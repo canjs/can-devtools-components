@@ -1,5 +1,7 @@
 # can-devtools-components
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-devtools-components.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/canjs/can-devtools-components.svg?branch=master)](https://travis-ci.org/canjs/can-devtools-components)
 
 Components for CanJS Devtools
