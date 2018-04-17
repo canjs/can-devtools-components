@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "can-component": "^4.0.2",
+    "can-reflect": "^1.15.2",
     "donejs-mocha": "^1.0.1",
     "steal-less": "^1.2.2"
   },
