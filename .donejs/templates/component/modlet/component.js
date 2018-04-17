@@ -1,11 +1,11 @@
-import Component from 'can-component';
-import './<%= name %>.less';
+import Component from "can-component";
+import "./<%= name %>.less";
 
 export default Component.extend({
-	tag: '<%= tag %>',
+	tag: "<%= tag %>",
 	ViewModel: {
 		message: {
-			default: 'This is the <%= tag %> component'
+			default: "This is the <%= tag %> component"
 		}
 	},
 	view: `

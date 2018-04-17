@@ -1,0 +1,214 @@
+<bindings-graph></bindings-graph>
+<script src="../node_modules/steal/steal.js" main="can-devtools-components/bindings-graph/bindings-graph">
+	var viewModel =  require("can-view-model");
+
+	var vm = viewModel( document.querySelector("bindings-graph") );
+
+	vm.graphData = {
+	  "nodes": [
+		{
+		  "shape": "box",
+		  "id": 1,
+		  "label": "HTMLInputElement{}.value"
+		},
+		{
+		  "shape": "box",
+		  "id": 2,
+		  "label": "AttributeObservable<input.value>"
+		},
+		{
+		  "shape": "box",
+		  "id": 3,
+		  "label": "ScopeKeyData{{first}}"
+		},
+		{
+		  "shape": "box",
+		  "id": 4,
+		  "label": "Observation<ScopeKeyData{{first}}.read>"
+		},
+		{
+		  "shape": "box",
+		  "id": 5,
+		  "label": "MyAppVM{}.first"
+		},
+		{
+		  "shape": "box",
+		  "id": 6,
+		  "label": "Observation<MyAppVM{}'s name getter>"
+		},
+		{
+		  "shape": "box",
+		  "id": 7,
+		  "label": "MyAppVM{}.last"
+		},
+		{
+		  "shape": "box",
+		  "id": 8,
+		  "label": "Observation<ScopeKeyData{{last}}.read>"
+		},
+		{
+		  "shape": "box",
+		  "id": 9,
+		  "label": "ScopeKeyData{{last}}"
+		},
+		{
+		  "shape": "box",
+		  "id": 10,
+		  "label": "AttributeObservable<input.value>"
+		},
+		{
+		  "shape": "box",
+		  "id": 11,
+		  "label": "HTMLInputElement{}.value"
+		},
+		{
+		  "shape": "box",
+		  "id": 12,
+		  "label": "AttributeObservable<input.value>"
+		},
+		{
+		  "shape": "box",
+		  "id": 13,
+		  "label": "ObservableFromScope<MyAppVM{}.last>"
+		},
+		{
+		  "shape": "box",
+		  "id": 14,
+		  "label": "ObservableFromScope<MyAppVM{}.first>"
+		},
+		{
+		  "shape": "box",
+		  "id": 15,
+		  "label": "AttributeObservable<input.value>"
+		}
+	  ],
+	  "edges": [
+		{
+		  "from": 1,
+		  "to": 15,
+		  "arrows": "to"
+		},
+		{
+		  "from": 15,
+		  "to": 14,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 14,
+		  "to": 5,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 5,
+		  "to": 4,
+		  "arrows": "to"
+		},
+		{
+		  "from": 4,
+		  "to": 3,
+		  "arrows": "to"
+		},
+		{
+		  "from": 3,
+		  "to": 2,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 2,
+		  "to": 1,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 3,
+		  "to": 5,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 5,
+		  "to": 6,
+		  "arrows": "to"
+		},
+		{
+		  "from": 15,
+		  "to": 1,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 1,
+		  "to": 2,
+		  "arrows": "to"
+		},
+		{
+		  "from": 7,
+		  "to": 6,
+		  "arrows": "to"
+		},
+		{
+		  "from": 7,
+		  "to": 8,
+		  "arrows": "to"
+		},
+		{
+		  "from": 8,
+		  "to": 9,
+		  "arrows": "to"
+		},
+		{
+		  "from": 9,
+		  "to": 7,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 9,
+		  "to": 10,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 10,
+		  "to": 11,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 11,
+		  "to": 10,
+		  "arrows": "to"
+		},
+		{
+		  "from": 11,
+		  "to": 12,
+		  "arrows": "to"
+		},
+		{
+		  "from": 12,
+		  "to": 11,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 12,
+		  "to": 13,
+		  "arrows": "to",
+		  "dashes": true
+		},
+		{
+		  "from": 13,
+		  "to": 7,
+		  "arrows": "to",
+		  "dashes": true
+		}
+	  ]
+	};
+
+	vm.availableKeys = [ "first" ];
+	vm.selectedObj = "<input>";
+	vm.selectedKey = "value";
+</script>

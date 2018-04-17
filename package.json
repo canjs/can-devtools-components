@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "can-component": "^4.0.2",
+    "can-debug": "^1.0.2",
     "can-reflect": "^1.15.2"
   },
   "devDependencies": {
