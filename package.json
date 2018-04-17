@@ -1,0 +1,72 @@
+{
+  "name": "can-devtools-components",
+  "version": "0.0.0",
+  "description": "Components for CanJS Devtools",
+  "homepage": "https://canjs.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/canjs/can-devtools-components.git"
+  },
+  "author": {
+    "name": "Bitovi",
+    "email": "contact@bitovi.com",
+    "url": "https://bitovi.com"
+  },
+  "scripts": {
+    "preversion": "npm test && npm run build",
+    "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/",
+    "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
+    "testee": "testee test.html --browsers firefox",
+    "test": "npm run jshint && npm run testee",
+    "jshint": "jshint ./*.js  --config",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "build": "node build.js && lessc can-devtools-components.less dist/can-devtools-components.css",
+    "develop": "done-serve --static --develop --port 8080"
+  },
+  "main": "dist/can-devtools-components",
+  "keywords": [
+    "donejs-plugin"
+  ],
+  "steal": {
+    "main": "can-devtools-components",
+    "npmIgnore": [
+      "donejs-cli",
+      "generator-donejs",
+      "testee",
+      "steal-tools"
+    ],
+    "plugins": [
+      "steal-less"
+    ],
+    "envs": {
+      "build-development": {
+        "map": {
+          "steal-less": "make-empty"
+        }
+      }
+    },
+    "map": {
+      "chai": "chai/chai"
+    }
+  },
+  "dependencies": {
+    "can-component": "^4.0.2",
+    "donejs-mocha": "^1.0.1",
+    "steal-less": "^1.2.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "donejs-cli": "^2.1.0",
+    "generator-donejs": "^2.1.0",
+    "jshint": "^2.9.1",
+    "less": "^3.0.1",
+    "steal": "^1.6.5",
+    "steal-mocha": "^1.0.0",
+    "steal-qunit": "^1.0.1",
+    "steal-tools": "^1.11.3",
+    "testee": "^0.7.0"
+  },
+  "license": "MIT"
+}
