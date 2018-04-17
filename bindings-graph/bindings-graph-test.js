@@ -6,8 +6,8 @@ const ViewModel = Component.ViewModel;
 const assert = chai.assert;
 
 describe("bindings-graph", () => {
-	it("Has message", () => {
+	it("VM", () => {
 		const vm = new ViewModel();
-		assert.equal(vm.message, "This is the bindings-graph component");
+		assert.equal(typeof vm, "object");
 	});
 });
