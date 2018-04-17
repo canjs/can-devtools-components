@@ -1,0 +1,37 @@
+<queues-logstack></queues-logstack>
+<script src="../node_modules/steal/steal.js" main="can-devtools-components/queues-logstack/queues-logstack">
+	var viewModel =  require("can-view-model");
+
+	var vm = viewModel( document.querySelector("queues-logstack") );
+
+	vm.stack = [
+	  {
+		"queue": "DOM_UI",
+		"context": "AttributeObservable<input.value>",
+		"fn": "update scope.first of <input>"
+	  },
+	  {
+		"queue": "NOTIFY",
+		"context": "MyAppVM{}",
+		"fn": "Observation<MyAppVM{}'s name getter>.onDependencyChange",
+		"reason": "MyAppVM{}'s first changed to Kevi from Kev"
+	  },
+	  {
+		"queue": "DERIVE",
+		"context": "Observation<MyAppVM{}'s name getter>",
+		"fn": "Observation<MyAppVM{}'s name getter>.update"
+	  },
+	  {
+		"queue": "NOTIFY",
+		"context": "Observation<MyAppVM{}'s name getter>",
+		"fn": "MyAppVM{}'s name event emitter",
+		"reason": "Observation<MyAppVM{}'s name getter> changed to Kevi Phillips from Kev Phillips"
+	  },
+	  {
+		"queue": "NOTIFY",
+		"context": "MyAppVM{}",
+		"fn": "bound MyAppVM{}.on('name',handler)::ResolverObservable<MyAppVM{}'s nameChangeCount value>",
+		"reason": "MyAppVM{} dispatched \"name\" with Kevi Phillips Kev Phillips"
+	  }
+	];
+</script>

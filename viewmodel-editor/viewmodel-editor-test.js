@@ -6,8 +6,8 @@ import DefineMap from "can-define/map/map";
 let ViewModel = Component.ViewModel;
 let assert = chai.assert;
 
-describe("viewmodel-editor", function() {
-	it("can pass in a setKeyValue function for editing external VM", function() {
+describe("viewmodel-editor", () => {
+	it("can pass in a setKeyValue function for editing external VM", () => {
 		const realVM = new DefineMap({
 			foo: "abc",
 			bar: "xyz"
