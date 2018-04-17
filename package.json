@@ -58,6 +58,7 @@
     "steal-less": "^1.2.2"
   },
   "devDependencies": {
+    "can-define": "^2.1.2",
     "chai": "^4.1.2",
     "donejs-cli": "^2.1.0",
     "generator-donejs": "^2.1.0",

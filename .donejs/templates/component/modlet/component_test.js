@@ -1,12 +1,13 @@
 import "steal-mocha";
 import chai from "chai";
-import { ViewModel } from "./<%= name %>";
+import Component from "./<%= name %>";
 
-let assert = chai.assert;
+const ViewModel = Component.ViewModel;
+const assert = chai.assert;
 
 describe("<%= module %>", function(){
-  it("Has message", function(){
-    var vm = new ViewModel();
-    assert.equal(vm.attr("message"), "This is the <%= tag %> component");
-  });
+	it("Has message", function(){
+		const vm = new ViewModel();
+		assert.equal(vm.message, "This is the <%= tag %> component");
+	});
 });
