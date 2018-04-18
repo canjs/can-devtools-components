@@ -1,13 +1,36 @@
 import Component from "can-component";
 import DefineList from "can-define/list/list";
+import DefineMap from "can-define/map/map";
 import "./queues-logstack.less";
 
 export default Component.extend({
 	tag: "queues-logstack",
 	ViewModel: {
-		stack: DefineList,
+		stack: { Type: DefineList, Default: DefineList },
+		selectedTask: {
+			value({ listenTo, lastSet, resolve }) {
+				listenTo(lastSet, resolve);
 
-		functionClickHandler: function(index) {
+				listenTo("stack", (ev, stack) => {
+					resolve( stack[stack.length - 1] );
+				});
+
+				if (this.stack) {
+					resolve( this.stack[this.stack.length - 1] );
+				}
+			}
+		},
+
+		get displayStack() {
+			return this.stack.slice().reverse();
+		},
+
+		selectTask(task) {
+			this.selectedTask = task;
+			this.inspectTask( this.stack.indexOf(task) );
+		},
+
+		inspectTask(index) {
 			console.log("inspecting " + this.stack[index].fn);
 		}
 	},
@@ -16,28 +39,16 @@ export default Component.extend({
             {{#unless(stack.length}}
                 No tasks on the can-queues.stack
             {{else}}
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>#</th>
-                            <th>Queue</th>
-                            <th>Reason</th>
-                            <th>Function</th>
-                        </tr>
-                        {{#each(stack, task=value index=index)}}
-                        <tr>
-                            <td>{{index}}</td>
-                            <td>{{task.queue}}</td>
-                            <td>{{task.reason}}</td>
-                            <td>
-                                <a on:click="scope.root.functionClickHandler(index)" href="#">
-                                    {{task.fn}}
-                                </a>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
+				<ul>
+					{{#each(displayStack, task=value index=index)}}
+						<li
+							on:click="scope.root.selectTask(task)"
+							class="{{#eq(index, 0)}}first{{/eq}} {{#eq(task, scope.root.selectedTask)}}selected{{/eq}}"
+						>
+							{{task.fn}}
+						</li>
+					{{/each}}
+				</ul>
             {{/unless}}
         {{/if}}
 	`
