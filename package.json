@@ -54,7 +54,10 @@
   "dependencies": {
     "can-component": "^4.0.2",
     "can-debug": "^1.0.2",
-    "can-reflect": "^1.15.2"
+    "can-dom-events": "^1.2.0",
+    "can-event-dom-enter": "^2.1.2",
+    "can-reflect": "^1.15.2",
+    "can-view-import": "^4.0.2"
   },
   "devDependencies": {
     "can-define": "^2.1.2",

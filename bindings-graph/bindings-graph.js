@@ -1,11 +1,14 @@
 import Component from "can-component";
 import DefineMap from "can-define/map/map";
 import DefineList from "can-define/list/list";
-import "./bindings-graph.less";
 import vis from "can-debug/src/draw-graph/vis";
+import "../magic-input/magic-input";
+import "./bindings-graph.less";
+
 
 export default Component.extend({
 	tag: "bindings-graph",
+
 	ViewModel: {
 		graphData: DefineMap,
 		availableKeys: { Type: DefineList, Default: DefineList },
@@ -63,7 +66,13 @@ export default Component.extend({
 			drawGraph(this.graphData);
 		}
 	},
+
 	view: `
-		<h1>{{selectedObj}}.{{selectedKey}}</h1>
+		<h1>
+			{{selectedObj}}
+			{{#if(selectedKey)}}
+				. <magic-input value:bind="selectedKey" options:from="availableKeys" />
+			{{/if}}
+		</h1>
 	`
 });
