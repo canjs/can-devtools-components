@@ -51,5 +51,15 @@ export default Component.extend({
 				</ul>
             {{/unless}}
         {{/if}}
-	`
+	`,
+
+	events: {
+		"li mouseover": function(li) {
+			li.classList.add("highlight");
+		},
+
+		"li mouseout": function(li) {
+			li.classList.remove("highlight");
+		}
+	}
 });
