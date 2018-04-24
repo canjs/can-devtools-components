@@ -1,8 +1,13 @@
 import Component from "can-component";
 import canReflect from "can-reflect";
 import "viewmodel-editor/viewmodel-editor.less";
-import guessBestFieldForValue from './util/getBestFieldForValue'
 import getBestFieldForValue from "./util/getBestFieldForValue";
+
+// editing components
+import 'spectre-canjs/sp-form/sp-form';
+import 'spectre-canjs/sp-form/fields/sp-text-field/sp-text-field';
+import 'spectre-canjs/sp-form/fields/sp-subform-field/sp-subform-field';
+import 'spectre-canjs/sp-form/fields/sp-multi-check-field/sp-multi-check-field';
 
 export default Component.extend({
 	tag: "viewmodel-editor",

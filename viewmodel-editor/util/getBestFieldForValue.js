@@ -1,10 +1,5 @@
 
 import canReflect from "can-reflect";
-import 'spectre-canjs/sp-form/sp-form';
-import 'spectre-canjs/sp-form/fields/sp-text-field/sp-text-field';
-import 'spectre-canjs/sp-form/fields/sp-subform-field/sp-subform-field';
-import 'spectre-canjs/sp-form/fields/sp-multi-check-field/sp-multi-check-field';
-import 'spectre.css/dist/spectre.css!steal-less';
 
 export default function(key,val) {
 
