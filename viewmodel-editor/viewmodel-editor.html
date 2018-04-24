@@ -1,3 +1,16 @@
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+
 <viewmodel-editor></viewmodel-editor>
 <script src="../node_modules/steal/steal.js"
-	main="can-devtools-components/viewmodel-editor/viewmodel-editor"></script>
+	main="can-devtools-components/viewmodel-editor/viewmodel-editor">
+	var viewModel = require('can-view-model');
+	viewModel(document.querySelector('viewmodel-editor')).update({
+		tagName: 'test',
+		viewModelData: {
+			test: 'hell',
+			number: 55,
+			array: [1,2,3],
+			object: {a: 'test', b: 'other'},
+			other: 'Whatsup'
+		}});
+</script>
