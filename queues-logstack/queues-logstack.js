@@ -42,8 +42,8 @@ export default Component.extend({
 				<ul>
 					{{#each(displayStack, task=value index=index)}}
 						<li
-							on:click="scope.root.selectTask(task)"
-							class="{{#eq(index, 0)}}first{{/eq}} {{#eq(task, scope.root.selectedTask)}}selected{{/eq}}"
+							on:click="scope.vm.selectTask(task)"
+							class="{{#eq(index, 0)}}first{{/eq}} {{#eq(task, scope.vm.selectedTask)}}selected{{/eq}}"
 						>
 							{{task.fn}}
 						</li>
