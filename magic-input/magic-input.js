@@ -43,7 +43,7 @@ export default Component.extend({
 		{{#if(showOptions)}}
 			<ul>
 				{{#each(options)}}
-					<li on:mousedown="scope.root.save(this)">{{this}}</li>
+					<li on:mousedown="scope.vm.save(this)">{{this}}</li>
 				{{/each}}
 			</ul>
 		{{/if}}

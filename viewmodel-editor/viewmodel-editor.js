@@ -25,7 +25,7 @@ export default Component.extend({
                             {{key}}:
                             <input
                                 value:from="value"
-                                on:change="scope.root.setKeyValue(key, scope.element.value)">
+                                on:change="scope.vm.setKeyValue(key, scope.element.value)">
                         </p>
                     {{/each}}
                 </form>
