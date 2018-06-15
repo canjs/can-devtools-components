@@ -68,7 +68,7 @@
     "less": "^3.0.1",
     "steal": "^1.6.5",
     "steal-less": "^1.2.2",
-    "steal-mocha": "^1.0.0",
+    "steal-mocha": "^2.0.0",
     "steal-qunit": "^1.0.1",
     "steal-tools": "^1.11.3",
     "testee": "^0.8.0"
