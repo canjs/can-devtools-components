@@ -24,8 +24,10 @@ export default Component.extend({
 				});
 			}
 		},
-		updateViewModel(args){
-			canReflect.update(this.viewModelData, args[0]);
+		updateViewModel([keyValuePairs]){
+			for (let key in keyValuePairs) {
+				this.setKeyValue(key, keyValuePairs[key]);
+			}
 			this.saving = false;
 		},
 		setKeyValue(key, value) {
