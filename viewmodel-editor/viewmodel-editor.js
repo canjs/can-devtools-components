@@ -1,35 +1,51 @@
 import Component from "can-component";
 import canReflect from "can-reflect";
 import "viewmodel-editor/viewmodel-editor.less";
+import getBestFieldForValue from "./util/getBestFieldForValue";
+
+// editing components
+import 'spectre-canjs/sp-form/sp-form';
+import 'spectre-canjs/sp-form/fields/sp-text-field/sp-text-field';
+import 'spectre-canjs/sp-form/fields/sp-subform-field/sp-subform-field';
+import 'spectre-canjs/sp-form/fields/sp-multi-check-field/sp-multi-check-field';
 
 export default Component.extend({
 	tag: "viewmodel-editor",
 	ViewModel: {
+		saving: 'boolean',
 		tagName: "string",
 		viewModelData: "any",
-		setKeyValue: function(key, value) {
+		fields: {
+			get(){
+				const vm = this.viewModelData
+				return canReflect.getOwnEnumerableKeys(vm).map((key) => {
+					const val = vm[key];
+					return getBestFieldForValue(key, val)
+				});
+			}
+		},
+		updateViewModel([keyValuePairs]){
+			for (let key in keyValuePairs) {
+				this.setKeyValue(key, keyValuePairs[key]);
+			}
+			this.saving = false;
+		},
+		setKeyValue(key, value) {
 			canReflect.setKeyValue(this.viewModelData, key, value);
 		}
 	},
 	view: `
+		<div class="container">
 		{{#unless(tagName)}}
-            <h1>Select an Element to see its ViewModel</h1>
-        {{else}}
-            {{#unless(viewModelData)}}
-                <h1><{{tagName}}> does not have a ViewModel</h1>
-            {{else}}
-                <h1><{{tagName}}> ViewModel</h1>
-                <form>
-                    {{#each(viewModelData, key=key value=value)}}
-                        <p>
-                            {{key}}:
-                            <input
-                                value:from="value"
-                                on:change="scope.vm.setKeyValue(key, scope.element.value)">
-                        </p>
-                    {{/each}}
-                </form>
-            {{/unless}}
-        {{/unless}}
+			<h1>Select an Element to see its ViewModel</h1>
+		{{else}}
+			{{#unless(viewModelData)}}
+				<h1><{{tagName}}> does not have a ViewModel</h1>
+			{{else}}
+				<h1><{{tagName}}> ViewModel</h1>
+				<sp-form object:from="viewModelData" fields:from="fields" isSaving:bind="saving" on:submit="updateViewModel(scope.arguments)"></sp-form>
+			{{/unless}}
+		{{/unless}}
+		</div>
 	`
 });

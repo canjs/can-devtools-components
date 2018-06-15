@@ -28,4 +28,30 @@ describe("viewmodel-editor", () => {
 		assert.equal(vmEditor.viewModelData.foo, "abc", "vmEditor unchanged value");
 		assert.equal(realVM.foo, "def", "realVM changed value");
 	});
+
+	it("updateViewModel calls setKeyValue for each property", () => {
+		const realVM = new DefineMap({
+			foo: "abc",
+			bar: "xyz"
+		});
+
+		let setKeyValueCallCount = 0;
+		let setKeyValues = {};
+		const vmEditor = new ViewModel({
+			viewModelData: realVM.serialize(),
+			setKeyValue: function(key, value) {
+				setKeyValues[key] = value;
+				setKeyValueCallCount++;
+			}
+		});
+
+		vmEditor.updateViewModel([{
+			foo: "def",
+			bar: "uvw"
+		}]);
+
+		assert.equal(setKeyValueCallCount, 2, "setKeyValue called twice");
+		assert.equal(setKeyValues["foo"], "def", "setKeyValue('foo', 'def')");
+		assert.equal(setKeyValues["bar"], "uvw", "setKeyValue('bar', 'uvw')");
+	});
 });
