@@ -1,3 +1,38 @@
+@import "../node_modules/jsoneditor/dist/jsoneditor.min.css";
+
 viewmodel-editor {
 	display: block;
+
+	h1 {
+		text-align: center;
+	}
+
+	.jsoneditor-container {
+		height: 400px;
+
+		&.disabled {
+		  position: relative;
+
+			&:before {
+			  content: " ";
+			  z-index: 10;
+			  display: block;
+			  position: absolute;
+			  height: 100%;
+			  top: 0;
+			  left: 0;
+			  right: 0;
+			  background: rgba(0, 0, 0, 0.5);
+			}
+		}
+	}
+
+	button {
+		background-color: #3883fa;
+		color: #ffffff;
+		margin: 8px 0;
+		padding: 4px;
+		font-weight: bold;
+		font-size: 120%;
+	}
 }

@@ -54,13 +54,15 @@
   "dependencies": {
     "can-component": "^4.0.2",
     "can-debug": "^1.0.2",
+    "can-define": "^2.1.2",
+    "can-diff": "^1.0.4",
     "can-dom-events": "^1.2.0",
     "can-event-dom-enter": "^2.1.2",
     "can-reflect": "^1.15.2",
-    "can-view-import": "^4.0.2"
+    "can-view-import": "^4.0.2",
+    "jsoneditor": "^5.17.1"
   },
   "devDependencies": {
-    "can-define": "^2.1.2",
     "chai": "^4.1.2",
     "donejs-cli": "^2.1.0",
     "generator-donejs": "^2.1.0",
