@@ -1,3 +1,93 @@
+<my-app></my-app>
+<hr>
 <viewmodel-editor></viewmodel-editor>
+
 <script src="../node_modules/steal/steal.js"
-	main="can-devtools-components/viewmodel-editor/viewmodel-editor"></script>
+	main="can-devtools-components/viewmodel-editor/viewmodel-editor">
+	var Component = require("can-component");
+	var DefineMap = require("can-define/map/map");
+	var DefineList = require("can-define/list/list");
+	var canReflect = require("can-reflect");
+	var viewModel = require("can-view-model");
+	var mergeDeep = require("can-diff/merge-deep/merge-deep");
+
+	require("can-debug");
+
+	Component.extend({
+		tag: "my-app",
+		view: `
+			<p>Time: {{time}}</p>
+			<p>First: <input type="text" value:bind="first"></p>
+			<p>Last: <input type="text" value:bind="last"></p>
+			<p>Name: {{name}}</p>
+			<p>Name Change Count: {{nameChangeCount}}</p>
+			<ul>
+				{{# each(hobbies) }}
+					<li>{{name}}</li>
+				{{/ each }}
+			</ul>
+		`,
+		ViewModel: {
+			type: "string",
+			time: {
+				value({ resolve }) {
+					resolve( (new Date()).toString() );
+
+					setInterval(() => {
+						resolve( (new Date()).toString() );
+					}, 1000);
+				}
+			},
+			first: { type: "string", default: "Connor" },
+			last: { type: "string", default: "Phillips" },
+			get name() {
+				return `${this.first} ${this.last}`;
+			},
+			nameChangeCount: {
+				value({ listenTo, resolve }) {
+					let count = 0;
+					listenTo("name", () => {
+						resolve(++count);
+					});
+					resolve(count);
+				}
+			},
+			hobbies: {
+				Type: DefineList,
+				default() {
+					return [{
+						name: "soccer"
+					}, {
+						name: "dancing"
+					}];
+				}
+			}
+		}
+	});
+
+	var vm = viewModel(document.querySelector("viewmodel-editor"));
+	var sourceVM = viewModel(document.querySelector("my-app"));
+
+	vm.assign({
+		tagName: "name-component",
+		viewModelData: sourceVM.serialize()
+	});
+
+	vm.__proto__.updateValues = function(data) {
+		mergeDeep(sourceVM, data);		
+	};
+
+	// simulate devtools getting new data from app
+	(function updateViewModelData(){
+		// fake serializing of non-serializable properties that devtools does
+		canReflect.updateDeep(vm.viewModelData, {
+			time: sourceVM.time,
+			first: sourceVM.first,
+			last: sourceVM.last,
+			name: sourceVM.name,
+			nameChangeCount: sourceVM.nameChangeCount,
+			hobbies: sourceVM.hobbies.serialize(),
+		});
+		setTimeout(updateViewModelData, 500);
+	}());
+</script>
