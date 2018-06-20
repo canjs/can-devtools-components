@@ -1,0 +1,103 @@
+@import "../node_modules/jsoneditor/dist/jsoneditor.min.css";
+viewmodel-editor {
+  display: block;
+}
+viewmodel-editor h1 {
+  text-align: center;
+}
+viewmodel-editor .jsoneditor-container {
+  height: 400px;
+}
+viewmodel-editor .jsoneditor-container.disabled {
+  position: relative;
+}
+viewmodel-editor .jsoneditor-container.disabled:before {
+  content: " ";
+  z-index: 10;
+  display: block;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+viewmodel-editor button {
+  background-color: #3883fa;
+  color: #ffffff;
+  margin: 8px 0;
+  padding: 4px;
+  font-weight: bold;
+  font-size: 120%;
+}
+queues-logstack ul {
+  margin: 0;
+  padding: 0;
+}
+queues-logstack ul li {
+  list-style: none;
+  border-top: 1px solid #e8e8e8;
+  margin: 0;
+  padding: 4px 0;
+  padding-left: 32px;
+  line-height: 16px;
+  cursor: default;
+}
+queues-logstack ul li.first {
+  border-top: none;
+}
+queues-logstack ul li.selected::before {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 9px;
+  content: "";
+  background: url(../images/blue-arrow.png) no-repeat 0 0;
+  background-size: 100%;
+  margin-left: -24px;
+}
+queues-logstack ul li.highlight {
+  background-color: #e8e8e8;
+}
+bindings-graph {
+  display: block;
+}
+bindings-graph h1 {
+  text-align: center;
+}
+bindings-graph div {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+magic-input {
+  display: inline-block;
+  text-align: left;
+  position: relative;
+  z-index: 1000;
+}
+magic-input span {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  cursor: text;
+}
+magic-input span.editing {
+  border: 1px solid #ccc;
+}
+magic-input ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: #fff;
+}
+magic-input ul li {
+  padding: 4px 0;
+}
+magic-input ul li.highlight {
+  background-color: #e8e8e8;
+}
