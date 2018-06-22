@@ -58,6 +58,7 @@
     "can-diff": "^1.0.4",
     "can-dom-events": "^1.2.0",
     "can-event-dom-enter": "^2.1.2",
+    "can-key": "^0.5.0",
     "can-reflect": "^1.15.2",
     "can-view-import": "^4.0.2",
     "jsoneditor": "^5.17.1"

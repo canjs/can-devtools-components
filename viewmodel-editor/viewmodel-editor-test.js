@@ -92,44 +92,93 @@ describe("viewmodel-editor", () => {
 	});
 
 	describe("getPatchedData", () => {
-		it("should work for add", () => {
-			let destination = { aaa: "bbb", ccc: "ddd" };
-			let oldSource = {};
-			let newSource = { eee: "fff" };
-			let expected = { aaa: "bbb", ccc: "ddd", eee: "fff" };
-			let actual = vm.getPatchedData(destination, oldSource, newSource);
+		describe("add", () => {
+			it("works", () => {
+				let destination = { aaa: "bbb", ccc: "ddd" };
+				let oldSource = {};
+				let newSource = { eee: "fff" };
+				let expected = { aaa: "bbb", ccc: "ddd", eee: "fff" };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
 
-			assert.deepEqual(actual, expected);
+				assert.deepEqual(actual, expected);
+			});
+
+			it("works with nested objects", () => {
+				let destination = { nested: { aaa: "bbb", ccc: "ddd" } };
+				let oldSource = { nested: {} };
+				let newSource = { nested: { eee: "fff" } };
+				let expected = { nested: { aaa: "bbb", ccc: "ddd", eee: "fff" } };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
+
+				assert.deepEqual(actual, expected);
+			});
 		});
 
-		it("should work for set", () => {
-			let destination = { aaa: "bbb", ccc: "ddd" };
-			let oldSource = { eee: "fff" };
-			let newSource = { eee: "ggg" };
-			let expected = { aaa: "bbb", ccc: "ddd", eee: "ggg" };
-			let actual = vm.getPatchedData(destination, oldSource, newSource);
+		describe("set", () => {
+			it("works", () => {
+				let destination = { aaa: "bbb", ccc: "ddd" };
+				let oldSource = { eee: "fff" };
+				let newSource = { eee: "ggg" };
+				let expected = { aaa: "bbb", ccc: "ddd", eee: "ggg" };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
 
-			assert.deepEqual(actual, expected);
+				assert.deepEqual(actual, expected);
+			});
+
+			it("works with nested objects", () => {
+				let destination = { nested: { aaa: "bbb", ccc: "ddd" } };
+				let oldSource = { nested: { eee: "fff"} };
+				let newSource = { nested: { eee: "ggg" } };
+				let expected = { nested: { aaa: "bbb", ccc: "ddd", eee: "ggg" } };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
+
+				assert.deepEqual(actual, expected);
+			});
 		});
 
-		it("should work for delete", () => {
-			let destination = { aaa: "bbb", ccc: "ddd" };
-			let oldSource = { aaa: "bbb", ccc: "ddd" };
-			let newSource = { aaa: "bbb" };
-			let expected = { aaa: "bbb" };
-			let actual = vm.getPatchedData(destination, oldSource, newSource);
+		describe("delete", () => {
+			it("works", () => {
+				let destination = { aaa: "bbb", ccc: "ddd" };
+				let oldSource = { aaa: "bbb", ccc: "ddd" };
+				let newSource = { aaa: "bbb" };
+				let expected = { aaa: "bbb" };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
 
-			assert.deepEqual(actual, expected);
+				assert.deepEqual(actual, expected);
+			});
+
+			it("works with nested objects", () => {
+				let destination = { nested: { aaa: "bbb", ccc: "ddd" } };
+				let oldSource = { nested: { aaa: "bbb", ccc: "ddd" } };
+				let newSource = { nested: { aaa: "bbb" } };
+				let expected = { nested: { aaa: "bbb" } };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
+
+				assert.deepEqual(actual, expected);
+			});
 		});
 
-		it("should work for splice", () => {
-			let destination = { list: [ "one", "two" ] };
-			let oldSource = { list: [ "one", "two" ] };
-			let newSource = { list: [ "one", "three" ] };
-			let expected = { list: [ "one", "three" ] };
-			let actual = vm.getPatchedData(destination, oldSource, newSource);
 
-			assert.deepEqual(actual, expected);
+		describe("splice", () => {
+			it("works", () => {
+				let destination = { list: [ "one", "two" ] };
+				let oldSource = { list: [ "one", "two" ] };
+				let newSource = { list: [ "one", "three" ] };
+				let expected = { list: [ "one", "three" ] };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
+
+				assert.deepEqual(actual, expected);
+			});
+
+			it("works for nested arrays", () => {
+				let destination = { nested: { list: [ "one", "two" ] } };
+				let oldSource = { nested: { list: [ "one", "two" ] } };
+				let newSource = { nested: { list: [ "one", "three" ] } };
+				let expected = { nested: { list: [ "one", "three" ] } };
+				let actual = vm.getPatchedData(destination, oldSource, newSource);
+
+				assert.deepEqual(actual, expected);
+			});
 		});
 	});
 
