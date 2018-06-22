@@ -3,6 +3,7 @@ import DefineMap from "can-define/map/map";
 import JSONEditor from "jsoneditor";
 import Observation from "can-observation";
 import diffDeep from "can-diff/deep/deep";
+import keys from "can-key";
 
 import "viewmodel-editor/viewmodel-editor.less";
 
@@ -108,13 +109,14 @@ export default Component.extend({
 				switch(type) {
 					case "add":
 					case "set":
-						destination[key] = value;
+						keys.set(destination, key, value);
 						break;
 					case "delete":
-						delete destination[key];
+						keys.deleteKey(destination, key);
 						break;
 					case "splice":
-						destination[key].splice(index, deleteCount, ...insert);
+						let arr = keys.get(destination, key);
+						arr.splice(index, deleteCount, ...insert);
 						break;
 				}
 			});
@@ -128,14 +130,14 @@ export default Component.extend({
 	},
 	view: `
 		{{# unless(tagName) }}
-            <h1>Select an Element to see its ViewModel</h1>
-        {{ else }}
-            {{# unless(viewModelData) }}
-                <h1><{{tagName}}> does not have a ViewModel</h1>
-            {{ else }}
-                <h1><{{tagName}}> ViewModel</h1>
-            {{/ unless }}
-        {{/ unless }}
+			<h1>Select an Element to see its ViewModel</h1>
+		{{ else }}
+			{{# unless(viewModelData) }}
+				<h1><{{tagName}}> does not have a ViewModel</h1>
+			{{ else }}
+				<h1><{{tagName}}> ViewModel</h1>
+			{{/ unless }}
+		{{/ unless }}
 
 		<div class="jsoneditor-container {{#if(saving)}}disabled{{/if}}"></div>
 
