@@ -1,0 +1,48 @@
+json-tree-editor {
+	display: block;
+	color: #404040;
+
+	.clickable {
+		cursor: pointer;
+	}
+
+	.children {
+		margin-left: 20px;
+	}
+
+	.key {
+		color: #963296;
+	}
+
+	.type {
+	}
+
+	.value {
+		color: #1527a9;
+
+		&.string {
+			color: #c3201c;
+		}
+	}
+
+	.options {
+		display: inline-block;
+		float: right;
+		margin-right: 50%;
+
+		span {
+			font-weight: bolder;
+			padding: 8px;
+			cursor: pointer;
+		}
+	}
+}
+
+key-value-editor {
+	magic-input {
+		span {
+			min-width: 100px;
+			height: 1em;
+		}
+	}
+}

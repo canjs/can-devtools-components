@@ -20,7 +20,8 @@ export default Component.extend({
 			return this.editing && this.options && this.options.length;
 		},
 
-		edit() {
+		edit(ev) {
+			if (ev) { ev.stopPropagation() }
 			this.editing = true;
 		},
 
@@ -32,7 +33,7 @@ export default Component.extend({
 
 	view: `
 		<span
-			on:click="edit()"
+			on:click="edit(scope.event)"
 			on:blur="save(scope.element.innerText)"
 			on:enter="save(scope.element.innerText)"
 			{{#if(editing)}}class="editing" contenteditable="true"{{/if}}
