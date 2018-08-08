@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "can-component": "^4.0.2",
-    "can-debug": "^1.0.2",
+    "can-debug": "^2.0.0",
     "can-define": "^2.1.2",
     "can-diff": "^1.0.4",
     "can-dom-events": "^1.2.0",
