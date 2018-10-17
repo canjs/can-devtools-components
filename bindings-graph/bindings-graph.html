@@ -1,8 +1,6 @@
 <bindings-graph></bindings-graph>
 <script src="../node_modules/steal/steal.js" main="can-devtools-components/bindings-graph/bindings-graph">
-	const viewModel =  require("can-view-model");
-
-	const vm = viewModel( document.querySelector("bindings-graph") );
+	const vm = document.querySelector("bindings-graph").viewModel;
 
 	vm.graphData = {
 	  "nodes": [

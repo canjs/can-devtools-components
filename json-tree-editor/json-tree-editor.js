@@ -1,9 +1,4 @@
-import Component from "can-component";
-import DefineList from "can-define/list/list";
-import DefineMap from "can-define/map/map";
-import stache from "can-stache";
-import canKey from "can-key";
-import canReflect from "can-reflect";
+import { Component, DefineList, DefineMap, stache, key, Reflect } from "can";
 
 import "../editable-span/editable-span";
 import "./json-tree-editor.less";
@@ -16,10 +11,10 @@ const capitalize = (key) => {
 };
 
 const getTypeName = (val) => {
-	if (canReflect.isObservableLike(val)) {
-		if (canReflect.isListLike(val)) {
+	if (Reflect.isObservableLike(val)) {
+		if (Reflect.isListLike(val)) {
 			return "Array";
-		} else if (canReflect.isMapLike(val)) {
+		} else if (Reflect.isMapLike(val)) {
 			return "Object";
 		}
 	}
@@ -31,8 +26,8 @@ const parseKeyValue = (key, value, parentPath) => {
 	let parsedValue;
 	const path =`${parentPath ? (parentPath + ".") : ""}${key}`;
 
-	const mightHaveChildren = canReflect.isObservableLike(value) &&
-		(canReflect.isListLike(value) || canReflect.isMapLike(value));
+	const mightHaveChildren = Reflect.isObservableLike(value) &&
+		(Reflect.isListLike(value) || Reflect.isMapLike(value));
 
 	if (mightHaveChildren) {
 		parsedValue = [];
@@ -99,7 +94,7 @@ export const JSONTreeEditor = Component.extend({
 				});
 
 				listenTo("add-child", (ev, path) => {
-					let parent = canKey.get(this.json, path);
+					let parent = key.get(this.json, path);
 
 					if ( parent instanceof DefineList ) {
 						path = path + ".0";
@@ -133,15 +128,15 @@ export const JSONTreeEditor = Component.extend({
 				listenTo(lastSet, (newJson) => resetJson(newJson));
 
 				listenTo("set-json-path-value", (ev, path, value) => {
-					canKey.set(json, path, value);
+					key.set(json, path, value);
 				});
 
 				listenTo("delete-json-path", (ev, path) => {
-					canKey.deleteKey(this.json, path);
+					key.deleteKey(this.json, path);
 				});
 
 				listenTo("add-child", (ev, path) => {
-					let parent = canKey.get(json, path);
+					let parent = key.get(json, path);
 
 					if ( parent instanceof DefineList ) {
 						parent.unshift({});
@@ -153,7 +148,7 @@ export const JSONTreeEditor = Component.extend({
 		get parsedJSON() {
 			const parsed = [];
 
-			canReflect.each(this.json, (value, key) => {
+			Reflect.each(this.json, (value, key) => {
 				parsed.push(
 					parseKeyValue(key, value)
 				);
@@ -195,7 +190,7 @@ export const JSONTreeEditor = Component.extend({
 				});
 
 				listenTo("add-child", (ev, path) => {
-					let parent = canKey.get(this.json, path);
+					let parent = key.get(this.json, path);
 
 					if ( parent instanceof DefineList ) {
 						path = path + ".0";

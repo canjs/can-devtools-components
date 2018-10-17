@@ -1,8 +1,7 @@
+import { DefineMap, Reflect } from "can";
+import Component from "./viewmodel-editor";
 import "steal-mocha";
 import chai from "chai";
-import Component from "./viewmodel-editor";
-import DefineMap from "can-define/map/map";
-import canReflect from "can-reflect";
 
 let ViewModel = Component.ViewModel;
 let assert = chai.assert;
@@ -183,7 +182,7 @@ describe("viewmodel-editor", () => {
 	});
 
 	it("saving", () => {
-		canReflect.onKeyValue(vm, "saving", () => {});
+		Reflect.onKeyValue(vm, "saving", () => {});
 
 		assert.equal(vm.saving, false, "false by default");
 

@@ -4,9 +4,7 @@
 	<editable-span></editable-span>
 </h1>
 <script src="../node_modules/steal/steal.js" main="can-devtools-components/editable-span/editable-span">
-	const viewModel =  require("can-view-model");
-
-	const vm = viewModel( document.querySelector("editable-span") );
+	const vm = document.querySelector("editable-span").viewModel;
 
 	vm.text = "thekey";
 	vm.options = [ "anotherkey", "thirdkey" ];

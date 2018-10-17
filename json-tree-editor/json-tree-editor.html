@@ -14,14 +14,10 @@
 		<json-tree-editor></json-tree-editor>
 
 		<script src="../node_modules/steal/steal.js" main="can-devtools-components/json-tree-editor/json-tree-editor">
-			require("can-debug");
-			const viewModel = require("can-view-model");
-			const canReflect = require("can-reflect");
-
 			const treeEditor = document.querySelector("json-tree-editor")
 			const textarea = document.querySelector("textarea");
 
-			const vm = viewModel( treeEditor );
+			const vm = treeEditor.viewModel;
 
 			vm.json = {
 				name: {
