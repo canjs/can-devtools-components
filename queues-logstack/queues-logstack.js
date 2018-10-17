@@ -1,6 +1,5 @@
 import Component from "can-component";
 import DefineList from "can-define/list/list";
-import DefineMap from "can-define/map/map";
 import "./queues-logstack.less";
 
 export default Component.extend({

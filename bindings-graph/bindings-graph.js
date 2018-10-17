@@ -34,15 +34,15 @@ export default Component.extend({
 		},
 
 		connectedCallback(element) {
-			var drawGraph = function(data) {
+			const drawGraph = function(data) {
 				// remove previous graph
-				var oldContainer = element.querySelector("div");
+				const oldContainer = element.querySelector("div");
 				if (oldContainer) {
 					oldContainer.remove();
 				}
 
 				// create new graph container and add it
-				var container = document.createElement("div");
+				const container = document.createElement("div");
 				element.appendChild(container);
 
 				new vis.Network(
@@ -57,7 +57,7 @@ export default Component.extend({
 						}
 					}
 				);
-			}
+			};
 
 			this.listenTo("graphData", function(ev, data) {
 				drawGraph(data);

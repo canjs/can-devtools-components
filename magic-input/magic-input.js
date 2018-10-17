@@ -21,7 +21,7 @@ export default Component.extend({
 		},
 
 		edit(ev) {
-			if (ev) { ev.stopPropagation() }
+			if (ev) { ev.stopPropagation(); }
 			this.editing = true;
 		},
 

@@ -1,7 +1,7 @@
-var stealTools = require("steal-tools");
-var globalJS = require("steal-tools/lib/build/helpers/global").js;
+const stealTools = require("steal-tools");
+const globalJS = require("steal-tools/lib/build/helpers/global").js;
 
-var baseNormalize = globalJS.normalize();
+const baseNormalize = globalJS.normalize();
 
 stealTools.export({
 	steal: {
