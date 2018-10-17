@@ -1,0 +1,17 @@
+<h1>
+	&lt;input&gt;
+	.
+	<editable-span></editable-span>
+</h1>
+<script src="../node_modules/steal/steal.js" main="can-devtools-components/editable-span/editable-span">
+	const viewModel =  require("can-view-model");
+
+	const vm = viewModel( document.querySelector("editable-span") );
+
+	vm.text = "thekey";
+	vm.options = [ "anotherkey", "thirdkey" ];
+
+	vm.on("text", (ev, val) => {
+		console.log(`text changed to ${val}`);
+	});
+</script>

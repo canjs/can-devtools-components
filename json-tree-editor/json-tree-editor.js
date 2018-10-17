@@ -5,7 +5,7 @@ import stache from "can-stache";
 import canKey from "can-key";
 import canReflect from "can-reflect";
 
-import "../magic-input/magic-input";
+import "../editable-span/editable-span";
 import "./json-tree-editor.less";
 
 stache.addHelper("isArray", (val) => Array.isArray(val));
@@ -296,7 +296,7 @@ export const JSONTreeEditor = Component.extend({
 					{{# unless( isArray(value) ) }}
 						<span>
 						{{# is type "String" }}
-							<q><span class="value string"><magic-input value:from="value" on:value="scope.vm.setPathValue(path, scope.event)" /></span></q>
+							<q><span class="value string"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></span></q>
 						{{ else }}
 							<span class="value"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></span>
 						{{ / is }}
@@ -378,7 +378,13 @@ export const KeyValueEditor = Component.extend({
 	},
 
 	view: `
-		<span class="key"><magic-input value:bind="key" />:&nbsp;</span>
-		<q><span class="value string"><magic-input value:bind="value" /></span></q>
+		<span class="key">
+			<editable-span text:bind="key" editing:raw="true" tabindex="0" />:&nbsp;
+		</span>
+		<q>
+			<span class="value string">
+				<editable-span text:bind="value" tabindex="0" />
+			</span>
+		</q>
 	`
 });

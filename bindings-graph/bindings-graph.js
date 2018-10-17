@@ -2,7 +2,7 @@ import Component from "can-component";
 import DefineMap from "can-define/map/map";
 import DefineList from "can-define/list/list";
 import vis from "can-debug/src/draw-graph/vis";
-import "../magic-input/magic-input";
+import "../editable-span/editable-span";
 import "./bindings-graph.less";
 
 
@@ -71,7 +71,7 @@ export default Component.extend({
 		<h1>
 			{{selectedObj}}
 			{{#if(selectedKey)}}
-				. <magic-input value:bind="selectedKey" options:from="availableKeys" />
+				. <editable-span text:bind="selectedKey" options:from="availableKeys" />
 			{{/if}}
 		</h1>
 	`
