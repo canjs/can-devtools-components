@@ -1,7 +1,6 @@
 import Component from "can-component";
 import DefineMap from "can-define/map/map";
 import JSONEditor from "jsoneditor";
-import Observation from "can-observation";
 import diffDeep from "can-diff/deep/deep";
 import keys from "can-key";
 

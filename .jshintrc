@@ -20,7 +20,11 @@
 		"raises": true,
 		"start": true,
 		"stop": true,
-		"global": true
+		"global": true,
+		"describe": true,
+		"it": true,
+		"beforeEach": true,
+		"afterEach": true
 	},
 	"curly": true,
 	"eqeqeq": true,

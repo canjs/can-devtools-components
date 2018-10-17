@@ -4,12 +4,12 @@
 
 <script src="../node_modules/steal/steal.js"
 	main="can-devtools-components/viewmodel-editor/viewmodel-editor">
-	var Component = require("can-component");
-	var DefineMap = require("can-define/map/map");
-	var DefineList = require("can-define/list/list");
-	var canReflect = require("can-reflect");
-	var viewModel = require("can-view-model");
-	var mergeDeep = require("can-diff/merge-deep/merge-deep");
+	const Component = require("can-component");
+	const DefineMap = require("can-define/map/map");
+	const DefineList = require("can-define/list/list");
+	const canReflect = require("can-reflect");
+	const viewModel = require("can-view-model");
+	const mergeDeep = require("can-diff/merge-deep/merge-deep");
 
 	require("can-debug");
 
@@ -65,8 +65,8 @@
 		}
 	});
 
-	var vm = viewModel(document.querySelector("viewmodel-editor"));
-	var sourceVM = viewModel(document.querySelector("my-app"));
+	const vm = viewModel(document.querySelector("viewmodel-editor"));
+	const sourceVM = viewModel(document.querySelector("my-app"));
 
 	vm.assign({
 		tagName: "name-component",

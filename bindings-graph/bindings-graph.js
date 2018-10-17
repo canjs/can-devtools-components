@@ -2,7 +2,7 @@ import Component from "can-component";
 import DefineMap from "can-define/map/map";
 import DefineList from "can-define/list/list";
 import vis from "can-debug/src/draw-graph/vis";
-import "../magic-input/magic-input";
+import "../editable-span/editable-span";
 import "./bindings-graph.less";
 
 
@@ -34,15 +34,15 @@ export default Component.extend({
 		},
 
 		connectedCallback(element) {
-			var drawGraph = function(data) {
+			const drawGraph = function(data) {
 				// remove previous graph
-				var oldContainer = element.querySelector("div");
+				const oldContainer = element.querySelector("div");
 				if (oldContainer) {
 					oldContainer.remove();
 				}
 
 				// create new graph container and add it
-				var container = document.createElement("div");
+				const container = document.createElement("div");
 				element.appendChild(container);
 
 				new vis.Network(
@@ -57,7 +57,7 @@ export default Component.extend({
 						}
 					}
 				);
-			}
+			};
 
 			this.listenTo("graphData", function(ev, data) {
 				drawGraph(data);
@@ -71,7 +71,7 @@ export default Component.extend({
 		<h1>
 			{{selectedObj}}
 			{{#if(selectedKey)}}
-				. <magic-input value:bind="selectedKey" options:from="availableKeys" />
+				. <editable-span text:bind="selectedKey" options:from="availableKeys" />
 			{{/if}}
 		</h1>
 	`

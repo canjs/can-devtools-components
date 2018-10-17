@@ -1,11 +1,11 @@
 import "steal-mocha";
 import chai from "chai";
-import Component from "./magic-input";
+import Component from "./editable-span";
 
 const ViewModel = Component.ViewModel;
 const assert = chai.assert;
 
-describe("magic-input", () => {
+describe("editable-span", () => {
 	it("edit() / save()", () => {
 		const vm = new ViewModel();
 

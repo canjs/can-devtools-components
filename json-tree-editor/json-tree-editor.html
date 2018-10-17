@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+	<head>
+		<style>
+			textarea {
+				width: 400px;
+				height: 350px;
+			}
+		</style>
+	</head>
+	<body>
+		<textarea></textarea>
+		<hr>
+		<json-tree-editor></json-tree-editor>
+
+		<script src="../node_modules/steal/steal.js" main="can-devtools-components/json-tree-editor/json-tree-editor">
+			require("can-debug");
+			const viewModel = require("can-view-model");
+			const canReflect = require("can-reflect");
+
+			const treeEditor = document.querySelector("json-tree-editor")
+			const textarea = document.querySelector("textarea");
+
+			const vm = viewModel( treeEditor );
+
+			vm.json = {
+				name: {
+					first: "Connor",
+					last: "Phillips"
+				},
+
+				hobbies: [{
+					name: "spinning around",
+					rank: 1
+				}, {
+					name: "kicking the ball",
+					rank: 2
+				}, {
+					name: "dunking it",
+					rank: 3
+				}]
+			};
+
+			(function updateTextAreaValue() {
+				textarea.value = JSON.stringify(vm.json, null, "\t");
+				setTimeout(updateTextAreaValue, 50);
+			}());
+
+			textarea.addEventListener("change", (ev) => {
+				vm.json = JSON.parse(ev.target.value);
+			});
+		</script>
+	</body>
+</html>
