@@ -1,8 +1,5 @@
-import Component from "can-component";
-import DefineMap from "can-define/map/map";
+import { Component, DefineMap, key as canKey, diff } from "can";
 import JSONEditor from "jsoneditor";
-import diffDeep from "can-diff/deep/deep";
-import keys from "can-key";
 
 import "viewmodel-editor/viewmodel-editor.less";
 
@@ -103,18 +100,18 @@ export default Component.extend({
 
 		getPatchedData(destination, oldSource, newSource) {
 			destination = Object.assign({}, destination);
-			let patches = diffDeep(oldSource, newSource);
+			let patches = diff.deep(oldSource, newSource);
 			patches.forEach(({ type, key, value, index, deleteCount, insert }) => {
 				switch(type) {
 					case "add":
 					case "set":
-						keys.set(destination, key, value);
+						canKey.set(destination, key, value);
 						break;
 					case "delete":
-						keys.deleteKey(destination, key);
+						canKey.deleteKey(destination, key);
 						break;
 					case "splice":
-						let arr = keys.get(destination, key);
+						let arr = canKey.get(destination, key);
 						arr.splice(index, deleteCount, ...insert);
 						break;
 				}

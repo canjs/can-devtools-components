@@ -4,14 +4,8 @@
 
 <script src="../node_modules/steal/steal.js"
 	main="can-devtools-components/viewmodel-editor/viewmodel-editor">
-	const Component = require("can-component");
-	const DefineMap = require("can-define/map/map");
-	const DefineList = require("can-define/list/list");
-	const canReflect = require("can-reflect");
-	const viewModel = require("can-view-model");
-	const mergeDeep = require("can-diff/merge-deep/merge-deep");
-
-	require("can-debug");
+	import { Component, DefineMap, DefineList, Reflect, diff } from "can"
+	const { mergeDeep } = diff;
 
 	Component.extend({
 		tag: "my-app",
@@ -65,8 +59,8 @@
 		}
 	});
 
-	const vm = viewModel(document.querySelector("viewmodel-editor"));
-	const sourceVM = viewModel(document.querySelector("my-app"));
+	const vm = document.querySelector("viewmodel-editor").viewModel;
+	const sourceVM = document.querySelector("my-app").viewModel;
 
 	vm.assign({
 		tagName: "name-component",
@@ -80,7 +74,7 @@
 	// simulate devtools getting new data from app
 	(function updateViewModelData(){
 		// fake serializing of non-serializable properties that devtools does
-		canReflect.updateDeep(vm.viewModelData, {
+		Reflect.updateDeep(vm.viewModelData, {
 			time: sourceVM.time,
 			first: sourceVM.first,
 			last: sourceVM.last,

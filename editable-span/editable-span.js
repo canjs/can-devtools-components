@@ -1,7 +1,4 @@
-import Component from "can-component";
-import DefineList from "can-define/list/list";
-import domEvents from "can-dom-events";
-import enterEvent from "can-event-dom-enter";
+import { Component, DefineList, domEvents, enterEvent } from "can";
 import "./editable-span.less";
 
 // add support for on:enter

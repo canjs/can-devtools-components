@@ -1,7 +1,5 @@
-import Component from "can-component";
-import DefineMap from "can-define/map/map";
-import DefineList from "can-define/list/list";
-import vis from "can-debug/src/draw-graph/vis";
+import { Component, DefineMap, DefineList } from "can";
+import vis from "../lib/vis";
 import "../editable-span/editable-span";
 import "./bindings-graph.less";
 
