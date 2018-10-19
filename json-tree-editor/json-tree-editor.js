@@ -3,7 +3,8 @@ import { Component, DefineList, DefineMap, stache, key, Reflect } from "can";
 import "../editable-span/editable-span";
 import "./json-tree-editor.less";
 
-stache.addHelper("isArray", (val) => Array.isArray(val));
+const isList = (val) => (val instanceof DefineList);
+stache.addHelper("isList", isList);
 stache.addHelper("isNumber", (val) => typeof val === "number");
 stache.addHelper("isEven", (num) => num % 2 === 0);
 
@@ -22,6 +23,25 @@ const getTypeName = (val) => {
 
 	return capitalize(typeof val);
 };
+
+const NumberOrString = (val) => val;
+
+const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
+	key: NumberOrString,
+	value: NumberOrString,
+	type: "string",
+	path: "string",
+	id: {
+		identity: true,
+		get() {
+			return JSON.stringify(this);
+		}
+	}
+});
+
+const ParsedJSON = DefineList.extend("ParsedJSON", {
+	"#": ParsedJSONNode
+});
 
 const parseKeyValue = (key, value, parentPath) => {
 	let parsedValue;
@@ -117,8 +137,9 @@ export const JSONTreeEditor = Component.extend({
 		},
 
 		json: {
+			Default: DefineMap,
 			value({ listenTo, lastSet, resolve }) {
-				let json = resolve( new DefineMap() );
+				let json = resolve( lastSet.value );
 
 				const resetJson = (newJson) => {
 					json = resolve( new DefineMap( newJson ) );
@@ -147,7 +168,7 @@ export const JSONTreeEditor = Component.extend({
 		},
 
 		get parsedJSON() {
-			const parsed = [];
+			const parsed = new ParsedJSON([]);
 
 			Reflect.each(this.json, (value, key) => {
 				parsed.push(
@@ -279,7 +300,7 @@ export const JSONTreeEditor = Component.extend({
 				<div>{{type}}({{value.length}})</div>
 			{{/ is }}
 
-			{{# unless( isArray(value) ) }}
+			{{# unless( isList(value) ) }}
 				{{# is type "String" }}
 					<div class="value string"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></div>
 				{{ else }}
@@ -289,7 +310,7 @@ export const JSONTreeEditor = Component.extend({
 
 			{{# if( scope.vm.shouldShowOptions(path) ) }}
 				<div class="options">
-					{{# if( isArray(value) ) }}
+					{{# if( isList(value) ) }}
 					<div on:click="scope.vm.addChild(scope.event, path)">&plus;</div>
 					{{/ if }}
 					<div on:click="scope.vm.deletePath(scope.event, path)">&minus;</div>
@@ -298,8 +319,8 @@ export const JSONTreeEditor = Component.extend({
 		{{/ keyValueTemplate }}
 
 		{{< nodeTemplate }}
-			<div {{# if( isArray(value) ) }}class="wrapper"{{/ if }} on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
-				{{# if( isArray(value) ) }}
+			<div class="wrapper" on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+				{{# if( isList(value) ) }}
 					<div class="header-container">
 						{{# if scope.vm.isExpanded(path) }}
 							<div class="arrow-toggle down" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
@@ -315,7 +336,7 @@ export const JSONTreeEditor = Component.extend({
 						</div>
 				{{/ if }}
 
-				{{# if( isArray(value) ) }}
+				{{# if( isList(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
 						<div class="list-container">
 							{{# each(value) }}

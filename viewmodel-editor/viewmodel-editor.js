@@ -1,106 +1,52 @@
-import { Component, DefineMap, key as canKey, diff } from "can";
-import JSONEditor from "jsoneditor";
+import { Component, DefineMap, key as canKey, diff, Reflect, Observation } from "can";
 
+import "../json-tree-editor/json-tree-editor";
 import "viewmodel-editor/viewmodel-editor.less";
 
 export default Component.extend({
 	tag: "viewmodel-editor",
 	ViewModel: {
-		connectedCallback(element) {
-			let container = element.querySelector(".jsoneditor-container");
-			this.editor = new JSONEditor(container, {
-				mode: "code"/*,
-				modes: [ "code", "form", "tree" ],
-				search: false
-				history: false*/
-			});
-
-			this.listenTo("json", () => {
-				this.editor.set(this.json);
-			});
-
-			this.listenTo(document.querySelector(".ace_content"), "click", () => {
-				this.updatesPaused = true;
-			});
-
-			this.listenTo(window, "blur", () => {
-				this.updatesPaused = false;
-				this.updateValues(this.json);
-			});
-
-			return this.stopListening.bind(this);
-		},
-
-		tagName: "string",
-		viewModelData: { Type: DefineMap, Default: DefineMap },
-
-		updatesPaused: { type: "boolean", default: false },
-
-		saving: {
-			value({ listenTo, resolve }) {
-				resolve(false);
-
-				listenTo("updatesPaused", (ev, paused) => {
-					if (!paused) {
-						resolve(true);
-					}
-				});
-
-				listenTo("serializedViewModelData", () => {
-					resolve(false);
-				});
-			}
-		},
-
 		// allow overwriting editor for testing
 		editor: "any",
+		tagName: "string",
+		viewModelData: { Type: DefineMap, Default: DefineMap },
 
 		get serializedViewModelData() {
 			return this.viewModelData.serialize();
 		},
 
 		json: {
-			type: "any",
-
 			value({ listenTo, lastSet, resolve }) {
-				// allow manually overwriting json for testing
-				listenTo(lastSet, resolve);
+				let json = resolve(
+					new DefineMap(this.serializedViewModelData)
+				);
+				let jsonPatches = [];
 
-				// update json when viewModel is replaced or updated
-				// as long as updates are not paused
-				listenTo("serializedViewModelData", (ev, currentViewModelData, lastViewModelData) => {
-					if (!this.updatesPaused) {
-						let patchedData = this.getPatchedData(
-							this.json,
-							lastViewModelData,
-							currentViewModelData
-						);
+				const setPatches = (newJSON, oldJSON) => {
+					const patches = diff.deep(oldJSON, newJSON);
+					jsonPatches.push( ...patches );
+				};
 
-						resolve( patchedData );
-					}
+				listenTo("reset-json-patches", () => {
+					jsonPatches = [];
 				});
 
-				// update with latest viewModel data when unpaused
-				listenTo("updatesPaused", (ev, paused) => {
-					if (!paused) {
-						let patchedData = this.getPatchedData(
-							this.serializedViewModelData,
-							this.json,
-							this.editor.get()
-						);
+				const serializedJSON = new Observation(() => json.serialize());
+				Reflect.onValue(serializedJSON, setPatches);
 
-						resolve( patchedData );
-					}
+				listenTo("serializedViewModelData", (ev, vmData) => {
+					let newJson = this.getPatchedData(vmData, jsonPatches);
+
+					// don't set patches when json is changed
+					// because viewModel data is updated
+					Reflect.offValue(serializedJSON, setPatches);
+					Reflect.assignDeep(json, newJson);
+					Reflect.onValue(serializedJSON, setPatches);
 				});
-
-				// set initial json to serialized viewModelData
-				resolve(this.serializedViewModelData);
 			}
 		},
 
-		getPatchedData(destination, oldSource, newSource) {
-			destination = Object.assign({}, destination);
-			let patches = diff.deep(oldSource, newSource);
+		getPatchedData(destination, patches) {
 			patches.forEach(({ type, key, value, index, deleteCount, insert }) => {
 				switch(type) {
 					case "add":
@@ -120,8 +66,26 @@ export default Component.extend({
 			return destination;
 		},
 
-		updateValues(data) {
-			console.log("updating viewModel with", data);
+		jsonEditorPatches: {
+			type: "any",
+			get(lastSet) {
+				if (lastSet) { return lastSet; }
+				const patches = diff.deep(this.serializedViewModelData, this.json.serialize());
+				return this.getPatchedData(this.serializedViewModelData, patches);
+			}
+		},
+
+		save() {
+			this.updateValues( this.jsonEditorPatches );
+			this.dispatch("reset-json-patches");
+		},
+
+		updateValues: {
+			default() {
+				return (data) => {
+					console.log("updating viewModel with", data);
+				};
+			}
 		}
 	},
 	view: `
@@ -135,10 +99,10 @@ export default Component.extend({
 			{{/ unless }}
 		{{/ unless }}
 
-		<div class="jsoneditor-container {{#if(saving)}}disabled{{/if}}"></div>
+		<json-tree-editor json:from="json"></json-tree-editor>
 
 		{{# if(tagName) }}
-			<button>Save</button>
+			<button on:click="this.save()">Save</button>
 		{{/if}}
 	`
 });

@@ -279,7 +279,7 @@ describe("JSONTreeEditor", () => {
 
 		testCases.forEach(t => {
 			vm.json = t.input;
-			assert.deepEqual(vm.parsedJSON, t.output, `works for ${t.name}`);
+			assert.deepEqual(vm.parsedJSON.serialize(), t.output, `works for ${t.name}`);
 		});
 	});
 
