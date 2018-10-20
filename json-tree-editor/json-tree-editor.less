@@ -1,13 +1,53 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i');
 json-tree-editor {
-	display: block;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 18px;
+	line-height: 1;
+	margin: 30px;
 	color: #404040;
-
+	q {
+		quotes: "“" "”" "‘" "’";
+	}
+	q:before {
+		content: open-quote;
+		user-select: none;
+	}
+	q:after {
+		content: close-quote;
+		user-select: none;
+	}
+	.arrow {
+		display: inline-block;
+		vertical-align: middle;
+		width: 0px;
+		height: 0px;
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+		border-left: 10px solid #404040;
+		&.right {
+			transform: rotate(0deg);
+			animation: rotateRight .25s ease-in-out forwards;
+		}
+		&.down {
+			transform: rotate(90deg);
+			animation: rotateDown .25s ease-in-out forwards;
+		}
+	}
 	.clickable {
 		cursor: pointer;
+		width: max-content;
+		+ .key, + .type {
+			margin-left: 10px;
+		}
 	}
 
 	.children {
-		margin-left: 20px;
+		padding-left: 25px;
+		opacity: 0;
+		transform-origin: top center;
+		animation: fadeIn .25s ease-in-out forwards;
 	}
 
 	.key {
@@ -27,13 +67,27 @@ json-tree-editor {
 
 	.options {
 		display: inline-block;
-		float: right;
-		margin-right: 50%;
-
+		margin-left: auto;
+		position: absolute;
+		left: 50%;
+		z-index: 9999;
 		span {
-			font-weight: bolder;
-			padding: 8px;
+			font-weight: bold;
+			height: auto;
+			width: 30px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 10%;
+			background:rgba(0, 0, 0, .0);
+			border: 1px solid rgba(0, 0, 0, .2);
+			margin-right: 10px;
 			cursor: pointer;
+			transition: all .2s ease-in-out;
+			&:hover, &:focus {
+				background:rgba(0, 0, 0, .25);
+				border: 1px solid rgba(0, 0, 0, .5);
+			}
 		}
 	}
 }
@@ -41,5 +95,32 @@ json-tree-editor {
 key-value-editor {
 	editable-span span {
 		min-width: 25px;
+	}
+}
+
+@keyframes rotateRight {
+	from {
+		transform: rotate(90deg);
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
+@keyframes rotateDown {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(90deg);
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scaleY(0);
+	}
+	to {
+		opacity: 1;
+		transform: scaleY(1)
 	}
 }

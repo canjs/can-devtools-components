@@ -266,13 +266,13 @@ export const JSONTreeEditor = Component.extend({
 
 	view: `
 		{{< nodeTemplate }}
-			<div {{# if( isArray(value) ) }}class="clickable" on:click="scope.vm.addChild(scope.event, path)"{{/ if }}>
+			<div {{# if( isArray(value) ) }}class="hello"{{/ if }}>
 				<p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
 					{{# if( isArray(value) ) }}
 						{{# if scope.vm.isExpanded(path) }}
-							<span class="clickable" on:click="scope.vm.toggleExpanded(scope.event, path)">▼</span>
+							<span class="clickable arrow down" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
 						{{ else }}
-							<span class="clickable" on:click="scope.vm.toggleExpanded(scope.event, path)">▶</span>
+							<span class="clickable arrow right" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
 						{{/ if }}
 					{{/ if }}
 

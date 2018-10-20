@@ -1,0 +1,152 @@
+<json-tree-editor>
+
+
+
+
+    <div class="clickable" on:click="scope.vm.addChild(scope.event, path)">
+        <p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+
+
+            <span class="clickable arrow down" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
+
+
+
+
+            <span class="key">name:&nbsp;</span>
+
+
+
+            <span class="type">Object</span>
+
+
+
+
+
+
+
+            <div class="options">
+
+                <span on:click="scope.vm.addChild(scope.event, path)">+</span>
+
+                <span on:click="scope.vm.deletePath(scope.event, path)">−</span>
+            </div>
+
+        </p>
+
+
+
+        <div class="children">
+
+
+            <div>
+                <p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+
+
+
+                    <span class="key">first:&nbsp;</span>
+
+
+
+
+
+
+
+                    <span>
+
+                        <q><span class="value string">
+                                <editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)">
+                                    <span on:click="edit(scope.event)" on:blur="save(scope.element.innerText)" on:enter="save(scope.element.innerText)">
+                                        Connor
+                                    </span>
+
+
+
+                                </editable-span>
+                            </span></q>
+
+                    </span>
+
+
+
+                </p>
+
+
+            </div>
+
+
+
+            <div>
+                <p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+
+
+
+                    <span class="key">last:&nbsp;</span>
+
+
+
+
+
+
+
+                    <span>
+
+                        <q><span class="value string">
+                                <editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)">
+                                    <span on:click="edit(scope.event)" on:blur="save(scope.element.innerText)" on:enter="save(scope.element.innerText)">
+                                        Phillips
+                                    </span>
+
+
+
+                                </editable-span>
+                            </span></q>
+
+                    </span>
+
+
+
+                </p>
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="clickable" on:click="scope.vm.addChild(scope.event, path)">
+        <p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+
+
+            <span class="clickable arrow right" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
+
+
+
+
+            <span class="key">hobbies:&nbsp;</span>
+
+
+
+
+
+            <span class="type">Array(3)</span>
+
+
+
+
+
+        </p>
+
+
+
+
+    </div>
+
+
+</json-tree-editor>
