@@ -5,6 +5,7 @@ import "./json-tree-editor.less";
 
 stache.addHelper("isArray", (val) => Array.isArray(val));
 stache.addHelper("isNumber", (val) => typeof val === "number");
+stache.addHelper("isEven", (num) => num % 2 === 0);
 
 const capitalize = (key) => {
 	return `${key.slice(0, 1).toUpperCase()}${key.slice(1)}`;
@@ -265,66 +266,74 @@ export const JSONTreeEditor = Component.extend({
 	},
 
 	view: `
-		{{< nodeTemplate }}
-			<div {{# if( isArray(value) ) }}class="hello"{{/ if }}>
-				<p on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+		{{< keyValueTemplate }}
+			{{# unless( isNumber(key) ) }}
+				<div class="key">{{key}}:&nbsp;</div>
+			{{/ unless }}
+
+			{{# is type "Object"}}
+				<div>{{type}}</div>
+			{{/ is }}
+
+			{{# is type "Array"}}
+				<div>{{type}}({{value.length}})</div>
+			{{/ is }}
+
+			{{# unless( isArray(value) ) }}
+				{{# is type "String" }}
+					<div class="value string"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></div>
+				{{ else }}
+					<div class="value"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></div>
+				{{ / is }}
+			{{/ unless }}
+
+			{{# if( scope.vm.shouldShowOptions(path) ) }}
+				<div class="options">
 					{{# if( isArray(value) ) }}
+					<div on:click="scope.vm.addChild(scope.event, path)">&plus;</div>
+					{{/ if }}
+					<div on:click="scope.vm.deletePath(scope.event, path)">&minus;</div>
+				</div>
+			{{/ if }}
+		{{/ keyValueTemplate }}
+
+		{{< nodeTemplate }}
+			<div {{# if( isArray(value) ) }}class="wrapper"{{/ if }} on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
+				{{# if( isArray(value) ) }}
+					<div class="header-container">
 						{{# if scope.vm.isExpanded(path) }}
-							<span class="clickable arrow down" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
+							<div class="arrow-toggle down" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
 						{{ else }}
-							<span class="clickable arrow right" on:click="scope.vm.toggleExpanded(scope.event, path)"></span>
+							<div class="arrow-toggle right" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
 						{{/ if }}
-					{{/ if }}
 
-					{{# unless( isNumber(key) ) }}
-						<span class="key">{{key}}:&nbsp;</span>
-					{{/ unless }}
-
-					{{# is type "Object"}}
-						<span class="type">{{type}}</span>
-					{{/ is }}
-
-					{{# is type "Array"}}
-						<span class="type">{{type}}({{value.length}})</span>
-					{{/ is }}
-
-					{{# unless( isArray(value) ) }}
-						<span>
-						{{# is type "String" }}
-							<q><span class="value string"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></span></q>
-						{{ else }}
-							<span class="value"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></span>
-						{{ / is }}
-						</span>
-					{{/ unless }}
-
-					{{# if( scope.vm.shouldShowOptions(path) ) }}
-						<div class="options">
-							{{# if( isArray(value) ) }}
-							<span on:click="scope.vm.addChild(scope.event, path)">&plus;</span>
-							{{/ if }}
-							<span on:click="scope.vm.deletePath(scope.event, path)">&minus;</span>
+						{{> keyValueTemplate }}
+					</div>
+				{{ else }}
+						<div class="kv-group {{# if( isEven(scope.index) ) }}even-row{{/ if }}">
+							{{> keyValueTemplate }}
 						</div>
-					{{/ if }}
-				</p>
+				{{/ if }}
 
 				{{# if( isArray(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
-						<div class="children">
+						<div class="list-container">
 							{{# each(value) }}
 								{{> nodeTemplate }}
 							{{/ each }}
-
-							{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
-								<key-value-editor
-									setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
-								></key-value-editor>
-								<div class="options">
-									<span on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</span>
-								</div>
-							{{/ if }}
 						</div>
 					{{/ if }}
+				{{/ if }}
+
+				{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
+					<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
+						<key-value-editor
+							setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
+						></key-value-editor>
+						<div class="options">
+							<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
+						</div>
+					</div>
 				{{/ if }}
 			</div>
 		{{/ nodeTemplate }}	
@@ -373,13 +382,11 @@ export const KeyValueEditor = Component.extend({
 	},
 
 	view: `
-		<span class="key">
+		<div class="key">
 			<editable-span text:bind="key" editing:raw="true" tabindex="0" />:&nbsp;
-		</span>
-		<q>
-			<span class="value string">
-				<editable-span text:bind="value" tabindex="0" />
-			</span>
-		</q>
+		</div>
+		<div class="value string">
+			<editable-span text:bind="value" tabindex="0" />
+		</div>
 	`
 });
