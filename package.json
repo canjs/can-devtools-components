@@ -52,8 +52,7 @@
     }
   },
   "dependencies": {
-    "can": "^5.14.0",
-    "jsoneditor": "^5.17.1"
+    "can": "^5.14.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

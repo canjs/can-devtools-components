@@ -1,103 +1,63 @@
-import { DefineMap, Reflect } from "can";
+import { diff } from "can";
 import Component from "./viewmodel-editor";
 import "steal-mocha";
 import chai from "chai";
 
-let ViewModel = Component.ViewModel;
-let assert = chai.assert;
+const ViewModel = Component.ViewModel;
+const assert = chai.assert;
+
+const noop = () => {};
 
 describe("viewmodel-editor", () => {
-	let el, sourceVM, vm;
-
-	beforeEach((done) => {
-		sourceVM = new DefineMap({
-			foo: "abc",
-			bar: "xyz"
+	it("json", () => {
+		const vm = new ViewModel({
+			viewModelData: {
+				abc: "xyz",
+				def: "uvw",
+				ghi: []
+			}
 		});
+		vm.listenTo("json", noop);
 
-		vm = new ViewModel({
-			viewModelData: sourceVM.serialize(),
-			tagName: "my-el"
-		});
+		assert.deepEqual(vm.json.serialize(), { abc: "xyz", def: "uvw", ghi: [] }, "defaults to viewModelData");
 
-		el = document.createElement("viewmodel-editor");
-		document.body.appendChild(el);
+		vm.viewModelData = { abc: "rst", def: "uvw" };
+		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "uvw", ghi: [] }, "updates when viewModelData is updated");
 
-		setTimeout(() => {
-			vm.connectedCallback(el);
-			done();
-		}, 50);
-	});
+		vm.json.def = "nop";
+		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "nop", ghi: [] }, "updates when change is made by json-editor");
 
-	afterEach(() => {
-		document.body.removeChild(el);
-	});
+		vm.viewModelData = { abc: "klm", def: "uvw", ghi: [] };
+		assert.deepEqual(vm.json.serialize(), { abc: "klm", def: "nop", ghi: [] }, "persists change made by json-editor after viewModelData is set");
 
-	describe("json", () => {
-		describe("when ONLY viewModelData is changing", () => {
-			it("should be set to initial viewModelData", () => {
-				assert.deepEqual(vm.json, sourceVM.serialize());
-			});
+		vm.viewModelData = { abc: "hij", def: "uvw", ghi: [] };
+		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [] }, "persists change made by json-editor after viewModelData is set twice");
 
-			it("should be set to replaced viewModelData", () => {
-				vm.viewModelData = { aaa: "bbb", ccc: "ddd" };
-				assert.deepEqual(vm.json, { aaa: "bbb", ccc: "ddd" });
-			});
+		vm.json.ghi.push("rst");
+		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [ "rst" ] }, "updates when another change is made by json-editor");
 
-			it("should be updated with updated viewModelData", () => {
-				vm.viewModelData = { aaa: "bbb", ccc: "ddd" };
-				vm.viewModelData.aaa = "zzz";
-				assert.deepEqual(vm.json, { aaa: "zzz", ccc: "ddd" });
-			});
+		vm.viewModelData = { abc: "hij", def: "uvw", ghi: [] };
+		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [ "rst" ] }, "persists changes made by json-editor after viewModelData is set");
 
-			it("should NOT be updated with updated viewModelData when updatesPaused === true", () => {
-				vm.viewModelData = { aaa: "bbb", ccc: "ddd" };
-				vm.updatesPaused = true;
-				vm.viewModelData.aaa = "yyy";
-				assert.deepEqual(vm.json, { aaa: "bbb", ccc: "ddd" });
-			});
-
-			it("should be updated with updated viewModelData when updatesPaused is set to false", () => {
-				vm.viewModelData = { aaa: "bbb", ccc: "ddd" };
-				vm.updatesPaused = true;
-				vm.viewModelData.aaa = "yyy";
-				vm.updatesPaused = false;
-				assert.deepEqual(vm.json, { aaa: "yyy", ccc: "ddd" });
-			});
-		});
-
-		describe("when viewModel AND jsoneditor data are changing", () => {
-			it("should merge changes made in jsoneditor with changes to viewModelData", () => {
-				// initial viewModelData
-				vm.viewModelData = { aaa: "yyy", ccc: "ddd" };
-
-				// simulate change to data in JSON editor
-				vm.json = { aaa: "yyy", ccc: "ddd" };
-				vm.editor.get = function() { return { aaa: "yyy", ccc: "eee" }; };
-
-				// pause updates
-				vm.updatesPaused = true;
-				// simulate change to viewModel data
-				vm.viewModelData.aaa = "xxx";
-				// unpause updates
-				vm.updatesPaused = false;
-
-				assert.deepEqual(vm.json, { aaa: "xxx", ccc: "eee" }, "should merge changes made in jsoneditor with changes to viewModelData");
-
-				vm.viewModelData.aaa = "www";
-				assert.deepEqual(vm.json, { aaa: "www", ccc: "eee" }, "should merge changes made to viewModelData into latest json in jsoneditor");
-			});
-		});
+		vm.dispatch("reset-json-patches");
+		vm.viewModelData = { abc: "hij", def: "nop", ghi: [ "rst" ] };
+		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [ "rst" ] }, "updates when viewModelData is updated again after reset-json-patches event");
 	});
 
 	describe("getPatchedData", () => {
+		let vm;
+
 		describe("add", () => {
+			beforeEach(() => {
+				vm = new ViewModel();
+			});
+
 			it("works", () => {
 				let destination = { aaa: "bbb", ccc: "ddd" };
 				let oldSource = {};
 				let newSource = { eee: "fff" };
 				let expected = { aaa: "bbb", ccc: "ddd", eee: "fff" };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -107,7 +67,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { nested: {} };
 				let newSource = { nested: { eee: "fff" } };
 				let expected = { nested: { aaa: "bbb", ccc: "ddd", eee: "fff" } };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -119,7 +79,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { eee: "fff" };
 				let newSource = { eee: "ggg" };
 				let expected = { aaa: "bbb", ccc: "ddd", eee: "ggg" };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -129,7 +89,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { nested: { eee: "fff"} };
 				let newSource = { nested: { eee: "ggg" } };
 				let expected = { nested: { aaa: "bbb", ccc: "ddd", eee: "ggg" } };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -141,7 +101,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { aaa: "bbb", ccc: "ddd" };
 				let newSource = { aaa: "bbb" };
 				let expected = { aaa: "bbb" };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -151,7 +111,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { nested: { aaa: "bbb", ccc: "ddd" } };
 				let newSource = { nested: { aaa: "bbb" } };
 				let expected = { nested: { aaa: "bbb" } };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -164,7 +124,7 @@ describe("viewmodel-editor", () => {
 				let oldSource = { list: [ "one", "two" ] };
 				let newSource = { list: [ "one", "three" ] };
 				let expected = { list: [ "one", "three" ] };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
@@ -174,25 +134,27 @@ describe("viewmodel-editor", () => {
 				let oldSource = { nested: { list: [ "one", "two" ] } };
 				let newSource = { nested: { list: [ "one", "three" ] } };
 				let expected = { nested: { list: [ "one", "three" ] } };
-				let actual = vm.getPatchedData(destination, oldSource, newSource);
+				let actual = vm.getPatchedData(destination, diff.deep(oldSource, newSource));
 
 				assert.deepEqual(actual, expected);
 			});
 		});
 	});
 
-	it("saving", () => {
-		Reflect.onKeyValue(vm, "saving", () => {});
+	it("save", (done) => {
+		const patches = [ "one", "two" ];
+		const vm = new ViewModel({
+			jsonEditorPatches: patches,
+			updateValues(p) {
+				assert.deepEqual(p, patches, "updateValues called with jsonEditorPatches");
+			}
+		});
 
-		assert.equal(vm.saving, false, "false by default");
+		vm.listenTo("reset-json-patches", () => {
+			assert.ok(true, "reset-json-patches event dispatched");
+			done();
+		});
 
-		vm.updatesPaused = true;
-		assert.equal(vm.saving, false, "false while updates are paused");
-
-		vm.updatesPaused = false;
-		assert.equal(vm.saving, true, "true when updates are resumed");
-
-		vm.viewModelData = {};
-		assert.equal(vm.saving, false, "false once next update is received");
+		vm.save();
 	});
 });

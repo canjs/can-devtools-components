@@ -15,6 +15,7 @@
 			<p>Last: <input type="text" value:bind="last"></p>
 			<p>Name: {{name}}</p>
 			<p>Name Change Count: {{nameChangeCount}}</p>
+			<p>Hobbies:</p>
 			<ul>
 				{{# each(hobbies) }}
 					<li>{{name}}</li>
@@ -67,8 +68,8 @@
 		viewModelData: sourceVM.serialize()
 	});
 
-	vm.__proto__.updateValues = function(data) {
-		mergeDeep(sourceVM, data);		
+	vm.updateValues = function(data) {
+		Reflect.assignDeep(sourceVM, data);
 	};
 
 	// simulate devtools getting new data from app
