@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,400i');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+// VARIABLES
+@base-unit:		30px;
+@double-unit:	@base-unit*2;
+@half-unit:		@base-unit/2;
+@third-unit:	@base-unit/3;
+@sm-unit:		@base-unit/6;
+
+@font-base:		18px;
+@font-sm:		14px;
+@font-lg:		24px;
+@font-xl:		32px;
+
+@key-color:		#963296;
+@value-color:	#1527a9;
+@string-color:	#c3201c;
+@base-color:	#404040;
+@action-color:  #0095f9;
+@white:         #FFFFFF;
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+my-app {
+    font-family: 'Source Code Pro', monospace;
+}
+h1, h2, h3 {
+    font-weight: 200;
+    text-align: center;
+}
+h1 {
+    font-size: @font-xl;
+}
+h2 {
+    font-size: @font-lg;
+}
+h3 {
+    font-size: @font-base;
+}
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    background-color: @action-color;
+    border: none;
+    margin: @base-unit auto;
+    padding: @sm-unit;
+    font-weight: 300;
+    font-size: @font-lg;
+    color: @white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: @sm-unit;
+    cursor: pointer;
+    box-shadow: 0 0 @third-unit 0 rgba(0,0,0,0.75),
+                inset 0 0 0 0 rgba(0,0,0,0.5);
+    transition: box-shadow .2s ease-in-out;
+    &:hover {
+        box-shadow: 0 0 0 0 rgba(0,0,0,0.75),
+                    inset 0 0 @third-unit 0 rgba(0,0,0,0.5);
+    }
+}
