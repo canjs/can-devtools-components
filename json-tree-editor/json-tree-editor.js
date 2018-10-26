@@ -115,6 +115,10 @@ export const JSONTreeEditor = Component.extend({
 				});
 
 				listenTo("add-child", (ev, path) => {
+					if ( keys.indexOf(path) < 0 ) {
+						keys.push(path);
+					}
+
 					let parent = key.get(this.json, path);
 
 					if ( parent instanceof DefineList ) {

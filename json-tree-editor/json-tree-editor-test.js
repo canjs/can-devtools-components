@@ -52,13 +52,13 @@ describe("JSONTreeEditor", () => {
 		vm.json = { arr: [] };
 
 		vm.dispatch("add-child", [ "arr" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr.0" ], "dispatching an add-child event for a path containing an array expands the arrays first child");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr", "arr.0" ], "dispatching an add-child event for a path containing an array expands the array and its first child");
 
 		vm.dispatch("add-child", [ "arr" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr.0" ], "dispatching a second add-child event for a path containing an array does nothing");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr", "arr.0" ], "dispatching a second add-child event for a path containing an array does nothing");
 
 		vm.dispatch("delete-json-path", [ "arr.0" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [  ], "dispatching a delete-json-path event removes that path from expandedKeys");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr" ], "dispatching a delete-json-path event removes that path from expandedKeys");
 	});
 
 	it("json", () => {
