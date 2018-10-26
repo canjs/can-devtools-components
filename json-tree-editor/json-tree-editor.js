@@ -346,19 +346,21 @@ export const JSONTreeEditor = Component.extend({
 							{{# each(value) }}
 								{{> nodeTemplate }}
 							{{/ each }}
+
+							{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
+								<div class="wrapper">
+									<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
+										<key-value-editor
+											setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
+										></key-value-editor>
+										<div class="options">
+											<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
+										</div>
+									</div>
+								</div>
+							{{/ if }}
 						</div>
 					{{/ if }}
-				{{/ if }}
-
-				{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
-					<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
-						<key-value-editor
-							setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
-						></key-value-editor>
-						<div class="options">
-							<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
-						</div>
-					</div>
 				{{/ if }}
 			</div>
 		{{/ nodeTemplate }}	
