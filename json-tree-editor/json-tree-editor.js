@@ -74,6 +74,8 @@ export const JSONTreeEditor = Component.extend({
 	tag: "json-tree-editor",
 
 	ViewModel: {
+		rootNodeName: { type: "string", default: "JSON" },
+
 		displayedOptions: {
 			value({ listenTo, lastSet, resolve }) {
 				let options = resolve( new DefineList() );
@@ -271,7 +273,7 @@ export const JSONTreeEditor = Component.extend({
 
 		makeSetKeyValueForPath(path) {
 			return (key, value) => {
-				this.dispatch("set-json-path-value", [ path + "." + key, value ]);
+				this.dispatch("set-json-path-value", [ `${path ? path + "." : ""}` + key, value ]);
 			};
 		},
 
@@ -365,9 +367,36 @@ export const JSONTreeEditor = Component.extend({
 			</div>
 		{{/ nodeTemplate }}	
 
-		{{# each(parsedJSON) }}
-			{{> nodeTemplate }}
-		{{/ each }}
+		<div class="wrapper" on:mouseenter="scope.vm.showOptions(scope.event, '')" on:mouseleave="scope.vm.hideOptions(scope.event, '')">
+			<div class="header-container">
+				<div class="key">{{ rootNodeName }}</div>
+
+				{{# if( scope.vm.shouldShowOptions('') ) }}
+					<div class="options">
+						<div on:click="scope.vm.addChild(scope.event, '')">&plus;</div>
+					</div>
+				{{/ if }}
+			</div>
+
+			<div class="list-container">
+				{{# each(parsedJSON) }}
+					{{> nodeTemplate }}
+				{{/ each }}
+
+				{{# if( scope.vm.shouldDisplayKeyValueEditor('') ) }}
+					<div class="wrapper">
+						<div class="kv-group">
+							<key-value-editor
+								setKeyValue:from="scope.vm.makeSetKeyValueForPath('')"
+							></key-value-editor>
+							<div class="options">
+								<div on:click="scope.vm.hideKeyValueEditor(scope.event, '')">&minus;</div>
+							</div>
+						</div>
+					</div>
+				{{/ if }}
+			</div>
+		</div>
 	`
 });
 
