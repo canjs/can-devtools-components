@@ -327,11 +327,11 @@ export const JSONTreeEditor = Component.extend({
 		{{< nodeTemplate }}
 			<div class="wrapper" on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
 				{{# if( isList(value) ) }}
-					<div class="header-container">
+					<div class="header-container" on:click="scope.vm.toggleExpanded(scope.event, path)">
 						{{# if scope.vm.isExpanded(path) }}
-							<div class="arrow-toggle down" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
+							<div class="arrow-toggle {{# eq(arrowDirection, 'down') }}down{{/ eq }}" on:click="arrowDirection='right'"></div>
 						{{ else }}
-							<div class="arrow-toggle right" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
+							<div class="arrow-toggle {{# eq(arrowDirection, 'right') }}right{{/ eq }}" on:click="arrowDirection='down'"></div>
 						{{/ if }}
 
 						{{> keyValueTemplate }}
@@ -345,9 +345,10 @@ export const JSONTreeEditor = Component.extend({
 				{{# if( isList(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
 						<div class="list-container">
-							{{# each(value) }}
-								{{> nodeTemplate }}
-							{{/ each }}
+							{{# for(child of value) }}
+								{{let arrowDirection=undefined}}
+								{{> nodeTemplate child }}
+							{{/ for }}
 
 							{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
 								<div class="wrapper">
@@ -379,9 +380,10 @@ export const JSONTreeEditor = Component.extend({
 			</div>
 
 			<div class="list-container">
-				{{# each(parsedJSON) }}
-					{{> nodeTemplate }}
-				{{/ each }}
+				{{# for(node of parsedJSON) }}
+					{{let arrowDirection=undefined}}
+					{{> nodeTemplate node }}
+				{{/ for }}
 
 				{{# if( scope.vm.shouldDisplayKeyValueEditor('') ) }}
 					<div class="wrapper">
