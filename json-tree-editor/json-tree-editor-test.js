@@ -52,13 +52,13 @@ describe("JSONTreeEditor", () => {
 		vm.json = { arr: [] };
 
 		vm.dispatch("add-child", [ "arr" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr.0" ], "dispatching an add-child event for a path containing an array expands the arrays first child");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr", "arr.0" ], "dispatching an add-child event for a path containing an array expands the array and its first child");
 
 		vm.dispatch("add-child", [ "arr" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr.0" ], "dispatching a second add-child event for a path containing an array does nothing");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr", "arr.0" ], "dispatching a second add-child event for a path containing an array does nothing");
 
 		vm.dispatch("delete-json-path", [ "arr.0" ]);
-		assert.deepEqual(vm.expandedKeys.serialize(), [  ], "dispatching a delete-json-path event removes that path from expandedKeys");
+		assert.deepEqual(vm.expandedKeys.serialize(), [ "arr" ], "dispatching a delete-json-path event removes that path from expandedKeys");
 	});
 
 	it("json", () => {
@@ -415,18 +415,34 @@ describe("JSONTreeEditor", () => {
 		vm.hideKeyValueEditor(ev, "foo.bar");
 	});
 
-	it("makeSetKeyValueForPath", (done) => {
-		const vm = new ViewModel();
+	describe("makeSetKeyValueForPath", () => {
+		it("for string path", (done) => {
+			const vm = new ViewModel();
 
-		vm.listenTo("set-json-path-value", (ev, path, value) => {
-			assert.ok(true, "should dispatch set-json-path-value event");
-			assert.equal(path, "foo.bar", "should pass correct path+key");
-			assert.equal(value, "baz", "should pass correct value");
-			done();
+			vm.listenTo("set-json-path-value", (ev, path, value) => {
+				assert.ok(true, "should dispatch set-json-path-value event");
+				assert.equal(path, "foo.bar", "should pass correct path+key");
+				assert.equal(value, "baz", "should pass correct value");
+				done();
+			});
+
+			const setKeyValueForPath = vm.makeSetKeyValueForPath("foo");
+			setKeyValueForPath("bar", "baz");
 		});
 
-		const setKeyValueForPath = vm.makeSetKeyValueForPath("foo");
-		setKeyValueForPath("bar", "baz");
+		it("for empty path", (done) => {
+			const vm = new ViewModel();
+
+			vm.listenTo("set-json-path-value", (ev, path, value) => {
+				assert.ok(true, "should dispatch set-json-path-value event");
+				assert.equal(path, "bar", "should pass correct key");
+				assert.equal(value, "baz", "should pass correct value");
+				done();
+			});
+
+			const setKeyValueForPath = vm.makeSetKeyValueForPath("");
+			setKeyValueForPath("bar", "baz");
+		});
 	});
 
 	it("showOptions", (done) => {

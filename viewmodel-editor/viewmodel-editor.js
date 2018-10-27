@@ -99,7 +99,7 @@ export default Component.extend({
 			{{/ unless }}
 		{{/ unless }}
 
-		<json-tree-editor json:from="json"></json-tree-editor>
+		<json-tree-editor json:from="json" rootNodeName:raw="ViewModel"></json-tree-editor>
 
 		{{# if(tagName) }}
 			<button on:click="this.save()">Save</button>

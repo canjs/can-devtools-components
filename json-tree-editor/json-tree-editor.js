@@ -74,6 +74,8 @@ export const JSONTreeEditor = Component.extend({
 	tag: "json-tree-editor",
 
 	ViewModel: {
+		rootNodeName: { type: "string", default: "JSON" },
+
 		displayedOptions: {
 			value({ listenTo, lastSet, resolve }) {
 				let options = resolve( new DefineList() );
@@ -115,6 +117,10 @@ export const JSONTreeEditor = Component.extend({
 				});
 
 				listenTo("add-child", (ev, path) => {
+					if ( keys.indexOf(path) < 0 ) {
+						keys.push(path);
+					}
+
 					let parent = key.get(this.json, path);
 
 					if ( parent instanceof DefineList ) {
@@ -267,7 +273,7 @@ export const JSONTreeEditor = Component.extend({
 
 		makeSetKeyValueForPath(path) {
 			return (key, value) => {
-				this.dispatch("set-json-path-value", [ path + "." + key, value ]);
+				this.dispatch("set-json-path-value", [ `${path ? path + "." : ""}` + key, value ]);
 			};
 		},
 
@@ -321,11 +327,11 @@ export const JSONTreeEditor = Component.extend({
 		{{< nodeTemplate }}
 			<div class="wrapper" on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
 				{{# if( isList(value) ) }}
-					<div class="header-container">
+					<div class="header-container" on:click="scope.vm.toggleExpanded(scope.event, path)">
 						{{# if scope.vm.isExpanded(path) }}
-							<div class="arrow-toggle down" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
+							<div class="arrow-toggle {{# eq(arrowDirection, 'down') }}down{{/ eq }}" on:click="arrowDirection='right'"></div>
 						{{ else }}
-							<div class="arrow-toggle right" on:click="scope.vm.toggleExpanded(scope.event, path)"></div>
+							<div class="arrow-toggle {{# eq(arrowDirection, 'right') }}right{{/ eq }}" on:click="arrowDirection='down'"></div>
 						{{/ if }}
 
 						{{> keyValueTemplate }}
@@ -339,29 +345,60 @@ export const JSONTreeEditor = Component.extend({
 				{{# if( isList(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
 						<div class="list-container">
-							{{# each(value) }}
-								{{> nodeTemplate }}
-							{{/ each }}
+							{{# for(child of value) }}
+								{{let arrowDirection=undefined}}
+								{{> nodeTemplate child }}
+							{{/ for }}
+
+							{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
+								<div class="wrapper">
+									<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
+										<key-value-editor
+											setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
+										></key-value-editor>
+										<div class="options">
+											<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
+										</div>
+									</div>
+								</div>
+							{{/ if }}
 						</div>
 					{{/ if }}
-				{{/ if }}
-
-				{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
-					<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
-						<key-value-editor
-							setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
-						></key-value-editor>
-						<div class="options">
-							<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
-						</div>
-					</div>
 				{{/ if }}
 			</div>
 		{{/ nodeTemplate }}	
 
-		{{# each(parsedJSON) }}
-			{{> nodeTemplate }}
-		{{/ each }}
+		<div class="wrapper" on:mouseenter="scope.vm.showOptions(scope.event, '')" on:mouseleave="scope.vm.hideOptions(scope.event, '')">
+			<div class="header-container">
+				<div class="key">{{ rootNodeName }}</div>
+
+				{{# if( scope.vm.shouldShowOptions('') ) }}
+					<div class="options">
+						<div on:click="scope.vm.addChild(scope.event, '')">&plus;</div>
+					</div>
+				{{/ if }}
+			</div>
+
+			<div class="list-container">
+				{{# for(node of parsedJSON) }}
+					{{let arrowDirection=undefined}}
+					{{> nodeTemplate node }}
+				{{/ for }}
+
+				{{# if( scope.vm.shouldDisplayKeyValueEditor('') ) }}
+					<div class="wrapper">
+						<div class="kv-group">
+							<key-value-editor
+								setKeyValue:from="scope.vm.makeSetKeyValueForPath('')"
+							></key-value-editor>
+							<div class="options">
+								<div on:click="scope.vm.hideKeyValueEditor(scope.event, '')">&minus;</div>
+							</div>
+						</div>
+					</div>
+				{{/ if }}
+			</div>
+		</div>
 	`
 });
 
