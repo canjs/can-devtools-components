@@ -89,20 +89,21 @@ export default Component.extend({
 		}
 	},
 	view: `
-		{{# unless(tagName) }}
-			<h1>Select an Element to see its ViewModel</h1>
-		{{ else }}
-			{{# unless(viewModelData) }}
-				<h1><{{tagName}}> does not have a ViewModel</h1>
+		<div class="header">
+			{{# unless(tagName) }}
+				<h1>Select an Element to see its ViewModel</h1>
 			{{ else }}
-				<h1><{{tagName}}> ViewModel</h1>
+				{{# unless(viewModelData) }}
+					<h1><{{tagName}}> does not have a ViewModel</h1>
+				{{ else }}
+					<h1><{{tagName}}> ViewModel</h1>
+				{{/ unless }}
 			{{/ unless }}
-		{{/ unless }}
+			{{# if(tagName) }}
+				<button on:click="this.save()">Apply Changes</button>
+			{{/if}}
+		</div>
 
 		<json-tree-editor json:from="json" rootNodeName:raw="ViewModel"></json-tree-editor>
-
-		{{# if(tagName) }}
-			<button on:click="this.save()">Save</button>
-		{{/if}}
 	`
 });
