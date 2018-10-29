@@ -3,6 +3,20 @@ import { Component, DefineMap, key as canKey, diff, Reflect, Observation } from 
 import "../json-tree-editor/json-tree-editor";
 import "viewmodel-editor/viewmodel-editor.less";
 
+const clone = (obj) => {
+	const c = Array.isArray(obj) ? [] : {};
+
+	for (var i in obj) {
+		if(obj[i] != null &&  typeof(obj[i])=="object") { // jshint ignore:line
+			c[i] = clone(obj[i]);
+		} else {
+			c[i] = obj[i];
+		}
+	}
+
+	return c;
+};
+
 export default Component.extend({
 	tag: "viewmodel-editor",
 	ViewModel: {
@@ -47,36 +61,44 @@ export default Component.extend({
 		},
 
 		getPatchedData(destination, patches) {
+			const patchedData = clone(destination);
+
 			patches.forEach(({ type, key, value, index, deleteCount, insert }) => {
 				switch(type) {
 					case "add":
 					case "set":
-						canKey.set(destination, key, value);
+						canKey.set(patchedData, key, value);
 						break;
 					case "delete":
-						canKey.deleteKey(destination, key);
+						canKey.deleteKey(patchedData, key);
 						break;
 					case "splice":
-						let arr = canKey.get(destination, key);
+						let arr = canKey.get(patchedData, key);
 						arr.splice(index, deleteCount, ...insert);
 						break;
 				}
 			});
 
-			return destination;
+			return patchedData;
 		},
 
-		jsonEditorPatches: {
+		get jsonEditorPatches() {
+			return diff.deep(this.serializedViewModelData, this.json.serialize());
+		},
+
+		patchedViewModelData: {
 			type: "any",
 			get(lastSet) {
 				if (lastSet) { return lastSet; }
-				const patches = diff.deep(this.serializedViewModelData, this.json.serialize());
-				return this.getPatchedData(this.serializedViewModelData, patches);
+				const patches = this.jsonEditorPatches;
+				const patchedViewModelData = this.getPatchedData(this.serializedViewModelData, patches);
+
+				return patchedViewModelData;
 			}
 		},
 
 		save() {
-			this.updateValues( this.jsonEditorPatches );
+			this.updateValues( this.patchedViewModelData );
 			this.dispatch("reset-json-patches");
 		},
 
@@ -99,11 +121,12 @@ export default Component.extend({
 					<h1><{{tagName}}> ViewModel</h1>
 				{{/ unless }}
 			{{/ unless }}
-			{{# if(tagName) }}
-				<button on:click="this.save()">Apply Changes</button>
-			{{/if}}
+
+			<button {{# if(jsonEditorPatches.length) }}on:click="this.save()"{{ else }}class="disabled"{{/ if }}>Apply Changes</button>
 		</div>
 
-		<json-tree-editor json:from="json" rootNodeName:raw="ViewModel"></json-tree-editor>
+		{{# and(tagName, viewModelData) }}
+			<json-tree-editor json:from="json" rootNodeName:raw="ViewModel"></json-tree-editor>
+		{{/ and }}
 	`
 });

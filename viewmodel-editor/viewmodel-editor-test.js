@@ -142,11 +142,11 @@ describe("viewmodel-editor", () => {
 	});
 
 	it("save", (done) => {
-		const patches = [ "one", "two" ];
+		const patched = [ "one", "two" ];
 		const vm = new ViewModel({
-			jsonEditorPatches: patches,
+			patchedViewModelData: patched,
 			updateValues(p) {
-				assert.deepEqual(p, patches, "updateValues called with jsonEditorPatches");
+				assert.deepEqual(p, patched, "updateValues called with patchedViewModelData");
 			}
 		});
 

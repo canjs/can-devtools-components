@@ -18,6 +18,7 @@
 @base-color:	#404040;
 @action-color:  #0095f9;
 @white:         #FFFFFF;
+@gray:			#CCCCCC;
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -65,4 +66,14 @@ button {
         background-color: @action-color;
         color: @white;
     }
+
+	&.disabled {
+		color: @gray;
+		border-color: @gray;
+		cursor: default;
+
+		&:hover {
+			background-color: @white;
+		}
+	}
 }
