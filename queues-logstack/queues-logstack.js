@@ -1,6 +1,7 @@
 import { Component, DefineList } from "can";
 
-import "./queues-logstack.less";
+// this breaks the bundled-es build, so leaving it out for now
+// import "./queues-logstack.less";
 
 export default Component.extend({
 	tag: "queues-logstack",
