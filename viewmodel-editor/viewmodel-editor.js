@@ -119,10 +119,14 @@ export default Component.extend({
 					<h1><{{tagName}}> does not have a ViewModel</h1>
 				{{ else }}
 					<h1><{{tagName}}> ViewModel</h1>
+
+					{{# if(jsonEditorPatches.length) }}
+						<button on:click="this.save()">Apply Changes</button>
+					{{ else }}
+						<button class="disabled">Up To Date</button>
+					{{/ if }}
 				{{/ unless }}
 			{{/ unless }}
-
-			<button {{# if(jsonEditorPatches.length) }}on:click="this.save()"{{ else }}class="disabled"{{/ if }}>Apply Changes</button>
 		</div>
 
 		{{# and(tagName, viewModelData) }}
