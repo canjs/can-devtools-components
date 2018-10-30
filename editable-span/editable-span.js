@@ -92,6 +92,7 @@ export default Component.extend({
 			on:blur="save(scope.element.innerText)"
 			on:enter="save(scope.element.innerText)"
 			{{#if(editing)}}class="editing" contenteditable="true"{{/if}}
+			tabindex="0"
 		>
 			{{text}}
 		</span>
