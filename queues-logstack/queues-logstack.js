@@ -62,3 +62,5 @@ export default Component.extend({
 		}
 	}
 });
+
+export { Component, DefineList };

@@ -74,3 +74,5 @@ export default Component.extend({
 		</h1>
 	`
 });
+
+export { Component, DefineMap, DefineList };

@@ -134,3 +134,5 @@ export default Component.extend({
 		{{/ and }}
 	`
 });
+
+export { Component, DefineMap, canKey as key, diff, Reflect, Observation };

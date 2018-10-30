@@ -448,3 +448,5 @@ export const KeyValueEditor = Component.extend({
 		</div>
 	`
 });
+
+export { Component, DefineList, DefineMap, stache, key, Reflect };
