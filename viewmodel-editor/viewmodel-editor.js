@@ -57,6 +57,13 @@ export default Component.extend({
 					Reflect.assignDeep(json, newJson);
 					Reflect.onValue(serializedJSON, setPatches);
 				});
+
+				listenTo("tagName", () => {
+					Reflect.offValue(serializedJSON, setPatches);
+					json.update({});
+					Reflect.onValue(serializedJSON, setPatches);
+					jsonPatches = [];
+				});
 			}
 		},
 
@@ -116,9 +123,9 @@ export default Component.extend({
 				<h1>Select an Element to see its ViewModel</h1>
 			{{ else }}
 				{{# unless(viewModelData) }}
-					<h1><{{tagName}}> does not have a ViewModel</h1>
+					<h1>{{tagName}} does not have a ViewModel</h1>
 				{{ else }}
-					<h1><{{tagName}}> ViewModel</h1>
+					<h1>{{tagName}} ViewModel</h1>
 
 					{{# if(jsonEditorPatches.length) }}
 						<button on:click="this.save()">Apply Changes</button>

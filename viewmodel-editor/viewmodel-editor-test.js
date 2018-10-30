@@ -42,6 +42,12 @@ describe("viewmodel-editor", () => {
 		vm.dispatch("reset-json-patches");
 		vm.viewModelData = { abc: "hij", def: "nop", ghi: [ "rst" ] };
 		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [ "rst" ] }, "updates when viewModelData is updated again after reset-json-patches event");
+
+		vm.assign({
+			tagName: "foo",
+			viewModelData: {}
+		});
+		assert.deepEqual(vm.json.serialize(), { }, "resets when tagName changes");
 	});
 
 	describe("getPatchedData", () => {
