@@ -73,21 +73,24 @@ describe("JSONTreeEditor", () => {
 		vm.dispatch("set-json", [ { abc: "def",	ghi: { jkl: "mno" }, pqr: [ ] } ]);
 		assert.deepEqual(vm.json.serialize(), { abc: "def",	ghi: { jkl: "mno" }, pqr: [ ] }, "can be set by dispatching a set-json event");
 
+		vm.dispatch("set-json-path-value", [ "abc", "onetwothree" ]);
+		assert.deepEqual(vm.json.serialize(), { abc: "onetwothree",	ghi: { jkl: "mno" }, pqr: [ ] }, "can set a property by dispatching a set-json-path-value event");
 
-		vm.dispatch("set-json-path-value", [ "abc", "123" ]);
-		assert.deepEqual(vm.json.serialize(), { abc: "123",	ghi: { jkl: "mno" }, pqr: [ ] }, "can set a property by dispatching a set-json-path-value event");
-
-		vm.dispatch("set-json-path-value", [ "ghi.jkl", "456" ]);
-		assert.deepEqual(vm.json.serialize(), { abc: "123",	ghi: { jkl: "456" }, pqr: [ ] }, "can set a nested property by dispatching a set-json-path-value event");
+		vm.dispatch("set-json-path-value", [ "ghi.jkl", "fourfivesix" ]);
+		assert.deepEqual(vm.json.serialize(), { abc: "onetwothree",	ghi: { jkl: "fourfivesix" }, pqr: [ ] }, "can set a nested property by dispatching a set-json-path-value event");
 
 		vm.dispatch("delete-json-path", [ "abc" ]);
-		assert.deepEqual(vm.json.serialize(), {	ghi: { jkl: "456" }, pqr: [ ] }, "can delete a property by dispatching a delete-json-path event");
+		assert.deepEqual(vm.json.serialize(), {	ghi: { jkl: "fourfivesix" }, pqr: [ ] }, "can delete a property by dispatching a delete-json-path event");
 
 		vm.dispatch("delete-json-path", [ "ghi.jkl" ]);
 		assert.deepEqual(vm.json.serialize(), {	ghi: { }, pqr: [ ] }, "can delete a nested property by dispatching a delete-json-path event");
 
 		vm.dispatch("add-child", [ "pqr" ]);
 		assert.deepEqual(vm.json.serialize(), {	ghi: { }, pqr: [ { } ] }, "dispatching an add-child event will add an empty object to an array");
+
+		vm.dispatch("set-json-path-value", [ "abc", "123" ]);
+		assert.deepEqual(vm.json.serialize(), {	abc: 123, ghi: { }, pqr: [ { } ] }, "can set a non-string property by dispatching a set-json-path-value event");
+
 	});
 
 	it("parsedJSON", () => {
@@ -416,7 +419,7 @@ describe("JSONTreeEditor", () => {
 	});
 
 	describe("makeSetKeyValueForPath", () => {
-		it("for string path", (done) => {
+		it("allows setting a value at a string path", (done) => {
 			const vm = new ViewModel();
 
 			vm.listenTo("set-json-path-value", (ev, path, value) => {
@@ -430,7 +433,7 @@ describe("JSONTreeEditor", () => {
 			setKeyValueForPath("bar", "baz");
 		});
 
-		it("for empty path", (done) => {
+		it("allows setting a value at an empty path", (done) => {
 			const vm = new ViewModel();
 
 			vm.listenTo("set-json-path-value", (ev, path, value) => {
