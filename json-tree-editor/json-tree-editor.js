@@ -26,6 +26,8 @@ const getTypeName = (val) => {
 
 const NumberOrString = (val) => val;
 
+const wrappedInQuotesRegex = /^["|'].*["|']$/;
+
 const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
 	key: NumberOrString,
 	value: NumberOrString,
@@ -156,7 +158,13 @@ export const JSONTreeEditor = Component.extend({
 				listenTo(lastSet, (newJson) => resetJson(newJson));
 
 				listenTo("set-json-path-value", (ev, path, value) => {
-					key.set(json, path, stringToAny(value));
+					if ( value.match(wrappedInQuotesRegex) ) {
+						value = value.slice(1, -1);
+					} else {
+						value = stringToAny(value);
+					}
+
+					key.set(json, path, value);
 				});
 
 				listenTo("delete-json-path", (ev, path) => {

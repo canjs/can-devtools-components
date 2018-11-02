@@ -91,6 +91,17 @@ describe("JSONTreeEditor", () => {
 		vm.dispatch("set-json-path-value", [ "abc", "123" ]);
 		assert.deepEqual(vm.json.serialize(), {	abc: 123, ghi: { }, pqr: [ { } ] }, "can set a non-string property by dispatching a set-json-path-value event");
 
+		vm.dispatch("set-json-path-value", [ "abc", '"onetwothree"' ]);
+		assert.deepEqual(vm.json.serialize(), {	abc: "onetwothree", ghi: { }, pqr: [ { } ] }, "can set a property as a string by dispatching a set-json-path-value event with the value wrapped in double quotes");
+
+		vm.dispatch("set-json-path-value", [ "abc", "'fourfivesix'" ]);
+		assert.deepEqual(vm.json.serialize(), {	abc: "fourfivesix", ghi: { }, pqr: [ { } ] }, "can set a property as a string by dispatching a set-json-path-value event with the value wrapped in single quotes");
+
+		vm.dispatch("set-json-path-value", [ "abc", '"123"' ]);
+		assert.deepEqual(vm.json.serialize(), {	abc: "123", ghi: { }, pqr: [ { } ] }, "can set a non-string property as a string by dispatching a set-json-path-value event with the value wrapped in double quotes");
+
+		vm.dispatch("set-json-path-value", [ "abc", "'456'" ]);
+		assert.deepEqual(vm.json.serialize(), {	abc: "456", ghi: { }, pqr: [ { } ] }, "can set a non-string property as a string by dispatching a set-json-path-value event with the value wrapped in single quotes");
 	});
 
 	it("parsedJSON", () => {
