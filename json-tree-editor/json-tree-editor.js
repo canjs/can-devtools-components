@@ -1,4 +1,4 @@
-import { Component, DefineList, DefineMap, stache, key, Reflect } from "can";
+import { Component, DefineList, DefineMap, stache, key, Reflect, stringToAny } from "can";
 
 import "../editable-span/editable-span";
 import "./json-tree-editor.less";
@@ -156,7 +156,7 @@ export const JSONTreeEditor = Component.extend({
 				listenTo(lastSet, (newJson) => resetJson(newJson));
 
 				listenTo("set-json-path-value", (ev, path, value) => {
-					key.set(json, path, value);
+					key.set(json, path, stringToAny(value));
 				});
 
 				listenTo("delete-json-path", (ev, path) => {
@@ -249,7 +249,7 @@ export const JSONTreeEditor = Component.extend({
 		},
 
 		setPathValue(path, value) {
-			this.dispatch("set-json-path-value", [ path, value ]);
+			this.dispatch("set-json-path-value", [ path, "" + value ]);
 		},
 
 		deletePath(ev, path) {
@@ -293,6 +293,28 @@ export const JSONTreeEditor = Component.extend({
 	},
 
 	view: `
+		{{< singleValueTemplate }}
+			{{# switch(type) }}
+				{{# case("String") }}
+					<div class="value string">
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
+					</div>
+				{{/ case }}
+
+				{{# case("Boolean") }}
+					<div class="value">
+						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(path, scope.element.checked)">
+					</div>
+				{{/ case }}
+
+				{{# default }}
+					<div class="value">
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
+					</div>
+				{{/ default }}
+			{{/ switch }}
+		{{/ singleValueTemplate }}
+
 		{{< keyValueTemplate }}
 			{{# unless( isNumber(key) ) }}
 				<div class="key">{{key}}:&nbsp;</div>
@@ -307,11 +329,7 @@ export const JSONTreeEditor = Component.extend({
 			{{/ is }}
 
 			{{# unless( isList(value) ) }}
-				{{# is type "String" }}
-					<div class="value string"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></div>
-				{{ else }}
-					<div class="value"><editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" /></div>
-				{{ / is }}
+				{{> singleValueTemplate }}
 			{{/ unless }}
 
 			{{# if( scope.vm.shouldShowOptions(path) ) }}
@@ -443,7 +461,7 @@ export const KeyValueEditor = Component.extend({
 		<div class="key">
 			<editable-span text:bind="key" editing:raw="true" tabindex="0" />:&nbsp;
 		</div>
-		<div class="value string">
+		<div class="value">
 			<editable-span text:bind="value" tabindex="0" />
 		</div>
 	`
