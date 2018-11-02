@@ -311,6 +311,7 @@ export const JSONTreeEditor = Component.extend({
 
 				{{# case("Boolean") }}
 					<div class="value">
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
 						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(path, scope.element.checked)">
 					</div>
 				{{/ case }}
