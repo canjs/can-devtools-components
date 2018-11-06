@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CanJS Devtools Panel Demo</title>
+  </head>
+
+  <body>
+    <todo-list></todo-list>
+
+    <canjs-devtools-panel></canjs-devtools-panel>
+
+    <script
+      src="../node_modules/steal/steal.js"
+      main="can-devtools-components/panel/panel">
+      import { Component } from "can";
+
+      Component.extend({
+        tag: "todo-item",
+
+        view: `
+          <input type="checkbox" checked:from="this.complete" disabled>
+          <span>{{ this.name }}</span>
+        `,
+
+        ViewModel: {
+          name: "string",
+
+          complete: "boolean"
+        }
+      });
+
+      Component.extend({
+        tag: "todo-editor",
+
+        view: `
+          <input type="checkbox" checked:bind="this.complete">
+          <input type="text" value:bind="this.name">
+        `,
+
+        ViewModel: {
+          name: "string",
+
+          complete: "boolean"
+        }
+      });
+
+      Component.extend({
+        tag: "todo-list",
+
+        view: `
+        {{# for(todo of this.todos) }}
+          <div on:click="this.editing = todo">
+          {{# if( this.isEditing(todo) ) }}
+            <todo-editor name:bind="todo.name" complete:bind="todo.complete" /> 
+          {{ else }}
+            <todo-item name:bind="todo.name" complete:bind="todo.complete" /> 
+          {{/ if }}
+          </div>
+        {{/ for }}
+        `,
+
+        ViewModel: {
+          editing: {
+            type: "any",
+            default() {
+              return this.todos[1];
+            }
+          },
+
+          isEditing(todo) {
+            return todo === this.editing;
+          },
+
+          todos: {
+            default() {
+              return [{
+                name: "create a list",
+                complete: true
+              }, {
+                name: "go shopping",
+                complete: false
+              }, {
+                name: "make dinner",
+                complete: false
+              }];
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
