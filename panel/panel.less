@@ -21,18 +21,12 @@ canjs-devtools-panel {
 
 	}
 
-	.search {
+	.filters {
 		border-bottom: 1px solid black;
 
 		input {
-			height: 75%;
-			margin-top: 2%;
-			width: 100%;
+			width: 200px;
 		}
-	}
-
-	.space {
-		border-bottom: 1px solid black;
 	}
 
 	.tabs {
@@ -61,19 +55,15 @@ canjs-devtools-panel {
 		grid-template-columns: repeat(8, 1fr);
 		grid-template-rows: 1fr 5fr;
 		grid-template-areas: 
-		"header header search space space space tabs tabs"
+		"header header header filters filters filters tabs tabs"
 		"content content content content content sidebar sidebar sidebar";
 
 		.header {
 			grid-area: header;
 		}
 
-		.search {
-			grid-area: search;
-		}
-
-		.space {
-			grid-area: space;
+		.filters {
+			grid-area: filters;
 		}
 
 		.tabs {

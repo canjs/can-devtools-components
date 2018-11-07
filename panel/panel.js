@@ -1,8 +1,9 @@
-import { Component, Symbol, Reflect } from "can";
+import { Component, Symbol, Reflect, DefineList } from "can";
 
 import "panel/panel.less";
 import "viewmodel-editor/viewmodel-editor";
 import "components-tree-view/components-tree-view";
+import "change-log/change-log";
 
 const getComponentElements = (el) => {
 	return [].map.call(el.childNodes, (child) => {
@@ -59,7 +60,14 @@ export default Component.extend({
 
 	ViewModel: {
 		selectedElement: {
-			default: null
+			set(el) {
+				el.viewModel.on("name", () => {
+					can.queues.logStack();
+					debugger;
+				}, "notify")
+
+				return el;
+			}
 		},
 
 		get selectedElementTagName() {
@@ -72,6 +80,29 @@ export default Component.extend({
 			}
 
 			return getSerializedViewModel(this.selectedElement);
+		},
+
+		selectedElementViewModelPatches: {
+			value({ listenTo, resolve }) {
+				const patches = resolve( new DefineList() );
+				let vm = null;
+
+				const addPatch = (newPatches) => {
+					patches.push(...newPatches);
+				};
+
+				listenTo("selectedElement", (ev, el) => {
+					if (vm) {
+						Reflect.offPatches(vm, addPatch);
+					}
+
+					vm = el.viewModel;
+
+					patches.updateDeep([]);
+
+					Reflect.onPatches(vm, addPatch);
+				});
+			}
 		},
 
 		updateSelectedElementViewModel(data) {
@@ -100,16 +131,14 @@ export default Component.extend({
 				<p>CanJS Components</p>
 			</div>
 
-			<div class="search">
-				<input placeholder="Filter Components">
+			<div class="filters">
+				<p><input placeholder="Filter Components"></p>
 			</div>
 
-			<div class="space"></div>
-
 			<div class="tabs">
-				<p class="selected">VM</p>
+				<p>VM</p>
 				<p>Bindings</p>
-				<p class="last">Log</p>
+				<p class="last selected">Log</p>
 			</div>
 
 			<div class="content">
@@ -120,12 +149,9 @@ export default Component.extend({
 			</div>
 
 			<div class="sidebar">
-				<viewmodel-editor
-					showHeading:from="false"
-					tagName:from="selectedElementTagName"
-					viewModelData:from="selectedElementViewModelData"
-					updateValues:from="updateSelectedElementViewModel"
-				></viewmodel-editor>
+				<change-log
+					patches:from="selectedElementViewModelPatches"
+				></change-log>
 			</div>
 		</div>
 	`
