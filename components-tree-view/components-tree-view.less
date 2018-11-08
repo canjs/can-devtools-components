@@ -1,20 +1,22 @@
+@import '../styles.less';
+
 components-tree-view {
 	.tag {
 		cursor: pointer;
-		color: purple;
+		color: @tag-color;
 
 		&.level-1 {
-			margin-left: 20px;
-			color: turquoise;
+			margin-left: @half-unit;
+			color: @l1-color;
 		}
 
 		&.level-2 {
-			margin-left: 40px;
-			color: lime;
+			margin-left: @base-unit;
+			color: @l2-color;
 		}
 
 		span {
-			color: gray;
+			color: @med-gray;
 		}
 	}
 }

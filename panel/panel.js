@@ -158,7 +158,7 @@ export default Component.extend({
 	view: `
 		<div class="grid-container">
 			<div class="header">
-				<p>CanJS Components</p>
+				<h1>CanJS Components</h1>
 			</div>
 
 			<div class="filters">

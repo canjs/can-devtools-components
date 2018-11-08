@@ -118,14 +118,14 @@ export default Component.extend({
 		}
 	},
 	view: `
-		<div class="header">
+		<div class="sub-header">
 			{{# unless(tagName) }}
-				<h1>Select an Element to see its ViewModel</h1>
+				<h2>Select an Element to see its ViewModel</h2>
 			{{ else }}
 				{{# unless(viewModelData) }}
-					<h1>{{tagName}} does not have a ViewModel</h1>
+					<h2>{{tagName}} does not have a ViewModel</h2>
 				{{ else }}
-					<h1>{{tagName}} ViewModel</h1>
+					<h2>{{tagName}} ViewModel</h2>
 
 					{{# if(jsonEditorPatches.length) }}
 						<button on:click="this.save()">Apply Changes</button>
