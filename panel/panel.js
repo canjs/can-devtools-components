@@ -1,9 +1,11 @@
-import { Component, Symbol, Reflect, DefineList } from "can";
+import { Component, Symbol, Reflect, DefineList, value } from "can";
+
+import ChangeLog from "change-log/change-log";
+import ViewModelEditor from "viewmodel-editor/viewmodel-editor";
+import BindingsGraph from "bindings-graph/bindings-graph";
 
 import "panel/panel.less";
-import "viewmodel-editor/viewmodel-editor";
 import "components-tree-view/components-tree-view";
-import "change-log/change-log";
 
 const getComponentElements = (el) => {
 	return [].map.call(el.childNodes, (child) => {
@@ -122,6 +124,34 @@ export default Component.extend({
 
 		selectElementFromNode(node) {
 			this.selectedElement = node.el;
+		},
+
+		selectedSidebar: { type: "string", default: "ViewModelEditor" },
+
+		get sidebarComponentData() {
+			switch(this.selectedSidebar) {
+				case "ViewModelEditor":
+					return {
+						showHeading: false,
+						tagName: value.from(this, "selectedElementTagName"),
+						viewModelData: value.from(this, "selectedElementViewModelData"),
+						updateValues: value.from(this, "updateSelectedElementViewModel")
+					};
+				case "BindingsGraph":
+					break;
+				case "ChangeLog":
+					return {
+						patches: value.from(this, "selectedElementViewModelPatches")
+					};
+			}
+		},
+
+		get sidebarComponent() {
+			const constructors = { ViewModelEditor, BindingsGraph, ChangeLog };
+
+			return new constructors[this.selectedSidebar]({
+				viewModel: this.sidebarComponentData
+			});
 		}
 	},
 
@@ -136,9 +166,9 @@ export default Component.extend({
 			</div>
 
 			<div class="tabs">
-				<p>VM</p>
-				<p>Bindings</p>
-				<p class="last selected">Log</p>
+				<p {{# eq(selectedSidebar, "ViewModelEditor") }}class="selected"{{/ eq }} on:click="this.selectedSidebar = 'ViewModelEditor'">VM</p>
+				<p {{# eq(selectedSidebar, "BindingsGraph") }}class="selected"{{/ eq }} on:click="this.selectedSidebar = 'BindingsGraph'">Bindings</p>
+				<p class="last {{# eq(selectedSidebar, "ChangeLog") }}selected{{/ eq }}" on:click="this.selectedSidebar = 'ChangeLog'">Log</p>
 			</div>
 
 			<div class="content">
@@ -149,9 +179,7 @@ export default Component.extend({
 			</div>
 
 			<div class="sidebar">
-				<change-log
-					patches:from="selectedElementViewModelPatches"
-				></change-log>
+				{{ sidebarComponent }}
 			</div>
 		</div>
 	`

@@ -1,7 +1,7 @@
 import { Component, DefineList } from "can";
 import "change-log/change-log.less";
 
-Component.extend({
+export default Component.extend({
 	tag: "change-log",
 
 	ViewModel: {
