@@ -10,26 +10,6 @@ const ev = { stopPropagation: noop };
 describe("JSONTreeEditor", () => {
 	const ViewModel = JSONTreeEditor.ViewModel;
 
-	it("displayedOptions", () => {
-		const vm = new ViewModel();
-		vm.listenTo("displayedOptions", noop);
-
-		assert.deepEqual(vm.displayedOptions.serialize(), [ ], "displayedOptions empty by default");
-
-		vm.dispatch("show-options", [ "foo.bar" ]);
-		assert.deepEqual(vm.displayedOptions.serialize(), [ "foo.bar" ], "dipatching show-options event shows options");
-
-		vm.dispatch("hide-options", [ "foo.bar" ]);
-		assert.deepEqual(vm.displayedOptions.serialize(), [ ], "dipatching hide-options event hides options");
-
-		vm.dispatch("show-options", [ "foo.bar" ]);
-		vm.dispatch("show-options", [ "foo.bar" ]);
-		assert.deepEqual(vm.displayedOptions.serialize(), [ "foo.bar" ], "dipatching show-options event twice shows options once");
-
-		vm.dispatch("hide-options", [ "foo.bar" ]);
-		assert.deepEqual(vm.displayedOptions.serialize(), [ ], "dipatching hide-options event hides options even if show-options was called twice");
-	});
-
 	it("expandedKeys", () => {
 		const vm = new ViewModel();
 		vm.listenTo("expandedKeys", noop);
@@ -457,43 +437,6 @@ describe("JSONTreeEditor", () => {
 			const setKeyValueForPath = vm.makeSetKeyValueForPath("");
 			setKeyValueForPath("bar", "baz");
 		});
-	});
-
-	it("showOptions", (done) => {
-		const vm = new ViewModel();
-
-		vm.listenTo("show-options", (ev, path) => {
-			assert.ok(true, "should dispatch show-options event");
-			assert.equal(path, "foo.bar", "should pass correct path");
-			done();
-		});
-
-		vm.showOptions(ev, "foo.bar");
-	});
-
-	it("hideOptions", (done) => {
-		const vm = new ViewModel();
-
-		vm.listenTo("hide-options", (ev, path) => {
-			assert.ok(true, "should dispatch hide-options event");
-			assert.equal(path, "foo.bar", "should pass correct path");
-			done();
-		});
-
-		vm.hideOptions(ev, "foo.bar");
-	});
-
-	it("shouldShowOptions", () => {
-		const vm = new ViewModel();
-		vm.listenTo("displayedOptions", noop);
-
-		vm.displayedOptions = [ "foo", "bar" ];
-
-		assert.equal(vm.shouldShowOptions("foo"), true, "options shown for foo");
-
-		assert.equal(vm.shouldShowOptions("bar"), true, "options shown for bar");
-
-		assert.equal(vm.shouldShowOptions("baz"), false, "options not shown for baz");
 	});
 });
 
