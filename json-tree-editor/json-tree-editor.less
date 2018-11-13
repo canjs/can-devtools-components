@@ -1,24 +1,26 @@
 @import '../styles.less';
 json-tree-editor {
+	display: block;
+
+	& > .wrapper {
+		margin-bottom: @third-unit;
+	}
+
 	.wrapper {
 		display: flex;
 		flex-direction: column;
 		font-size: @font-base;
 		line-height: 2;
-		margin-top: @half-unit;
 		color: @base-color;
 		.wrapper {
 			margin-top: 0;
 			margin-left: @base-unit;
 		}
-		.even-row {
-			background: rgba(217, 247, 254,.2);
-		}
 	}
 	.header-container {
 		display: flex;
 		align-items: center;
-		margin-bottom: @third-unit;
+		margin-bottom: @sm-unit;
 		box-shadow: 0px @half-unit @third-unit -@half-unit rgba(1,1,1,.15);
 		div:first-child {
 			margin-right: @half-unit;
@@ -27,6 +29,7 @@ json-tree-editor {
 	.list-container {
 		display: flex;
 		flex-direction: column;
+		padding-bottom: @half-unit;
 	}
 	.header-container, .list-container {
 		transform-origin: top left;
@@ -38,10 +41,6 @@ json-tree-editor {
 		width: 100%;
 		+ .kv-group {
 			border-top: none;
-		}
-		&:hover {
-			background-color: rgba(0, 0, 0, .025);
-			transition: background-color .2s ease-in-out;
 		}
 		.key {
 			margin-left: @base-unit;
@@ -59,15 +58,20 @@ json-tree-editor {
 		transform-origin: center center;
 		&.right {
 			transform: rotate(0deg);
-			animation: rotateRight 0.25s ease-in-out forwards;
+			&.animate {
+				animation: rotateRight 0.25s ease-in-out forwards;
+			}
 		}
 		&.down {
 			transform: rotate(90deg);
-			animation: rotateDown 0.25s ease-in-out forwards;
+			&.animate {
+				animation: rotateDown 0.25s ease-in-out forwards;
+			}
 		}
 	}
 	.key {
 		color: @key-color;
+		margin-right: @sm-unit;
 	}
 	.value {
 		color: @value-color;
@@ -91,17 +95,20 @@ json-tree-editor {
 			}
 		}
 	}
+	.highlighted-item {
+		background-color: rgba(0, 0, 0, .05);
+		transition: background-color .2s ease-in-out;
+	}
 	.options {
 		display: flex;
-		margin-right: @base-unit;
+		margin-right: @half-unit;
 		margin-left: auto;
 		align-self: center;
 		div {
 			font-weight: bold;
 			height: @half-unit;
-			width: @double-unit;
 			font-size: @font-lg;
-			color: rgba(0, 0, 0, 0.1);
+			color: rgba(0, 0, 0, 0.6);
 			display: inline-flex;
 			justify-content: center;
 			align-items: center;
@@ -113,15 +120,6 @@ json-tree-editor {
 			&:last-of-type {
 				margin-right: 0;
 			}
-		}
-	}
-	.header-container:hover .options div, 
-	.kv-group:hover .options div {
-		color: rgba(0, 0, 0, 0.1);
-		box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
-		&:hover {
-			color: rgba(0, 0, 0, 0.5);
-			box-shadow: 0 0 0 3px rgba(0,0,0,0.5);
 		}
 	}
 	@keyframes rotateRight {

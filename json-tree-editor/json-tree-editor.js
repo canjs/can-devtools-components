@@ -78,30 +78,6 @@ export const JSONTreeEditor = Component.extend({
 	ViewModel: {
 		rootNodeName: { type: "string", default: "JSON" },
 
-		displayedOptions: {
-			value({ listenTo, lastSet, resolve }) {
-				let options = resolve( new DefineList() );
-
-				listenTo(lastSet, resolve);
-
-				listenTo("show-options", (ev, path) => {
-					const index = options.indexOf(path);
-
-					if (index < 0) {
-						options.push(path);
-					}
-				});
-
-				listenTo("hide-options", (ev, path) => {
-					const index = options.indexOf(path);
-
-					if (index >= 0) {
-						options.splice(index, 1);
-					}
-				});
-			}
-		},
-
 		expandedKeys: {
 			value({ listenTo, lastSet, resolve }) {
 				let keys = resolve( new DefineList() );
@@ -283,20 +259,6 @@ export const JSONTreeEditor = Component.extend({
 			return (key, value) => {
 				this.dispatch("set-json-path-value", [ `${path ? path + "." : ""}` + key, value ]);
 			};
-		},
-
-		showOptions(ev, path) {
-			if (ev) { ev.stopPropagation(); }
-			this.dispatch("show-options", [ path ]);
-		},
-
-		hideOptions(ev, path) {
-			if (ev) { ev.stopPropagation(); }
-			this.dispatch("hide-options", [ path ]);
-		},
-
-		shouldShowOptions(path) {
-			return this.displayedOptions.indexOf(path) >= 0;
 		}
 	},
 
@@ -341,50 +303,54 @@ export const JSONTreeEditor = Component.extend({
 				{{> singleValueTemplate }}
 			{{/ unless }}
 
-			{{# if( scope.vm.shouldShowOptions(path) ) }}
+			{{# if( showOptions ) }}
 				<div class="options">
 					{{# if( isList(value) ) }}
-					<div on:click="scope.vm.addChild(scope.event, path)">&plus;</div>
+						<div title="Add Child" on:click="scope.vm.addChild(scope.event, path)">&plus;</div>
 					{{/ if }}
-					<div on:click="scope.vm.deletePath(scope.event, path)">&minus;</div>
+					<div title="Remove Item" on:click="scope.vm.deletePath(scope.event, path)">&minus;</div>
 				</div>
 			{{/ if }}
 		{{/ keyValueTemplate }}
 
 		{{< nodeTemplate }}
-			<div class="wrapper" on:click="scope.vm.toggleExpanded(scope.event, path)" on:mouseenter="scope.vm.showOptions(scope.event, path)" on:mouseleave="scope.vm.hideOptions(scope.event, path)">
-				{{# if( isList(value) ) }}
-					<div class="header-container" on:click="scope.vm.toggleExpanded(scope.event, path)">
-						{{# if scope.vm.isExpanded(path) }}
-							<div class="arrow-toggle {{# eq(arrowDirection, 'down') }}down{{/ eq }}" on:click="arrowDirection='right'"></div>
-						{{ else }}
-							<div class="arrow-toggle {{# eq(arrowDirection, 'right') }}right{{/ eq }}" on:click="arrowDirection='down'"></div>
-						{{/ if }}
+			{{ let showOptions = false }}
 
-						{{> keyValueTemplate }}
-					</div>
-				{{ else }}
-						<div class="kv-group {{# if( isEven(scope.index) ) }}even-row{{/ if }}">
+			<div class="wrapper">
+				{{# if( isList(value) ) }}
+					<div on:click="scope.vm.toggleExpanded(scope.event, path)">
+						<div class="header-container {{# if( showOptions ) }}highlighted-item{{/ if }}" on:mouseenter="showOptions = true" on:mouseleave="showOptions = false" on:click="showArrowAnimation = true">
+							{{# if( scope.vm.isExpanded(path) ) }}
+								<div class="arrow-toggle down {{# if(showArrowAnimation) }}animate{{/ if }}"></div>
+							{{ else }}
+								<div class="arrow-toggle right {{# if(showArrowAnimation) }}animate{{/ if }}"></div>
+							{{/ if }}
+
 							{{> keyValueTemplate }}
 						</div>
+					</div>
+				{{ else }}
+					<div class="kv-group {{# if( showOptions ) }}highlighted-item{{/ if }}" on:mouseenter="showOptions = true" on:mouseleave="showOptions = false">
+						{{> keyValueTemplate }}
+					</div>
 				{{/ if }}
 
 				{{# if( isList(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
-						<div class="list-container">
+						<div class="list-container" on:click="scope.vm.addChild(scope.event, path)">
 							{{# for(child of value) }}
-								{{let arrowDirection=undefined}}
+								{{ let showArrowAnimation = false }}
 								{{> nodeTemplate child }}
 							{{/ for }}
 
 							{{# if( scope.vm.shouldDisplayKeyValueEditor(path) ) }}
 								<div class="wrapper">
-									<div class="kv-group {{# if( isEven(value.length) ) }}even-row{{/ if }}">
+									<div class="kv-group">
 										<key-value-editor
 											setKeyValue:from="scope.vm.makeSetKeyValueForPath(path)"
 										></key-value-editor>
 										<div class="options">
-											<div on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
+											<div title="Remove Item" on:click="scope.vm.hideKeyValueEditor(scope.event, path)">&minus;</div>
 										</div>
 									</div>
 								</div>
@@ -395,20 +361,10 @@ export const JSONTreeEditor = Component.extend({
 			</div>
 		{{/ nodeTemplate }}	
 
-		<div class="wrapper" on:mouseenter="scope.vm.showOptions(scope.event, '')" on:mouseleave="scope.vm.hideOptions(scope.event, '')">
-			<div class="header-container">
-				<div class="key">{{ rootNodeName }}</div>
-
-				{{# if( scope.vm.shouldShowOptions('') ) }}
-					<div class="options">
-						<div on:click="scope.vm.addChild(scope.event, '')">&plus;</div>
-					</div>
-				{{/ if }}
-			</div>
-
+		<div class="wrapper" on:click="scope.vm.addChild(scope.event, '')">
 			<div class="list-container">
 				{{# for(node of parsedJSON) }}
-					{{let arrowDirection=undefined}}
+					{{ let showArrowAnimation = false }}
 					{{> nodeTemplate node }}
 				{{/ for }}
 
@@ -419,7 +375,7 @@ export const JSONTreeEditor = Component.extend({
 								setKeyValue:from="scope.vm.makeSetKeyValueForPath('')"
 							></key-value-editor>
 							<div class="options">
-								<div on:click="scope.vm.hideKeyValueEditor(scope.event, '')">&minus;</div>
+								<div title="Remove Item" on:click="scope.vm.hideKeyValueEditor(scope.event, '')">&minus;</div>
 							</div>
 						</div>
 					</div>
