@@ -1,0 +1,286 @@
+bindings-graph {
+  display: block;
+}
+bindings-graph h1 {
+  text-align: center;
+}
+bindings-graph div {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+editable-span {
+  display: inline-block;
+  text-align: left;
+  position: relative;
+  z-index: 1000;
+}
+editable-span span {
+  display: inline-block;
+  margin: 0;
+  padding: 2px;
+  cursor: text;
+  overflow: hidden;
+  vertical-align: middle;
+}
+editable-span span:hover,
+editable-span span.editing {
+  outline: 1px solid #ccc;
+}
+editable-span ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: #fff;
+}
+editable-span ul li {
+  padding: 4px 0;
+}
+editable-span ul li.highlight {
+  background-color: #e8e8e8;
+}
+body {
+  font-family: monospace;
+}
+h1,
+h2,
+h3 {
+  font-weight: 200;
+  text-align: center;
+}
+h1 {
+  font-size: 20px;
+}
+h2 {
+  font-size: 13px;
+}
+h3 {
+  font-size: 11px;
+}
+button {
+  background-color: #FFFFFF;
+  border: #0095f9 2px solid;
+  margin-left: 60px;
+  padding: 5px 15px;
+  font-weight: 300;
+  font-size: 11px;
+  color: #0095f9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+button:hover {
+  background-color: #0095f9;
+  color: #FFFFFF;
+}
+button.disabled {
+  color: #CCCCCC;
+  border-color: #CCCCCC;
+  cursor: default;
+}
+button.disabled:hover {
+  background-color: #FFFFFF;
+}
+json-tree-editor {
+  display: block;
+}
+json-tree-editor > .wrapper {
+  margin-bottom: 10px;
+}
+json-tree-editor .wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  line-height: 2;
+  color: #404040;
+}
+json-tree-editor .wrapper .wrapper {
+  margin-top: 0;
+  margin-left: 30px;
+}
+json-tree-editor .header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  box-shadow: 0px 15px 10px -15px rgba(1, 1, 1, 0.15);
+}
+json-tree-editor .header-container div:first-child {
+  margin-right: 15px;
+}
+json-tree-editor .list-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+}
+json-tree-editor .header-container,
+json-tree-editor .list-container {
+  transform-origin: top left;
+  animation: fadeIn 0.1s forwards ease-in-out;
+}
+json-tree-editor .kv-group {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+}
+json-tree-editor .kv-group + .kv-group {
+  border-top: none;
+}
+json-tree-editor .kv-group .key {
+  margin-left: 30px;
+  display: inline-block;
+}
+json-tree-editor .arrow-toggle {
+  content: '';
+  display: inline-flex;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 14px solid #404040;
+  transform-origin: center center;
+}
+json-tree-editor .arrow-toggle.right {
+  transform: rotate(0deg);
+}
+json-tree-editor .arrow-toggle.right.animate {
+  animation: rotateRight 0.25s ease-in-out forwards;
+}
+json-tree-editor .arrow-toggle.down {
+  transform: rotate(90deg);
+}
+json-tree-editor .arrow-toggle.down.animate {
+  animation: rotateDown 0.25s ease-in-out forwards;
+}
+json-tree-editor .key {
+  color: #963296;
+  margin-right: 5px;
+}
+json-tree-editor .value {
+  color: #1527a9;
+  display: inline-block;
+}
+json-tree-editor .value.string {
+  color: #c3201c;
+  quotes: "\201c" "\201d" "\2018" "\2019";
+}
+json-tree-editor .value.string:before {
+  content: open-quote;
+  user-select: none;
+}
+json-tree-editor .value.string:after {
+  content: close-quote;
+  user-select: none;
+}
+json-tree-editor .value.string span {
+  border: 1px transparent solid;
+}
+json-tree-editor .value.string span:hover {
+  border: 1px #CCC solid;
+}
+json-tree-editor .highlighted-item {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease-in-out;
+}
+json-tree-editor .options {
+  display: flex;
+  margin-right: 15px;
+  margin-left: auto;
+  align-self: center;
+}
+json-tree-editor .options div {
+  font-weight: bold;
+  height: 15px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5%;
+  margin-right: 15px;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  transition: all 0.2s ease-in-out;
+}
+json-tree-editor .options div:last-of-type {
+  margin-right: 0;
+}
+@keyframes rotateRight {
+  from {
+    transform: rotate(90deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+@keyframes rotateDown {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+queues-logstack {
+  display: block;
+  overflow: scroll;
+}
+queues-logstack ul {
+  margin: 0;
+  padding: 0;
+}
+queues-logstack ul li {
+  list-style: none;
+  border-top: 1px solid #e8e8e8;
+  padding-left: 32px;
+  line-height: 16px;
+  cursor: default;
+}
+queues-logstack ul li p {
+  display: inline-block;
+  margin: 0;
+  padding: 4px 0;
+}
+queues-logstack ul li p.reason {
+  margin-left: 16px;
+  color: #404040;
+}
+queues-logstack ul li.first {
+  border-top: none;
+}
+queues-logstack ul li.selected::before {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 9px;
+  content: "";
+  background: url(../images/blue-arrow.png) no-repeat 0 0;
+  background-size: 100%;
+  margin-left: -30px;
+}
+queues-logstack ul li.highlight {
+  background-color: #e8e8e8;
+}
+viewmodel-editor {
+  display: block;
+}
+viewmodel-editor .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
