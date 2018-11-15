@@ -1,4 +1,9 @@
+@import '../styles.less';
+
 queues-logstack {
+	display: block;
+	overflow: scroll;
+
 	ul {
 		margin: 0;
 		padding: 0;
@@ -6,11 +11,20 @@ queues-logstack {
 		li {
 			list-style: none;
 			border-top: 1px solid #e8e8e8;
-			margin: 0;
-			padding: 4px 0;
 			padding-left: 32px;
 			line-height: 16px;
 			cursor: default;
+
+			p {
+				display: inline-block;
+				margin: 0;
+				padding: 4px 0;
+
+				&.reason {
+					margin-left: 16px;
+					color: @base-color;
+				}
+			}
 
 			&.first {
 				border-top: none;
@@ -24,7 +38,7 @@ queues-logstack {
 				content: "";
 				background: url(../images/blue-arrow.png) no-repeat 0 0;
 				background-size: 100%;
-				margin-left: -24px;
+				margin-left: -30px;
 			}
 
 			&.highlight {
