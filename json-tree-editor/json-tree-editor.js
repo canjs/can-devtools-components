@@ -232,7 +232,8 @@ export const JSONTreeEditor = Component.extend({
 			this.dispatch("set-json", [ json ]);
 		},
 
-		setPathValue(path, value) {
+		setPathValue(ev, path, value) {
+			if (ev) { ev.stopPropagation(); }
 			this.dispatch("set-json-path-value", [ path, "" + value ]);
 		},
 
@@ -267,20 +268,20 @@ export const JSONTreeEditor = Component.extend({
 			{{# switch(type) }}
 				{{# case("String") }}
 					<div class="value string">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
 					</div>
 				{{/ case }}
 
 				{{# case("Boolean") }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
-						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(path, scope.element.checked)">
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(scope.event, path, scope.element.checked)">
 					</div>
 				{{/ case }}
 
 				{{# default }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
 					</div>
 				{{/ default }}
 			{{/ switch }}
