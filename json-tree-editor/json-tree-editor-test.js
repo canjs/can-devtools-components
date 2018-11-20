@@ -356,20 +356,19 @@ describe("JSONTreeEditor", () => {
 			done();
 		});
 
-		vm.setPathValue("foo", "bar");
+		vm.setPathValue(ev, "foo", "bar");
 	});
 
 	it("deletePath", (done) => {
 		const vm = new ViewModel();
 
-		vm.listenTo("set-json-path-value", (ev, path, value) => {
-			assert.ok(true, "should dispatch set-json-path-value event");
+		vm.listenTo("delete-json-path", (ev, path) => {
+			assert.ok(true, "should dispatch delete-json-path event");
 			assert.equal(path, "foo", "should pass correct path");
-			assert.equal(value, "bar", "should pass correct value");
 			done();
 		});
 
-		vm.setPathValue("foo", "bar");
+		vm.deletePath(ev, "foo");
 	});
 
 	it("addChild", (done) => {
