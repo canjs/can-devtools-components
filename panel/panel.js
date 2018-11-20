@@ -61,6 +61,8 @@ export default Component.extend({
 	tag: "canjs-devtools-panel",
 
 	ViewModel: {
+		breakpointsOpen: { default: false, type: "boolean" },
+
 		selectedElement: {
 			set(el) {
 				el.viewModel.on("name", () => {
@@ -124,62 +126,29 @@ export default Component.extend({
 
 		selectElementFromNode(node) {
 			this.selectedElement = node.el;
-		},
-
-		selectedSidebar: { type: "string", default: "ViewModelEditor" },
-
-		get sidebarComponentData() {
-			switch(this.selectedSidebar) {
-				case "ViewModelEditor":
-					return {
-						showHeading: false,
-						tagName: value.from(this, "selectedElementTagName"),
-						viewModelData: value.from(this, "selectedElementViewModelData"),
-						updateValues: value.from(this, "updateSelectedElementViewModel")
-					};
-				case "BindingsGraph":
-					break;
-				case "ChangeLog":
-					return {
-						patches: value.from(this, "selectedElementViewModelPatches")
-					};
-			}
-		},
-
-		get sidebarComponent() {
-			const constructors = { ViewModelEditor, BindingsGraph, ChangeLog };
-
-			return new constructors[this.selectedSidebar]({
-				viewModel: this.sidebarComponentData
-			});
 		}
 	},
 
 	view: `
 		<div class="grid-container">
-			<div class="header">
-				<h1>CanJS Components</h1>
-			</div>
-
-			<div class="filters">
-				<p><input placeholder="Filter Components"></p>
-			</div>
-
-			<div class="tabs">
-				<p {{# eq(selectedSidebar, "ViewModelEditor") }}class="selected"{{/ eq }} on:click="this.selectedSidebar = 'ViewModelEditor'">VM</p>
-				<p {{# eq(selectedSidebar, "BindingsGraph") }}class="selected"{{/ eq }} on:click="this.selectedSidebar = 'BindingsGraph'">Bindings</p>
-				<p class="last {{# eq(selectedSidebar, "ChangeLog") }}selected{{/ eq }}" on:click="this.selectedSidebar = 'ChangeLog'">Log</p>
-			</div>
-
-			<div class="content">
+			<div class="tree-view">
 				<components-tree-view
 					tree:from="selectedElementsTree"
 					selectNode:from="selectElementFromNode"
 				></components-tree-view>
 			</div>
 
-			<div class="sidebar">
-				{{ sidebarComponent }}
+			<div class="sidebar {{# if(breakpointsOpen) }}breakpoints-open{{ else }}breakpoints-closed{{/ if }}">
+				<div class="breakpoints" on:click="this.breakpointsOpen = not(this.breakpointsOpen)">
+					<p><div class="arrow-toggle  {{# if(breakpointsOpen) }}down{{ else }}right{{/ if }}"></div>Breakpoints</p>
+				</div>
+
+				<div class="viewmodel-editor">
+					<viewmodel-editor
+						tagName:from="this.selectedElementTagName"
+						viewModelData:from="this.selectedElementViewModelData"
+						updateValues:from="this.updateSelectedElementViewModel" />
+				</div>
 			</div>
 		</div>
 	`

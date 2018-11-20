@@ -1,10 +1,31 @@
 @import '../styles.less';
+
 todo-list {
 	div {
 		margin: @third-unit @half-unit;
 	}
-	
 }
+
+.arrow-toggle {
+	content: '';
+	display: inline-flex;
+	width: 0;
+	height: 0;
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	border-left: 14px solid @base-color;
+	transform-origin: center center;
+	margin-right: 15px;
+
+	&.right {
+		transform: rotate(0deg);
+	}
+
+	&.down {
+		transform: rotate(90deg);
+	}
+}
+
 canjs-devtools-panel {
 	position: absolute;
 	bottom: 0;
@@ -17,83 +38,18 @@ canjs-devtools-panel {
 
 	margin: 0;
 	padding: 0;
-	.header, .filters, .tabs {
-		align-self: center;
-		height: @base-unit*1.5;
-		padding: @third-unit @base-unit;
-	}
-	.header {
-		border-bottom: 1px solid @black;
-
-		> h1 {
-			color: @brand-color;
-			font-weight: bold;
-			text-align: left;
-		}
-		> h2 {
-			text-align: left;
-		}
-
-	}
-
-	.filters {
-		border-bottom: 1px solid @black;
-		padding: @sm-unit @base-unit;
-
-		input {
-			min-width: 200px;
-		}
-	}
-
-	.tabs {
-		display: inline-block;
-		border-bottom: 1px solid @black;
-		text-align: right;
-		cursor: default;
-		p {
-			display: inline-block;
-			margin: 0 @third-unit;
-			cursor: pointer;
-			border-bottom: 2px dotted @gray;
-			transition: border-bottom .5s ease-in-out;
-			&:hover {
-				border-bottom: 2px solid @action-color;
-			}
-			&.selected {
-				font-weight: bold;
-				color: @action-color;
-				border-bottom: none;
-				&:hover {
-					border-bottom: none;
-				}
-			}
-		}
-	}
 
 	.grid-container {
 		max-height: 300px;
 		min-height: 300px;
 		display: grid;
 		grid-template-columns: repeat(8, 1fr);
-		grid-template-rows: 1fr 5fr;
-		grid-template-areas: 
-		"header header header filters filters filters tabs tabs"
-		"content content content content content sidebar sidebar sidebar";
+		grid-template-rows: 1fr;
+		grid-template-areas:
+		"tree-view tree-view tree-view tree-view tree-view sidebar sidebar sidebar";
 
-		.header {
-			grid-area: header;
-		}
-
-		.filters {
-			grid-area: filters;
-		}
-
-		.tabs {
-			grid-area: tabs;
-		}
-
-		.content {
-			grid-area: content;
+		.tree-view {
+			grid-area: tree-view;
 			padding: @third-unit @base-unit;
 			line-height: 1.5;
 		}
@@ -104,6 +60,30 @@ canjs-devtools-panel {
 			line-height: 1.5;
 			padding: @third-unit @half-unit;
 			box-shadow: -@sm-unit 0 @half-unit -@sm-unit rgba(0,0,0,.25);
+
+			display: grid;
+			grid-template-columns: 1fr;
+
+			&.breakpoints-closed {
+				grid-template-rows: 1fr 5fr;
+			}
+
+			&.breakpoints-open {
+				grid-template-rows: 4fr 2fr;
+			}
+
+			grid-template-areas:
+				"breakpoints"
+				"viewmodel-editor";
+
+			.viewmodel-editor {
+			}
+
+			.breakpoints {
+				&.closed p {
+					font-size: @font-lg;
+				}
+			}
 		}
 	}
 }
