@@ -46,30 +46,57 @@ canjs-devtools-panel {
 		grid-template-columns: repeat(8, 1fr);
 		grid-template-rows: 1fr;
 		grid-template-areas:
-		"tree-view tree-view tree-view tree-view tree-view sidebar sidebar sidebar";
+			"tree-view tree-view tree-view tree-view tree-view sidebar sidebar sidebar";
 
 		.tree-view {
 			grid-area: tree-view;
 			padding: @third-unit @base-unit;
 			line-height: 1.5;
+
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr 7fr;
+			grid-template-areas:
+				"component-tree-header"
+				"component-tree";
+
+			.component-tree-header {
+
+				h1 {
+					text-align: left;
+					display: inline-block;
+					color: @brand-color;
+				}
+
+				.filters {
+					display: inline-block;
+					margin-left: 200px;
+				}
+			}
+
+			.component-tree {
+			}
 		}
 
 		.sidebar {
 			grid-area: sidebar;
 			overflow-y: scroll;
 			line-height: 1.5;
-			padding: @third-unit @half-unit;
 			box-shadow: -@sm-unit 0 @half-unit -@sm-unit rgba(0,0,0,.25);
 
 			display: grid;
 			grid-template-columns: 1fr;
 
 			&.breakpoints-closed {
-				grid-template-rows: 1fr 5fr;
+				grid-template-rows: 1fr 7fr;
 			}
 
 			&.breakpoints-open {
-				grid-template-rows: 4fr 2fr;
+				grid-template-rows: 4fr 4fr;
+
+				h2 {
+					margin-bottom: 16px;
+				}
 			}
 
 			grid-template-areas:
@@ -77,11 +104,37 @@ canjs-devtools-panel {
 				"viewmodel-editor";
 
 			.viewmodel-editor {
+				viewmodel-editor h2 {
+					text-align: center;
+					width: 100%;
+				}
+			}
+
+			.viewmodel-editor,
+			.breakpoints {
+				> h2 {
+					padding: 6px 0;
+					text-align: left;
+					width: 100%;
+					background-color: #eee;
+					border-bottom: 1px solid #ddd;
+				}
+
+				&.closed p {
+					font-size: @font-lg;
+				}
 			}
 
 			.breakpoints {
-				&.closed p {
-					font-size: @font-lg;
+				ul {
+					li {
+						list-style: none;
+						margin: 12px 0;
+
+						input {
+							margin-right: 8px;
+						}
+					}
 				}
 			}
 		}

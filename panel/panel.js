@@ -62,6 +62,17 @@ export default Component.extend({
 
 	ViewModel: {
 		breakpointsOpen: { default: false, type: "boolean" },
+		viewmodelEditorOpen: { default: true, type: "boolean" },
+
+		breakpoints: {
+			Type: DefineList,
+			default() {
+				return [{
+					key: "todos.length",
+					parent: "TodoListVM{}"
+				}]
+			}
+		},
 
 		selectedElement: {
 			set(el) {
@@ -126,28 +137,80 @@ export default Component.extend({
 
 		selectElementFromNode(node) {
 			this.selectedElement = node.el;
+		},
+
+		addBreakpoint(el) {
+			this.breakpoints.push({
+				key: el.value,
+				parent: Reflect.getName( this.selectedElement.viewModel )
+			});
+			el.value = "";
 		}
 	},
 
 	view: `
 		<div class="grid-container">
 			<div class="tree-view">
-				<components-tree-view
-					tree:from="selectedElementsTree"
-					selectNode:from="selectElementFromNode"
-				></components-tree-view>
+				<div class="component-tree-header">
+					<h1>CanJS Components</h1>
+
+					<div class="filters">
+						<p><input placeholder="Filter Components"></p>
+					</div>
+				</div>
+				<div class="component-tree">
+					<components-tree-view
+						tree:from="selectedElementsTree"
+						selectNode:from="selectElementFromNode"
+					></components-tree-view>
+				</div>
 			</div>
 
 			<div class="sidebar {{# if(breakpointsOpen) }}breakpoints-open{{ else }}breakpoints-closed{{/ if }}">
-				<div class="breakpoints" on:click="this.breakpointsOpen = not(this.breakpointsOpen)">
-					<p><div class="arrow-toggle  {{# if(breakpointsOpen) }}down{{ else }}right{{/ if }}"></div>Breakpoints</p>
+				<div class="breakpoints">
+					{{# if(breakpointsOpen) }}
+						<h2>
+							<div class="arrow-toggle down" on:click="this.breakpointsOpen = false">
+							</div>
+							Breakpoints
+						</h2>
+
+						<ul>
+						{{# for(breakpoint of this.breakpoints) }}
+							<li><input type="checkbox" checked>{{ breakpoint.parent }}.{{ breakpoint.key }}</li>
+						{{/ for }}
+						</ul>
+
+						{{# if(this.selectedElement) }}
+							<p><input placeholder="Add breakpoint" on:enter="addBreakpoint(scope.element)"></p>
+						{{/ if }}
+					{{ else }}
+						<h2>
+							<div class="arrow-toggle right" on:click="this.breakpointsOpen = true"></div>
+							Breakpoints ({{ this.breakpoints.length }})
+						</h2>
+					{{/ if }}
 				</div>
 
 				<div class="viewmodel-editor">
-					<viewmodel-editor
-						tagName:from="this.selectedElementTagName"
-						viewModelData:from="this.selectedElementViewModelData"
-						updateValues:from="this.updateSelectedElementViewModel" />
+					{{# if(viewmodelEditorOpen) }}
+						<h2>
+							<div class="arrow-toggle down" on:click="this.viewmodelEditorOpen = false">
+							</div>
+							ViewModel Editor
+						</h2>
+
+						<viewmodel-editor
+							tagName:from="this.selectedElementTagName"
+							viewModelData:from="this.selectedElementViewModelData"
+							updateValues:from="this.updateSelectedElementViewModel" />
+
+					{{ else }}
+						<h2>
+							<div class="arrow-toggle right" on:click="this.viewmodelEditorOpen = true"></div>
+							ViewModel Editor
+						</h2>
+					{{/ if }}
 				</div>
 			</div>
 		</div>
