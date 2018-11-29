@@ -4,19 +4,26 @@ components-tree-view {
 	.tag {
 		cursor: pointer;
 		color: @tag-color;
-
+		padding-left: @half-unit;
 		&.level-1 {
-			margin-left: @half-unit;
+			padding-left: @base-unit;
 			color: @l1-color;
 		}
 
 		&.level-2 {
-			margin-left: @base-unit;
+			padding-left: @base-unit + @half-unit;
 			color: @l2-color;
 		}
 
 		span {
 			color: @med-gray;
 		}
+	}
+	p:hover {
+		background-color: #eaf2fb;
+	}
+	p.selected {
+		background-color: #4f96ec;
+		color: white !important;
 	}
 }

@@ -11,12 +11,11 @@ todo-list {
 	display: inline-flex;
 	width: 0;
 	height: 0;
-	border-top: 7px solid transparent;
-	border-bottom: 7px solid transparent;
-	border-left: 14px solid @base-color;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 8px solid @base-color;
 	transform-origin: center center;
-	margin-right: 15px;
-
+	margin: 0 5px 0 7px;
 	&.right {
 		transform: rotate(0deg);
 	}
@@ -34,7 +33,7 @@ canjs-devtools-panel {
     min-height: 300px;
     overflow: hidden;
 	font-weight: 600;
-	border-top: 2px solid @med-gray;
+	border-top: 1px solid #d0d0d0;
 
 	margin: 0;
 	padding: 0;
@@ -50,31 +49,34 @@ canjs-devtools-panel {
 
 		.tree-view {
 			grid-area: tree-view;
-			padding: @third-unit @base-unit;
+			padding: 0 0 @third-unit;
 			line-height: 1.5;
 
 			display: grid;
 			grid-template-columns: 1fr;
-			grid-template-rows: 1fr 7fr;
+			grid-template-rows: auto 7fr;
 			grid-template-areas:
 				"component-tree-header"
 				"component-tree";
 
 			.component-tree-header {
-
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background-color: #f3f3f3;
+				border-bottom: 1px solid #d0d0d0;
+				padding-left: @half-unit;
+				margin-bottom: @sm-unit;
 				h1 {
+					font-family: sans-serif;
 					text-align: left;
 					display: inline-block;
 					color: @brand-color;
 				}
 
 				.filters {
-					display: inline-block;
-					margin-left: 200px;
+					padding: 2px @sm-unit;
 				}
-			}
-
-			.component-tree {
 			}
 		}
 
@@ -82,20 +84,29 @@ canjs-devtools-panel {
 			grid-area: sidebar;
 			overflow-y: scroll;
 			line-height: 1.5;
-			box-shadow: -@sm-unit 0 @half-unit -@sm-unit rgba(0,0,0,.25);
+			border-left: 1px solid #d0d0d0;
 
 			display: grid;
 			grid-template-columns: 1fr;
-
+			h2 {
+				font-family: sans-serif;
+				display: flex;
+				align-items: center;
+				margin: 0;
+			}
 			&.breakpoints-closed {
-				grid-template-rows: 1fr 7fr;
+				grid-template-rows: auto 7fr;
+				h2 {
+					border-bottom: none;
+				}
 			}
 
-			&.breakpoints-open {
+			&.breakpoints-open .breakpoints {
 				grid-template-rows: 4fr 4fr;
 
 				h2 {
-					margin-bottom: 16px;
+					margin-bottom: 6px;
+					border-bottom: 1px solid #d0d0d0;
 				}
 			}
 
@@ -103,21 +114,13 @@ canjs-devtools-panel {
 				"breakpoints"
 				"viewmodel-editor";
 
-			.viewmodel-editor {
-				viewmodel-editor h2 {
-					text-align: center;
-					width: 100%;
-				}
-			}
-
 			.viewmodel-editor,
 			.breakpoints {
 				> h2 {
 					padding: 6px 0;
 					text-align: left;
 					width: 100%;
-					background-color: #eee;
-					border-bottom: 1px solid #ddd;
+					background-color: #f3f3f3;
 				}
 
 				&.closed p {
@@ -125,12 +128,25 @@ canjs-devtools-panel {
 				}
 			}
 
+			.viewmodel-editor {
+				> h2 {
+					border-top: 1px solid #d0d0d0;
+					border-bottom: 1px solid #d0d0d0;
+				}
+			}
+
+			.sidebar-container {
+				padding: 0 10px;
+			}
+			
 			.breakpoints {
 				ul {
 					li {
 						list-style: none;
 						margin: 12px 0;
-
+						&:first-of-type {
+							margin-top: 0;
+						}
 						input {
 							margin-right: 8px;
 						}

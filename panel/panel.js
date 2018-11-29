@@ -174,16 +174,17 @@ export default Component.extend({
 							</div>
 							Breakpoints
 						</h2>
+						<div class="sidebar-container">
+							<ul>
+							{{# for(breakpoint of this.breakpoints) }}
+								<li><input type="checkbox" checked>{{ breakpoint.parent }}.{{ breakpoint.key }}</li>
+							{{/ for }}
+							</ul>
 
-						<ul>
-						{{# for(breakpoint of this.breakpoints) }}
-							<li><input type="checkbox" checked>{{ breakpoint.parent }}.{{ breakpoint.key }}</li>
-						{{/ for }}
-						</ul>
-
-						{{# if(this.selectedElement) }}
-							<p><input placeholder="Add breakpoint" on:enter="addBreakpoint(scope.element)"></p>
-						{{/ if }}
+							{{# if(this.selectedElement) }}
+								<p><input placeholder="Add breakpoint" on:enter="addBreakpoint(scope.element)"></p>
+							{{/ if }}
+						</div>
 					{{ else }}
 						<h2>
 							<div class="arrow-toggle right" on:click="this.breakpointsOpen = true"></div>
@@ -199,11 +200,12 @@ export default Component.extend({
 							</div>
 							ViewModel Editor
 						</h2>
-
-						<viewmodel-editor
-							tagName:from="this.selectedElementTagName"
-							viewModelData:from="this.selectedElementViewModelData"
-							updateValues:from="this.updateSelectedElementViewModel" />
+						<div class="sidebar-container">
+							<viewmodel-editor
+								tagName:from="this.selectedElementTagName"
+								viewModelData:from="this.selectedElementViewModelData"
+								updateValues:from="this.updateSelectedElementViewModel" />
+						</div>
 
 					{{ else }}
 						<h2>
