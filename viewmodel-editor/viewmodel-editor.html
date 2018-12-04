@@ -27,6 +27,14 @@
 			import { Component, DefineMap, DefineList, Reflect, diff } from "can"
 			const { mergeDeep } = diff;
 
+			const Hobby = DefineMap.extend("Hobby", {
+				name: "string"
+			});
+
+			const Hobbies = DefineList.extend("Hobbies", {
+				"#": Hobby
+			});
+
 			Component.extend({
 				tag: "my-app",
 				view: `
@@ -68,13 +76,9 @@
 						}
 					},
 					hobbies: {
-						Type: DefineList,
+						Type: Hobbies,
 						default() {
-							return [{
-								name: "soccer"
-							}, {
-								name: "dancing"
-							}];
+							return [{ name: "soccer" }, { name: "dancing" }];
 						}
 					}
 				}
@@ -83,9 +87,19 @@
 			const vm = document.querySelector("viewmodel-editor").viewModel;
 			const sourceVM = document.querySelector("my-app").viewModel;
 
+			const viewModelData = sourceVM.serialize();
+			const typeNamesData = {};
+
+			for (let key in viewModelData) {
+				if (typeof viewModelData[key] === "object") {
+					typeNamesData[key] = Reflect.getName( Reflect.getKeyValue(sourceVM, key) );
+				}
+			}
+
 			vm.assign({
 				tagName: "name-component",
-				viewModelData: sourceVM.serialize()
+				viewModelData,
+				typeNamesData
 			});
 
 			vm.updateValues = function(data) {

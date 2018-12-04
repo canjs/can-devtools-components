@@ -7,12 +7,13 @@ const isList = (val) => (val instanceof DefineList);
 stache.addHelper("isList", isList);
 stache.addHelper("isNumber", (val) => typeof val === "number");
 stache.addHelper("isEven", (num) => num % 2 === 0);
+stache.addHelper("removeTrailingBrackets", (str) => str.replace(/\[\]$/, ""));
 
 const capitalize = (key) => {
 	return `${key.slice(0, 1).toUpperCase()}${key.slice(1)}`;
 };
 
-const getTypeName = (val) => {
+const getType = (val) => {
 	if (Reflect.isObservableLike(val)) {
 		if (Reflect.isListLike(val)) {
 			return "Array";
@@ -32,11 +33,19 @@ const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
 	key: NumberOrString,
 	value: NumberOrString,
 	type: "string",
+	typeName: "string",
 	path: "string",
 	id: {
 		identity: true,
 		get() {
-			return JSON.stringify(this);
+			return `{
+				"key": "${this.key}",
+				"value": "${this.value}",
+				"type": "${this.type}",
+				"typeName": "${this.typeName}",
+				"path": "${this.path}"
+			}`;
+
 		}
 	}
 });
@@ -45,7 +54,7 @@ const ParsedJSON = DefineList.extend("ParsedJSON", {
 	"#": ParsedJSONNode
 });
 
-const parseKeyValue = (key, value, parentPath) => {
+const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
 	let parsedValue;
 	const path =`${parentPath ? (parentPath + ".") : ""}${key}`;
 
@@ -57,7 +66,7 @@ const parseKeyValue = (key, value, parentPath) => {
 
 		value.forEach((childValue, childKey) => {
 			parsedValue.push(
-				parseKeyValue(childKey, childValue, path)
+				parseKeyValue({ key: childKey, value:childValue, parentPath: path, getTypeName: getTypeName })
 			);
 		});
 	} else {
@@ -67,7 +76,8 @@ const parseKeyValue = (key, value, parentPath) => {
 	return {
 		key,
 		path,
-		type: getTypeName(value),
+		type: getType(value),
+		typeName: getTypeName(path),
 		value: parsedValue
 	};
 };
@@ -77,6 +87,7 @@ export const JSONTreeEditor = Component.extend({
 
 	ViewModel: {
 		rootNodeName: { type: "string", default: "JSON" },
+		typeNames: { type: "any", default: () => ({}) },
 
 		expandedKeys: {
 			value({ listenTo, lastSet, resolve }) {
@@ -160,9 +171,13 @@ export const JSONTreeEditor = Component.extend({
 		get parsedJSON() {
 			const parsed = new ParsedJSON([]);
 
+			const getTypeName = (path) => {
+				return this.typeNames[path];
+			};
+
 			Reflect.each(this.json, (value, key) => {
 				parsed.push(
-					parseKeyValue(key, value)
+					parseKeyValue({ key, value, getTypeName })
 				);
 			});
 
@@ -292,12 +307,20 @@ export const JSONTreeEditor = Component.extend({
 				<div class="key">{{key}}:&nbsp;</div>
 			{{/ unless }}
 
-			{{# is type "Object"}}
-				<div>{{type}}</div>
+			{{# is(type, "Object") }}
+				{{# if(typeName) }}
+					<div>{{typeName}}</div>
+				{{ else }}
+					<div>{{type}}</div>
+				{{/ if }}
 			{{/ is }}
 
-			{{# is type "Array"}}
-				<div>{{type}}({{value.length}})</div>
+			{{# is(type, "Array") }}
+				{{# if(typeName) }}
+					<div>{{ removeTrailingBrackets(typeName) }}({{value.length}})</div>
+				{{ else }}
+					<div>{{type}}({{value.length}})</div>
+				{{/ if }}
 			{{/ is }}
 
 			{{# unless( isList(value) ) }}

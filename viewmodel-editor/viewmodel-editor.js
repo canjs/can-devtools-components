@@ -24,6 +24,7 @@ export default Component.extend({
 		editor: "any",
 		tagName: "string",
 		viewModelData: { Type: DefineMap, Default: DefineMap },
+		typeNamesData: { Type: DefineMap, Default: DefineMap },
 
 		get serializedViewModelData() {
 			return this.viewModelData.serialize();
@@ -137,7 +138,11 @@ export default Component.extend({
 		</div>
 
 		{{# and(tagName, viewModelData) }}
-			<json-tree-editor json:from="json" rootNodeName:raw="ViewModel"></json-tree-editor>
+			<json-tree-editor
+				json:from="json"
+				typeNames:from="typeNamesData"
+				rootNodeName:raw="ViewModel"
+			></json-tree-editor>
 		{{/ and }}
 	`
 });
