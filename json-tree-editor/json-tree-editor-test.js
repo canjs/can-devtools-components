@@ -89,15 +89,17 @@ describe("JSONTreeEditor", () => {
 		vm.listenTo("parsedJSON", noop);
 
 		const testCases = [{
-			input: { },
+			json: { },
+			types: { },
 			output: [ ],
 			name: "empty object"
 		}, {
-			input: {
+			json: {
 				name: "Kevin",
 				age: 30,
 				likesPizza: true
 			},
+			types: { },
 			output: [{
 				key: "name",
 				path: "name",
@@ -116,12 +118,13 @@ describe("JSONTreeEditor", () => {
 			}],
 			name: "simple object"
 		}, {
-			input: {
+			json: {
 				name: {
 					first: "Connor",
 					last: "Phillips"
 				}
 			},
+			types: { },
 			output: [{
 				key: "name",
 				path: "name",
@@ -140,9 +143,10 @@ describe("JSONTreeEditor", () => {
 			}],
 			name: "object in object"
 		}, {
-			input: {
+			json: {
 				hobbies: [ "singing", "dancing", "soccer" ]
 			},
+			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -166,11 +170,12 @@ describe("JSONTreeEditor", () => {
 			}],
 			name: "array in object"
 		}, {
-			input: {
+			json: {
 				person: {
 					hobbies: [ "singing", "dancing", "soccer" ]
 				}
 			},
+			types: { },
 			output: [{
 				key: "person",
 				path: "person",
@@ -199,11 +204,12 @@ describe("JSONTreeEditor", () => {
 			}],
 			name: "array in object in object"
 		}, {
-			input: {
+			json: {
 				hobbies: [
 					{ name: "singing" }, { name: "dancing" }, { name: "soccer" }
 				]
 			},
+			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -242,11 +248,12 @@ describe("JSONTreeEditor", () => {
 			}],
 			name: "array of objects"
 		}, {
-			input: {
+			json: {
 				hobbies: [
 					{ }, { name: "dancing" }
 				]
 			},
+			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -269,10 +276,82 @@ describe("JSONTreeEditor", () => {
 				}]
 			}],
 			name: "array with empty object"
+		}, {
+			json: {
+				hobbies: [ "singing", "dancing", "soccer" ]
+			},
+			types: {
+				hobbies: "Hobbies{}"
+			},
+			output: [{
+				key: "hobbies",
+				path: "hobbies",
+				type: "Array",
+				typeName: "Hobbies{}",
+				value: [{
+					key: 0,
+					path: "hobbies.0",
+					type: "String",
+					value: "singing"
+				}, {
+					key: 1,
+					path: "hobbies.1",
+					type: "String",
+					value: "dancing"
+				},{
+					key: 2,
+					path: "hobbies.2",
+					type: "String",
+					value: "soccer"
+				}]
+			}],
+			name: "array in object with typenames"
+		}, {
+			json: {
+				person: {
+					hobbies: [ "singing", "dancing", "soccer" ]
+				}
+			},
+			types: {
+				person: "Person{}",
+				"person.hobbies": "Hobbies{}"
+			},
+			output: [{
+				key: "person",
+				path: "person",
+				type: "Object",
+				typeName: "Person{}",
+				value: [{
+					key: "hobbies",
+					path: "person.hobbies",
+					type: "Array",
+					typeName: "Hobbies{}",
+					value: [{
+						key: 0,
+						path: "person.hobbies.0",
+						type: "String",
+						value: "singing"
+					}, {
+						key: 1,
+						path: "person.hobbies.1",
+						type: "String",
+						value: "dancing"
+					}, {
+						key: 2,
+						path: "person.hobbies.2",
+						type: "String",
+						value: "soccer"
+					}]
+				}]
+			}],
+			name: "array in object in object with typenames"
 		}];
 
 		testCases.forEach(t => {
-			vm.json = t.input;
+			vm.assign({
+				json: t.json,
+				typeNames: t.types
+			});
 			assert.deepEqual(vm.parsedJSON.serialize(), t.output, `works for ${t.name}`);
 		});
 	});
