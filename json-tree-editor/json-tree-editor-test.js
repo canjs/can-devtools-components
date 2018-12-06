@@ -1,6 +1,6 @@
 import "steal-mocha";
 import chai from "chai";
-import { JSONTreeEditor, KeyValueEditor } from "./json-tree-editor";
+import { JSONTreeEditor, KeyValueEditor, removeTrailingBracketsOrBraces } from "./json-tree-editor";
 
 const assert = chai.assert;
 
@@ -533,5 +533,21 @@ describe("KeyValueEditor", () => {
 
 		vm.key = "theKey";
 		vm.value = "theValue";
+	});
+});
+
+describe("helpers", () => {
+	it("removeTrailingBracketsOrBraces", () => {
+		assert.equal(
+			removeTrailingBracketsOrBraces("Foo[]"),
+			"Foo",
+			"works for brackets"
+		);
+
+		assert.equal(
+			removeTrailingBracketsOrBraces("Foo{}"),
+			"Foo",
+			"works for braces"
+		);
 	});
 });

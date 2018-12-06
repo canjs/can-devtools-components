@@ -7,7 +7,8 @@ const isList = (val) => (val instanceof DefineList);
 stache.addHelper("isList", isList);
 stache.addHelper("isNumber", (val) => typeof val === "number");
 stache.addHelper("isEven", (num) => num % 2 === 0);
-stache.addHelper("removeTrailingBrackets", (str) => str.replace(/\[\]$/, ""));
+export const removeTrailingBracketsOrBraces = (str) => str.replace(/\[\]|\{\}$/, "");
+stache.addHelper("removeTrailingBracketsOrBraces", removeTrailingBracketsOrBraces);
 
 const capitalize = (key) => {
 	return `${key.slice(0, 1).toUpperCase()}${key.slice(1)}`;
@@ -309,7 +310,7 @@ export const JSONTreeEditor = Component.extend({
 
 			{{# is(type, "Object") }}
 				{{# if(typeName) }}
-					<div>{{typeName}}</div>
+					<div>{{ removeTrailingBracketsOrBraces(typeName) }}</div>
 				{{ else }}
 					<div>{{type}}</div>
 				{{/ if }}
@@ -317,7 +318,7 @@ export const JSONTreeEditor = Component.extend({
 
 			{{# is(type, "Array") }}
 				{{# if(typeName) }}
-					<div>{{ removeTrailingBrackets(typeName) }}({{value.length}})</div>
+					<div>{{ removeTrailingBracketsOrBraces(typeName) }}({{value.length}})</div>
 				{{ else }}
 					<div>{{type}}({{value.length}})</div>
 				{{/ if }}
