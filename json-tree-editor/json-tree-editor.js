@@ -284,20 +284,20 @@ export const JSONTreeEditor = Component.extend({
 			{{# switch(type) }}
 				{{# case("String") }}
 					<div class="value string">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 					</div>
 				{{/ case }}
 
 				{{# case("Boolean") }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(scope.event, path, scope.element.checked)">
 					</div>
 				{{/ case }}
 
 				{{# default }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 					</div>
 				{{/ default }}
 			{{/ switch }}

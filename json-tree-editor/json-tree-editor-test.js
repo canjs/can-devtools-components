@@ -7,7 +7,7 @@ const assert = chai.assert;
 const noop = () => { };
 const ev = { stopPropagation: noop };
 
-describe("JSONTreeEditor", () => {
+describe("JSONTreeEditor - ViewModel", () => {
 	const ViewModel = JSONTreeEditor.ViewModel;
 
 	it("expandedKeys", () => {
@@ -549,5 +549,27 @@ describe("helpers", () => {
 			"Foo",
 			"works for braces"
 		);
+	});
+});
+
+describe("JSONTreeEditor - Component", () => {
+	it("changing a key value", (done) => {
+		const c = new JSONTreeEditor({
+			viewModel: {
+				json: { name: "Kevin" }
+			}
+		});
+
+		const vm = c.viewModel;
+		const el = c.element;
+		const nameEditor = el.querySelector(".value editable-span");
+
+		vm.listenTo("set-json-path-value", (ev, path, value) => {
+			assert.equal(path, "name", "correct name");
+			assert.equal(value, "Connor", "correct value");
+			done();
+		});
+
+		nameEditor.viewModel.text = "Connor";
 	});
 });
