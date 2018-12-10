@@ -7,7 +7,7 @@ const assert = chai.assert;
 const noop = () => { };
 const ev = { stopPropagation: noop };
 
-describe("JSONTreeEditor", () => {
+describe("JSONTreeEditor - ViewModel", () => {
 	const ViewModel = JSONTreeEditor.ViewModel;
 
 	it("expandedKeys", () => {
@@ -83,6 +83,7 @@ describe("JSONTreeEditor", () => {
 		vm.dispatch("set-json-path-value", [ "abc", "'456'" ]);
 		assert.deepEqual(vm.json.serialize(), {	abc: "456", ghi: { }, pqr: [ { } ] }, "can set a non-string property as a string by dispatching a set-json-path-value event with the value wrapped in single quotes");
 	});
+
 
 	it("parsedJSON", () => {
 		const vm = new ViewModel();
@@ -549,5 +550,71 @@ describe("helpers", () => {
 			"Foo",
 			"works for braces"
 		);
+	});
+});
+
+describe("JSONTreeEditor - Component", () => {
+	it("changing a key value should call setPathValue", (done) => {
+		const c = new JSONTreeEditor({
+			viewModel: {
+				json: { name: "Kevin" }
+			}
+		});
+
+		const vm = c.viewModel;
+		const el = c.element;
+		const nameEditor = el.querySelector(".value editable-span");
+
+		vm.listenTo("set-json-path-value", (ev, path, value) => {
+			assert.equal(path, "name", "correct name");
+			assert.equal(value, "Connor", "correct value");
+			done();
+		});
+
+		nameEditor.viewModel.text = "Connor";
+	});
+
+	it("changing json should re-render the tree", () => {
+		const c = new JSONTreeEditor({
+			viewModel: {
+				json: {
+					name: "Kevin",
+					person: { name: "Kevin" },
+					class: { student: { name: "Kevin" } }
+				}
+			}
+		});
+
+		const el = c.element;
+		const vm = c.viewModel;
+
+		vm.listenTo("expandedKeys", () => {});
+		vm.expandedKeys = [ "person", "class", "class.student" ];
+
+		assert.equal(el.querySelectorAll(".value span")[0].innerHTML.trim(), "Kevin", "default name");
+		assert.equal(el.querySelectorAll(".value span")[1].innerHTML.trim(), "Kevin", "default person.name");
+		assert.equal(el.querySelectorAll(".value span")[2].innerHTML.trim(), "Kevin", "default class.student.name");
+
+		vm.json = {
+			name: "Connor", //updated
+			person: { name: "Kevin" },
+			class: { student: { name: "Kevin" } }
+		};
+
+		assert.equal(el.querySelectorAll(".value span")[0].innerHTML.trim(), "Connor", "updated name");
+
+		vm.json = {
+			name: "Connor",
+			person: { name: "Connor" }, //updated
+			class: { student: { name: "Kevin" } }
+		};
+		assert.equal(el.querySelectorAll(".value span")[1].innerHTML.trim(), "Connor", "updated person.name");
+
+		vm.json = {
+			name: "Connor",
+			person: { name: "Connor" },
+			class: { student: { name: "Connor" } } //updated
+		};
+		assert.equal(el.querySelectorAll(".value span")[2].innerHTML.trim(), "Connor", "updated class.student.name");
 	});
 });

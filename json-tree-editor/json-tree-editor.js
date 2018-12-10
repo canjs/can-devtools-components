@@ -38,7 +38,11 @@ const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
 	path: "string",
 	id: {
 		identity: true,
-		get() {
+		get(lastSet) {
+			if (lastSet) {
+				return lastSet;
+			}
+
 			return `{
 				"key": "${this.key}",
 				"value": "${this.value}",
@@ -56,19 +60,23 @@ const ParsedJSON = DefineList.extend("ParsedJSON", {
 });
 
 const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
-	let parsedValue;
+	let parsedValue, parsedId = "";
 	const path =`${parentPath ? (parentPath + ".") : ""}${key}`;
 
 	const mightHaveChildren = Reflect.isObservableLike(value) &&
 		(Reflect.isListLike(value) || Reflect.isMapLike(value));
 
 	if (mightHaveChildren) {
-		parsedValue = [];
+		parsedValue = new ParsedJSON([]);
 
 		value.forEach((childValue, childKey) => {
 			parsedValue.push(
 				parseKeyValue({ key: childKey, value:childValue, parentPath: path, getTypeName: getTypeName })
 			);
+		});
+
+		parsedValue.forEach((parsed) => {
+			parsedId += parsed.id + "|";
 		});
 	} else {
 		parsedValue = value;
@@ -79,7 +87,8 @@ const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
 		path,
 		type: getType(value),
 		typeName: getTypeName(path),
-		value: parsedValue
+		value: parsedValue,
+		id: parsedId
 	};
 };
 
@@ -284,20 +293,20 @@ export const JSONTreeEditor = Component.extend({
 			{{# switch(type) }}
 				{{# case("String") }}
 					<div class="value string">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 					</div>
 				{{/ case }}
 
 				{{# case("Boolean") }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 						<input type="checkbox" checked:from="value" on:click="scope.vm.setPathValue(scope.event, path, scope.element.checked)">
 					</div>
 				{{/ case }}
 
 				{{# default }}
 					<div class="value">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
 					</div>
 				{{/ default }}
 			{{/ switch }}
