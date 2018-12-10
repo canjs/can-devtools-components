@@ -37,6 +37,10 @@
 				}]
 			};
 
+			vm.typeNames = {
+				hobbies: "Hobbies"
+			};
+
 			(function updateTextAreaValue() {
 				textarea.value = JSON.stringify(vm.json, null, "\t");
 				setTimeout(updateTextAreaValue, 50);

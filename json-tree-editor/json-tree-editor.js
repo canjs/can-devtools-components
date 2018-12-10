@@ -34,7 +34,6 @@ const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
 	key: NumberOrString,
 	value: NumberOrString,
 	type: "string",
-	typeName: "string",
 	path: "string",
 	id: {
 		identity: true,
@@ -47,7 +46,6 @@ const ParsedJSONNode = DefineMap.extend("ParsedJSONNode", {
 				"key": "${this.key}",
 				"value": "${this.value}",
 				"type": "${this.type}",
-				"typeName": "${this.typeName}",
 				"path": "${this.path}"
 			}`;
 
@@ -59,7 +57,7 @@ const ParsedJSON = DefineList.extend("ParsedJSON", {
 	"#": ParsedJSONNode
 });
 
-const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
+const parseKeyValue = ({ key, value, parentPath }) => {
 	let parsedValue, parsedId = "";
 	const path =`${parentPath ? (parentPath + ".") : ""}${key}`;
 
@@ -71,7 +69,7 @@ const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
 
 		value.forEach((childValue, childKey) => {
 			parsedValue.push(
-				parseKeyValue({ key: childKey, value:childValue, parentPath: path, getTypeName: getTypeName })
+				parseKeyValue({ key: childKey, value:childValue, parentPath: path })
 			);
 		});
 
@@ -86,7 +84,6 @@ const parseKeyValue = ({ key, value, parentPath, getTypeName }) => {
 		key,
 		path,
 		type: getType(value),
-		typeName: getTypeName(path),
 		value: parsedValue,
 		id: parsedId
 	};
@@ -97,7 +94,7 @@ export const JSONTreeEditor = Component.extend({
 
 	ViewModel: {
 		rootNodeName: { type: "string", default: "JSON" },
-		typeNames: { type: "any", default: () => ({}) },
+		typeNames: { Type: DefineMap, Default: DefineMap },
 
 		expandedKeys: {
 			value({ listenTo, lastSet, resolve }) {
@@ -181,13 +178,9 @@ export const JSONTreeEditor = Component.extend({
 		get parsedJSON() {
 			const parsed = new ParsedJSON([]);
 
-			const getTypeName = (path) => {
-				return this.typeNames[path];
-			};
-
 			Reflect.each(this.json, (value, key) => {
 				parsed.push(
-					parseKeyValue({ key, value, getTypeName })
+					parseKeyValue({ key, value })
 				);
 			});
 
@@ -285,6 +278,10 @@ export const JSONTreeEditor = Component.extend({
 			return (key, value) => {
 				this.dispatch("set-json-path-value", [ `${path ? path + "." : ""}` + key, value ]);
 			};
+		},
+
+		getTypeNameAtPath(path) {
+			return this.typeNames[path];
 		}
 	},
 
@@ -312,26 +309,32 @@ export const JSONTreeEditor = Component.extend({
 			{{/ switch }}
 		{{/ singleValueTemplate }}
 
-		{{< keyValueTemplate }}
-			{{# unless( isNumber(key) ) }}
-				<div class="key">{{key}}:&nbsp;</div>
-			{{/ unless }}
+		{{< typeTemplate }}
+			{{ let typeName = scope.vm.getTypeNameAtPath(path) }}
 
 			{{# is(type, "Object") }}
 				{{# if(typeName) }}
-					<div>{{ removeTrailingBracketsOrBraces(typeName) }}</div>
+					<div class="type">{{ removeTrailingBracketsOrBraces(typeName) }}</div>
 				{{ else }}
-					<div>{{type}}</div>
+					<div class="type">{{type}}</div>
 				{{/ if }}
 			{{/ is }}
 
 			{{# is(type, "Array") }}
 				{{# if(typeName) }}
-					<div>{{ removeTrailingBracketsOrBraces(typeName) }}({{value.length}})</div>
+					<div class="type">{{ removeTrailingBracketsOrBraces(typeName) }}({{value.length}})</div>
 				{{ else }}
-					<div>{{type}}({{value.length}})</div>
+					<div class="type">{{type}}({{value.length}})</div>
 				{{/ if }}
 			{{/ is }}
+		{{/ typeTemplate }}
+
+		{{< keyValueTemplate }}
+			{{# unless( isNumber(key) ) }}
+				<div class="key">{{key}}:&nbsp;</div>
+			{{/ unless }}
+
+			{{> typeTemplate }}
 
 			{{# unless( isList(value) ) }}
 				{{> singleValueTemplate }}
