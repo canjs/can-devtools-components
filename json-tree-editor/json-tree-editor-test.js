@@ -91,7 +91,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 
 		const testCases = [{
 			json: { },
-			types: { },
 			output: [ ],
 			name: "empty object"
 		}, {
@@ -100,7 +99,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 				age: 30,
 				likesPizza: true
 			},
-			types: { },
 			output: [{
 				key: "name",
 				path: "name",
@@ -125,7 +123,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 					last: "Phillips"
 				}
 			},
-			types: { },
 			output: [{
 				key: "name",
 				path: "name",
@@ -147,7 +144,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 			json: {
 				hobbies: [ "singing", "dancing", "soccer" ]
 			},
-			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -176,7 +172,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 					hobbies: [ "singing", "dancing", "soccer" ]
 				}
 			},
-			types: { },
 			output: [{
 				key: "person",
 				path: "person",
@@ -210,7 +205,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 					{ name: "singing" }, { name: "dancing" }, { name: "soccer" }
 				]
 			},
-			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -254,7 +248,6 @@ describe("JSONTreeEditor - ViewModel", () => {
 					{ }, { name: "dancing" }
 				]
 			},
-			types: { },
 			output: [{
 				key: "hobbies",
 				path: "hobbies",
@@ -277,81 +270,11 @@ describe("JSONTreeEditor - ViewModel", () => {
 				}]
 			}],
 			name: "array with empty object"
-		}, {
-			json: {
-				hobbies: [ "singing", "dancing", "soccer" ]
-			},
-			types: {
-				hobbies: "Hobbies{}"
-			},
-			output: [{
-				key: "hobbies",
-				path: "hobbies",
-				type: "Array",
-				typeName: "Hobbies{}",
-				value: [{
-					key: 0,
-					path: "hobbies.0",
-					type: "String",
-					value: "singing"
-				}, {
-					key: 1,
-					path: "hobbies.1",
-					type: "String",
-					value: "dancing"
-				},{
-					key: 2,
-					path: "hobbies.2",
-					type: "String",
-					value: "soccer"
-				}]
-			}],
-			name: "array in object with typenames"
-		}, {
-			json: {
-				person: {
-					hobbies: [ "singing", "dancing", "soccer" ]
-				}
-			},
-			types: {
-				person: "Person{}",
-				"person.hobbies": "Hobbies{}"
-			},
-			output: [{
-				key: "person",
-				path: "person",
-				type: "Object",
-				typeName: "Person{}",
-				value: [{
-					key: "hobbies",
-					path: "person.hobbies",
-					type: "Array",
-					typeName: "Hobbies{}",
-					value: [{
-						key: 0,
-						path: "person.hobbies.0",
-						type: "String",
-						value: "singing"
-					}, {
-						key: 1,
-						path: "person.hobbies.1",
-						type: "String",
-						value: "dancing"
-					}, {
-						key: 2,
-						path: "person.hobbies.2",
-						type: "String",
-						value: "soccer"
-					}]
-				}]
-			}],
-			name: "array in object in object with typenames"
 		}];
 
 		testCases.forEach(t => {
 			vm.assign({
-				json: t.json,
-				typeNames: t.types
+				json: t.json
 			});
 			assert.deepEqual(vm.parsedJSON.serialize(), t.output, `works for ${t.name}`);
 		});
@@ -517,39 +440,14 @@ describe("JSONTreeEditor - ViewModel", () => {
 			setKeyValueForPath("bar", "baz");
 		});
 	});
-});
 
-describe("KeyValueEditor", () => {
-	const ViewModel = KeyValueEditor.ViewModel;
-
-	it("should call setKeyValue when key and value are set", () => {
+	it("getTypeNameAtPath", () => {
 		const vm = new ViewModel({
-			setKeyValue(key, value) {
-				assert.equal(key, "theKey", "passed the correct key");
-				assert.equal(value, "theValue", "passed the correct value");
-			}
+			typeNames: { foo: "BarList[]", "foo.0": "Bar{}" }
 		});
 
-		vm.key = "notTheKey";
-
-		vm.key = "theKey";
-		vm.value = "theValue";
-	});
-});
-
-describe("helpers", () => {
-	it("removeTrailingBracketsOrBraces", () => {
-		assert.equal(
-			removeTrailingBracketsOrBraces("Foo[]"),
-			"Foo",
-			"works for brackets"
-		);
-
-		assert.equal(
-			removeTrailingBracketsOrBraces("Foo{}"),
-			"Foo",
-			"works for braces"
-		);
+		assert.equal(vm.getTypeNameAtPath("foo"), "BarList[]", "foo");
+		assert.equal(vm.getTypeNameAtPath("foo.0"), "Bar{}", "foo.0");
 	});
 });
 
@@ -616,5 +514,66 @@ describe("JSONTreeEditor - Component", () => {
 			class: { student: { name: "Connor" } } //updated
 		};
 		assert.equal(el.querySelectorAll(".value span")[2].innerHTML.trim(), "Connor", "updated class.student.name");
+	});
+
+	it("changing typenames should re-render the tree", () => {
+		const c = new JSONTreeEditor({
+			viewModel: {
+				json: {
+					people: [{
+						name: "Kevin"
+					}]
+				}
+			}
+		});
+
+		const el = c.element;
+		const vm = c.viewModel;
+
+		vm.listenTo("expandedKeys", () => {});
+		vm.expandedKeys = [ "people" ];
+
+		assert.equal(el.querySelectorAll(".type")[0].innerHTML.trim(), "Array(1)", "default type for people");
+		assert.equal(el.querySelectorAll(".type")[1].innerHTML.trim(), "Object", "default type for person");
+
+		vm.typeNames = { people: "People[]", "people.0": "Person{}" };
+
+		console.log("asserting");
+		assert.equal(el.querySelectorAll(".type")[0].innerHTML.trim(), "People(1)", "correct type for people");
+		assert.equal(el.querySelectorAll(".type")[1].innerHTML.trim(), "Person", "correct type for person");
+	});
+});
+
+describe("KeyValueEditor", () => {
+	const ViewModel = KeyValueEditor.ViewModel;
+
+	it("should call setKeyValue when key and value are set", () => {
+		const vm = new ViewModel({
+			setKeyValue(key, value) {
+				assert.equal(key, "theKey", "passed the correct key");
+				assert.equal(value, "theValue", "passed the correct value");
+			}
+		});
+
+		vm.key = "notTheKey";
+
+		vm.key = "theKey";
+		vm.value = "theValue";
+	});
+});
+
+describe("helpers", () => {
+	it("removeTrailingBracketsOrBraces", () => {
+		assert.equal(
+			removeTrailingBracketsOrBraces("Foo[]"),
+			"Foo",
+			"works for brackets"
+		);
+
+		assert.equal(
+			removeTrailingBracketsOrBraces("Foo{}"),
+			"Foo",
+			"works for braces"
+		);
 	});
 });
