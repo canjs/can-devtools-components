@@ -84,6 +84,7 @@ describe("JSONTreeEditor - ViewModel", () => {
 		assert.deepEqual(vm.json.serialize(), {	abc: "456", ghi: { }, pqr: [ { } ] }, "can set a non-string property as a string by dispatching a set-json-path-value event with the value wrapped in single quotes");
 	});
 
+
 	it("parsedJSON", () => {
 		const vm = new ViewModel();
 		vm.listenTo("parsedJSON", noop);
@@ -553,7 +554,7 @@ describe("helpers", () => {
 });
 
 describe("JSONTreeEditor - Component", () => {
-	it("changing a key value", (done) => {
+	it("changing a key value should call setPathValue", (done) => {
 		const c = new JSONTreeEditor({
 			viewModel: {
 				json: { name: "Kevin" }
@@ -571,5 +572,49 @@ describe("JSONTreeEditor - Component", () => {
 		});
 
 		nameEditor.viewModel.text = "Connor";
+	});
+
+	it("changing json should re-render the tree", () => {
+		const c = new JSONTreeEditor({
+			viewModel: {
+				json: {
+					name: "Kevin",
+					person: { name: "Kevin" },
+					class: { student: { name: "Kevin" } }
+				}
+			}
+		});
+
+		const el = c.element;
+		const vm = c.viewModel;
+
+		vm.listenTo("expandedKeys", () => {});
+		vm.expandedKeys = [ "person", "class", "class.student" ];
+
+		assert.equal(el.querySelectorAll(".value span")[0].innerHTML.trim(), "Kevin", "default name");
+		assert.equal(el.querySelectorAll(".value span")[1].innerHTML.trim(), "Kevin", "default person.name");
+		assert.equal(el.querySelectorAll(".value span")[2].innerHTML.trim(), "Kevin", "default class.student.name");
+
+		vm.json = {
+			name: "Connor", //updated
+			person: { name: "Kevin" },
+			class: { student: { name: "Kevin" } }
+		};
+
+		assert.equal(el.querySelectorAll(".value span")[0].innerHTML.trim(), "Connor", "updated name");
+
+		vm.json = {
+			name: "Connor",
+			person: { name: "Connor" }, //updated
+			class: { student: { name: "Kevin" } }
+		};
+		assert.equal(el.querySelectorAll(".value span")[1].innerHTML.trim(), "Connor", "updated person.name");
+
+		vm.json = {
+			name: "Connor",
+			person: { name: "Connor" },
+			class: { student: { name: "Connor" } } //updated
+		};
+		assert.equal(el.querySelectorAll(".value span")[2].innerHTML.trim(), "Connor", "updated class.student.name");
 	});
 });
