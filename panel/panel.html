@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+	<head>
+		<style>
+			html, body {
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<components-panel></components-panel>
+
+		<script src="../node_modules/steal/steal.js"
+			main="can-devtools-components/panel/panel">
+			const vm = document.querySelector("components-panel").viewModel;
+
+			vm.componentTree.updateDeep([{
+				"tagName": "todo-list",
+				"children": [{
+					"tagName": "todo-item",
+					"children": []
+				},{
+					"tagName": "todo-editor",
+					"children": []
+				},{
+					"tagName": "todo-item",
+					"children": []
+				}]
+			}]);
+		</script>
+	</body>
+<html>
