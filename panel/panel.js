@@ -153,6 +153,10 @@ export default Component.extend({
 			<div class="tree-view">
 				<div class="component-tree-header">
 					<h1>CanJS Components</h1>
+					<select class="frame-picker">
+						<option>http://localhost/devtools-test-app/</option>
+						<option>https://s.codepen.io/boomerang/iFrameKey-b25e5141-aa15-2540-e55c-6c1e47b1de86/index.html</option>
+					</select>
 
 					<div class="filters">
 						<p><input placeholder="Filter Components"></p>
