@@ -1,4 +1,4 @@
-import { Component, DefineList } from "../node_modules/can-devtools-components/dist/panel.mjs";
+import { Component, DefineList } from "../dist/panel.mjs";
 
 Component.extend({
     tag: "canjs-devtools-panel",
@@ -32,3 +32,4 @@ Component.extend({
         componentTree: { Type: DefineList, Default: DefineList },
         error: "string"
     }
+});
