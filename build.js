@@ -29,6 +29,12 @@ stealTools.export({
 			dest: globalJS.dest(__dirname + "/dist/bindings-graph.mjs"),
 			removeDevelopmentCode: false
 		},
+		"+bundled-es component-tree": {
+			modules: ["component-tree/component-tree"],
+			addProcessShim: true,
+			dest: globalJS.dest(__dirname + "/dist/component-tree.mjs"),
+			removeDevelopmentCode: false
+		},
 		"+bundled-es editable-span": {
 			modules: ["editable-span/editable-span"],
 			addProcessShim: true,
@@ -39,6 +45,12 @@ stealTools.export({
 			modules: ["json-tree-editor/json-tree-editor"],
 			addProcessShim: true,
 			dest: globalJS.dest(__dirname + "/dist/json-tree-editor.mjs"),
+			removeDevelopmentCode: false
+		},
+		"+bundled-es panel": {
+			modules: ["panel/panel"],
+			addProcessShim: true,
+			dest: globalJS.dest(__dirname + "/dist/panel.mjs"),
 			removeDevelopmentCode: false
 		},
 		"+bundled-es queues-logstack": {

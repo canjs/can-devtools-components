@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<style></style>
+	</head>
+
+	<body>
+		<component-tree></component-tree>
+
+		<script src="../node_modules/steal/steal.js"
+			main="can-devtools-components/component-tree/component-tree">
+			const vm = document.querySelector("component-tree").viewModel;
+
+			vm.componentTree = [{
+				"tagName": "todo-list",
+				"children": [{
+					"tagName": "todo-item",
+					"children": []
+				},{
+					"tagName": "todo-editor",
+					"children": []
+				},{
+					"tagName": "todo-item",
+					"children": []
+				}]
+			}];
+		</script>
+	</body>
+<html>

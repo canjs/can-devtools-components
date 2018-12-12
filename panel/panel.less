@@ -1,0 +1,48 @@
+@import '../styles.less';
+
+components-panel {
+	.grid-container {
+		display: grid;
+		grid-template-columns: repeat(8, 1fr);
+		grid-template-rows: 1fr;
+		grid-template-areas:
+			"tree-view tree-view tree-view tree-view tree-view sidebar sidebar sidebar";
+
+		.tree-view {
+			grid-area: tree-view;
+			padding: 0 0 @third-unit;
+			line-height: 1.5;
+
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: auto 7fr;
+			grid-template-areas:
+				"component-tree-header"
+				"component-tree";
+
+			.component-tree-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background-color: #f3f3f3;
+				border-bottom: 1px solid #d0d0d0;
+				padding-left: @half-unit;
+				margin-bottom: @sm-unit;
+				h1 {
+					font-family: sans-serif;
+					text-align: left;
+					display: inline-block;
+					color: @brand-color;
+				}
+			}
+		}
+
+		.sidebar {
+			grid-area: sidebar;
+			line-height: 1.5;
+			border-left: 1px solid #d0d0d0;
+			display: grid;
+			grid-template-columns: 1fr;
+		}
+	}
+}
