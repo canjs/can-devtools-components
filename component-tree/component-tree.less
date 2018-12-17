@@ -4,15 +4,35 @@ component-tree {
 	.tag {
 		cursor: pointer;
 		color: @tag-color;
-		padding-left: @half-unit;
+
+		&.level-0 {
+			padding-left: 1 * @half-unit;
+			color: @level-color-0;
+		}
+
 		&.level-1 {
-			padding-left: @base-unit;
-			color: @l1-color;
+			padding-left: 2 * @half-unit;
+			color: @level-color-1;
 		}
 
 		&.level-2 {
-			padding-left: @base-unit + @half-unit;
-			color: @l2-color;
+			padding-left: 3 * @half-unit;
+			color: @level-color-2;
+		}
+
+		&.level-3 {
+			padding-left: 4 * @half-unit;
+			color: @level-color-3;
+		}
+
+		&.level-4 {
+			padding-left: 5 * @half-unit;
+			color: @level-color-4;
+		}
+
+		&.level-5 {
+			padding-left: 6 * @half-unit;
+			color: @level-color-5;
 		}
 
 		span {
