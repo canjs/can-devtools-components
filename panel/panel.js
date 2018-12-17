@@ -1,13 +1,23 @@
-import { Component, DefineMap, DefineList } from "can";
+import { Component, DefineMap, DefineList, Reflect } from "can";
 
 import "component-tree/component-tree";
+import "viewmodel-editor/viewmodel-editor";
 import "panel/panel.less";
 
 export default Component.extend({
 	tag: "components-panel",
 	ViewModel: {
 		componentTree: DefineList,
-		selectedNode: DefineMap
+		selectedNode: DefineMap,
+		viewModelData: DefineMap,
+		typeNamesData: DefineMap,
+		updateValues: {
+			default() {
+				return (data) => {
+					console.log("updating viewModel with", data);
+				};
+			}
+		}
 	},
 	view: `
 		<div class="grid-container">
@@ -26,9 +36,22 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar">
+				<div class="viewmodel-editor">
+					<h2>
+						ViewModel Editor
+					</h2>
+					<div class="sidebar-container">
+						<viewmodel-editor
+							tagName:from="this.selectedNode.tagName"
+							viewModelData:to="viewModelData"
+							typeNamesData:to="typeNamesData"
+							updateValues:from="updateValues"
+						></viewmodel-editor>
+					</div>
+				</div>
 			</div>
 		</div>
 	`
 });
 
-export { Component, DefineMap, DefineList };
+export { Component, DefineMap, DefineList, Reflect };

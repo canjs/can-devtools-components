@@ -46,8 +46,30 @@ components-panel {
 			grid-area: sidebar;
 			line-height: 1.5;
 			border-left: 1px solid #d0d0d0;
+
 			display: grid;
 			grid-template-columns: 1fr;
+
+			h2 {
+				font-family: sans-serif;
+				display: flex;
+				align-items: center;
+				margin: 0;
+			}
+
+
+			.viewmodel-editor {
+				> h2 {
+					text-align: left;
+					width: 100%;
+					background-color: #f3f3f3;
+					border-bottom: 1px solid #d0d0d0;
+				}
+			}
+
+			.sidebar-container {
+				padding: 0 10px;
+			}
 		}
 	}
 }
