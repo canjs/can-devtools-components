@@ -6,13 +6,13 @@ component-tree {
 		cursor: pointer;
 		color: @tag-color;
 
-		@iterations: 5;
+		@iterations: 23;
 		.levels-loop (@i) when (@i >= 0) {
 			.levels-loop(@i - 1);
 
 			&.level-@{i} {
 				padding-left: (@i + 1) * @half-unit;
-				color: extract(@level-colors, @i + 1);
+				color: extract(@level-colors, mod(@i, 6) + 1);
 			}
 		}
 		.levels-loop (@iterations);
