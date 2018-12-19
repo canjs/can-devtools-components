@@ -60,7 +60,7 @@
     "generator-donejs": "^2.1.0",
     "jshint": "^2.9.1",
     "less": "^3.0.1",
-    "steal": "^2.1.6",
+    "steal": "^2.1.11",
     "steal-less": "^1.2.2",
     "steal-mocha": "^2.0.0",
     "steal-qunit": "^1.0.1",

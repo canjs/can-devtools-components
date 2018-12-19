@@ -10,14 +10,27 @@
 @font-lg:		13px;
 @font-xl:		20px;
 
+@brand-color:   #2e77b5;
 @key-color:		#963296;
 @value-color:	#1527a9;
 @string-color:	#c3201c;
+
+@tag-color:     #f37736;
+
 @base-color:	#404040;
 @action-color:  #0095f9;
+@black:         #111111;
 @white:         #FFFFFF;
+@med-gray:      #AAAAAA;
 @gray:			#CCCCCC;
+@light-gray:	#EAEAEA;
 
+* {
+    font-size: @font-base;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
 	font-family: monospace;
 }
@@ -26,7 +39,7 @@ h1, h2, h3 {
     text-align: center;
 }
 h1 {
-    font-size: @font-xl;
+    font-size: @font-lg;
 }
 h2 {
     font-size: @font-lg;
@@ -34,10 +47,14 @@ h2 {
 h3 {
     font-size: @font-base;
 }
+input {
+    font-size: @font-base;
+    padding: @sm-unit;
+}
 button {
     background-color: @white;
     border: @action-color 2px solid;
-    margin-left: @double-unit;
+    margin-left: auto;
     padding: @sm-unit @half-unit;
     font-weight: 300;
     font-size: @font-base;
@@ -54,9 +71,8 @@ button {
 
 	&.disabled {
 		color: @gray;
-		border-color: @gray;
+		border-color: @light-gray;
 		cursor: default;
-
 		&:hover {
 			background-color: @white;
 		}

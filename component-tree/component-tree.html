@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<style></style>
+	</head>
+
+	<body>
+		<component-tree></component-tree>
+
+		<script src="../node_modules/steal/steal.js"
+			main="can-devtools-components/component-tree/component-tree">
+			const vm = document.querySelector("component-tree").viewModel;
+
+			vm.componentTree.updateDeep([{
+				tagName: "todo-list",
+				id: 0,
+				children: [{
+					tagName: "todo-item",
+					id: 1,
+					children: []
+				},{
+					tagName: "todo-editor",
+					id: 2,
+					children: []
+				},{
+					tagName: "todo-item",
+					id: 3,
+					children: []
+				}]
+			}]);
+
+			setTimeout(() => {
+				console.log("updating componentTree");
+
+				vm.componentTree.updateDeep([{
+					tagName: "todo-list",
+					id: 0,
+					children: [{
+						tagName: "todo-editor",
+						id: 4,
+						children: []
+					},{
+						tagName: "todo-item",
+						id: 5,
+						children: []
+					},{
+						tagName: "todo-item",
+						id: 3,
+						children: []
+					}]
+				}]);
+			}, 5000);
+		</script>
+	</body>
+<html>

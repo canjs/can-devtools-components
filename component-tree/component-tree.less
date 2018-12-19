@@ -1,0 +1,31 @@
+@import '../styles.less';
+@level-colors: #C90131, #01A54C, #DA5E00, #01547B, #D7A000, #6D007B;
+
+component-tree {
+	.tag {
+		cursor: pointer;
+		color: @tag-color;
+
+		@iterations: 23;
+		.levels-loop (@i) when (@i >= 0) {
+			.levels-loop(@i - 1);
+
+			&.level-@{i} {
+				padding-left: (@i + 1) * @half-unit;
+				color: extract(@level-colors, mod(@i, 6) + 1);
+			}
+		}
+		.levels-loop (@iterations);
+
+		span {
+			color: @med-gray;
+		}
+	}
+	p:hover {
+		background-color: #eaf2fb;
+	}
+	p.selected {
+		background-color: #4f96ec;
+		color: white !important;
+	}
+}
