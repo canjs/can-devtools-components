@@ -43,8 +43,8 @@ export default Component.extend({
 					<div class="sidebar-container">
 						<viewmodel-editor
 							tagName:from="this.selectedNode.tagName"
-							viewModelData:to="viewModelData"
-							typeNamesData:to="typeNamesData"
+							viewModelData:bind="viewModelData"
+							typeNamesData:bind="typeNamesData"
 							updateValues:from="updateValues"
 						></viewmodel-editor>
 					</div>
