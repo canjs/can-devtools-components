@@ -1,4 +1,4 @@
-import { Component, DefineMap, key as canKey, diff, Reflect, Observation } from "can";
+import { Component, DefineMap, DefineList, key as canKey, diff, Reflect, Observation } from "can";
 
 import "../json-tree-editor/json-tree-editor";
 import "viewmodel-editor/viewmodel-editor.less";
@@ -20,11 +20,10 @@ const clone = (obj) => {
 export default Component.extend({
 	tag: "viewmodel-editor",
 	ViewModel: {
-		// allow overwriting editor for testing
-		editor: "any",
 		tagName: "string",
 		viewModelData: { Type: DefineMap, Default: DefineMap },
 		typeNamesData: { Type: DefineMap, Default: DefineMap },
+		expandedKeys: DefineList,
 
 		get serializedViewModelData() {
 			return this.viewModelData.serialize();
@@ -142,9 +141,10 @@ export default Component.extend({
 				json:from="json"
 				typeNames:from="typeNamesData"
 				rootNodeName:raw="ViewModel"
+				expandedKeys:to="expandedKeys"
 			></json-tree-editor>
 		{{/ and }}
 	`
 });
 
-export { Component, DefineMap, canKey as key, diff, Reflect, Observation };
+export { Component, DefineMap, DefineList, canKey as key, diff, Reflect, Observation };
