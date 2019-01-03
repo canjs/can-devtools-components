@@ -53,11 +53,11 @@ describe("viewmodel-editor", () => {
 	describe("getPatchedData", () => {
 		let vm;
 
-		describe("add", () => {
-			beforeEach(() => {
-				vm = new ViewModel();
-			});
+		beforeEach(() => {
+			vm = new ViewModel();
+		});
 
+		describe("add", () => {
 			it("works", () => {
 				let destination = { aaa: "bbb", ccc: "ddd" };
 				let oldSource = {};
@@ -148,11 +148,15 @@ describe("viewmodel-editor", () => {
 	});
 
 	it("save", (done) => {
-		const patched = [ "one", "two" ];
+		const patches = [{
+			key: "foo", type: "set", value: "baz"
+		},{
+			index: 0, deleteCount: 1, insert: [], type: "splice", key: "list"
+		}];
 		const vm = new ViewModel({
-			patchedViewModelData: patched,
+			jsonEditorPatches: patches,
 			updateValues(p) {
-				assert.deepEqual(p, patched, "updateValues called with patchedViewModelData");
+				assert.deepEqual(p, patches, "updateValues called with jsonEditorPatches");
 			}
 		});
 
