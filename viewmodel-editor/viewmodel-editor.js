@@ -89,23 +89,16 @@ export default Component.extend({
 			return patchedData;
 		},
 
-		get jsonEditorPatches() {
-			return diff.deep(this.serializedViewModelData, this.json.serialize());
-		},
-
-		patchedViewModelData: {
+		jsonEditorPatches: {
 			type: "any",
 			get(lastSet) {
 				if (lastSet) { return lastSet; }
-				const patches = this.jsonEditorPatches;
-				const patchedViewModelData = this.getPatchedData(this.serializedViewModelData, patches);
-
-				return patchedViewModelData;
+				return diff.deep(this.serializedViewModelData, this.json.serialize());
 			}
 		},
 
 		save() {
-			this.updateValues( this.patchedViewModelData );
+			this.updateValues( this.jsonEditorPatches );
 			this.dispatch("reset-json-patches");
 		},
 
