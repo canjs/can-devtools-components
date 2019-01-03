@@ -22,10 +22,10 @@ describe("viewmodel-editor", () => {
 		assert.deepEqual(vm.json.serialize(), { abc: "xyz", def: "uvw", ghi: [] }, "defaults to viewModelData");
 
 		vm.viewModelData = { abc: "rst", def: "uvw" };
-		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "uvw", ghi: [] }, "updates when viewModelData is updated");
+		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "uvw" }, "updates when viewModelData is updated");
 
 		vm.json.def = "nop";
-		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "nop", ghi: [] }, "updates when change is made by json-editor");
+		assert.deepEqual(vm.json.serialize(), { abc: "rst", def: "nop" }, "updates when change is made by json-editor");
 
 		vm.viewModelData = { abc: "klm", def: "uvw", ghi: [] };
 		assert.deepEqual(vm.json.serialize(), { abc: "klm", def: "nop", ghi: [] }, "persists change made by json-editor after viewModelData is set");
