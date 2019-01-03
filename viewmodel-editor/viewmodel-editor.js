@@ -52,9 +52,9 @@ export default Component.extend({
 					let newJson = this.getPatchedData(vmData, jsonPatches);
 
 					// don't set patches when json is changed
-					// because viewModel data is updated
+					// due to viewModel data being updated
 					Reflect.offValue(serializedJSON, setPatches);
-					Reflect.assignDeep(json, newJson);
+					Reflect.updateDeep(json, newJson);
 					Reflect.onValue(serializedJSON, setPatches);
 				});
 
