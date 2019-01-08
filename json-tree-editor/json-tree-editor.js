@@ -95,6 +95,7 @@ export const JSONTreeEditor = Component.extend({
 	ViewModel: {
 		rootNodeName: { type: "string", default: "JSON" },
 		typeNames: { Type: DefineMap, Default: DefineMap },
+		messages: { Type: DefineMap, Default: DefineMap },
 
 		expandedKeys: {
 			value({ listenTo, lastSet, resolve }) {
@@ -282,6 +283,10 @@ export const JSONTreeEditor = Component.extend({
 
 		getTypeNameAtPath(path) {
 			return this.typeNames[path];
+		},
+
+		getMessageAtPath(path) {
+			return this.messages[path];
 		}
 	},
 
@@ -352,6 +357,7 @@ export const JSONTreeEditor = Component.extend({
 
 		{{< nodeTemplate }}
 			{{ let showOptions = false }}
+			{{ let message = scope.vm.getMessageAtPath(path) }}
 
 			<div class="wrapper">
 				{{# if( isList(value) ) }}
@@ -374,6 +380,10 @@ export const JSONTreeEditor = Component.extend({
 
 				{{# if( isList(value) ) }}
 					{{# if( scope.vm.isExpanded(path) ) }}
+						{{# if(message) }}
+							<div class="message {{message.type}}">{{message.message}}</div>
+						{{/ if }}
+
 						<div class="list-container" on:click="scope.vm.addChild(scope.event, path)">
 							{{# for(child of value) }}
 								{{ let showArrowAnimation = false }}
@@ -393,6 +403,10 @@ export const JSONTreeEditor = Component.extend({
 								</div>
 							{{/ if }}
 						</div>
+					{{/ if }}
+				{{/ else }}
+					{{# if(message) }}
+						<div class="message {{message.type}}">{{message.message}}</div>
 					{{/ if }}
 				{{/ if }}
 			</div>

@@ -11,6 +11,7 @@ export default Component.extend({
 		selectedNode: DefineMap,
 		viewModelData: DefineMap,
 		typeNamesData: DefineMap,
+		messages: DefineMap,
 		expandedKeys: DefineList,
 		updateValues: {
 			default() {
@@ -46,6 +47,7 @@ export default Component.extend({
 							tagName:from="this.selectedNode.tagName"
 							viewModelData:bind="viewModelData"
 							typeNamesData:bind="typeNamesData"
+							messages:bind="messages"
 							updateValues:from="updateValues"
 							expandedKeys:to="expandedKeys"
 						></viewmodel-editor>
