@@ -26,14 +26,9 @@
     "build": "node build.js && lessc can-devtools-components.less dist/can-devtools-components.css"
   },
   "main": "dist/can-devtools-components",
-  "keywords": [
-    "donejs-plugin"
-  ],
   "steal": {
     "main": "can-devtools-components",
     "npmIgnore": [
-      "donejs-cli",
-      "generator-donejs",
       "testee",
       "steal-tools"
     ],
@@ -56,8 +51,6 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "donejs-cli": "^2.1.0",
-    "generator-donejs": "^2.1.0",
     "jshint": "^2.9.1",
     "less": "^3.0.1",
     "steal": "^2.1.11",

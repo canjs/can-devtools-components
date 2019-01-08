@@ -449,6 +449,21 @@ describe("JSONTreeEditor - ViewModel", () => {
 		assert.equal(vm.getTypeNameAtPath("foo"), "BarList[]", "foo");
 		assert.equal(vm.getTypeNameAtPath("foo.0"), "Bar{}", "foo.0");
 	});
+
+	it("getMessageAtPath", () => {
+		const vm = new ViewModel({
+			messages: {
+				prop: { type: "info", message: "here is some info" },
+				"prop.0": { type: "warning", message: "here is a warning" }
+			}
+		});
+
+		assert.equal(vm.getMessageAtPath("prop").type, "info", "prop type");
+		assert.equal(vm.getMessageAtPath("prop").message, "here is some info", "prop message");
+
+		assert.equal(vm.getMessageAtPath("prop.0").type, "warning", "prop.0 type");
+		assert.equal(vm.getMessageAtPath("prop.0").message, "here is a warning", "prop.0 message");
+	});
 });
 
 describe("JSONTreeEditor - Component", () => {

@@ -34,11 +34,32 @@
 				}, {
 					name: "dunking it",
 					rank: 3
-				}]
+				}],
+
+				element: {},
+				recursive: {},
+				warning: "something??"
 			};
 
 			vm.typeNames = {
-				hobbies: "Hobbies"
+				hobbies: "Hobbies",
+				element: "HTMLParagraphElement",
+				recursive: "Object"
+			};
+
+			vm.messages = {
+				element: {
+					type: "info",
+					message: "CanJS Devtools does not expand HTML Elements"
+				},
+				recursive: {
+					type: "error",
+					message: 'Error getting value of "recursive": Maximum stack size exceeded'
+				},
+				warning: {
+					type: "warning",
+					message: 'A Warning?'
+				}
 			};
 
 			(function updateTextAreaValue() {

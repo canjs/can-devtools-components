@@ -23,6 +23,7 @@ export default Component.extend({
 		tagName: "string",
 		viewModelData: { Type: DefineMap, Default: DefineMap },
 		typeNamesData: { Type: DefineMap, Default: DefineMap },
+		messages: { Type: DefineMap, Default: DefineMap },
 		expandedKeys: DefineList,
 
 		get serializedViewModelData() {
@@ -133,6 +134,7 @@ export default Component.extend({
 			<json-tree-editor
 				json:from="json"
 				typeNames:from="typeNamesData"
+				messages:from="messages"
 				rootNodeName:raw="ViewModel"
 				expandedKeys:to="expandedKeys"
 			></json-tree-editor>
