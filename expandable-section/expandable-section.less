@@ -1,0 +1,55 @@
+expandable-section {
+	& > div {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		background-color: #F4F4F4;
+		transition: .1s all ease-in-out;
+
+		.title {
+			display: flex;
+			align-items: center;
+			justify-content: left;
+			width: 100%;
+			border-bottom: 1px solid #d0d0d0;
+
+			p {
+				margin: 0;
+				padding: 0;
+				font-size: 13px;
+
+				&.not-collapsible {
+					margin-left: 24px;
+				}
+			}
+		}
+
+		&.collapsible:hover {
+			background-color: #E0E0E0;
+		}
+
+		.content-container {
+			display: none;
+
+			&.expanded {
+				display: flex;
+				flex-direction: column;
+				background: #FFFFFF;
+				border-top: none;
+				list-style: none;
+			}
+		}
+
+		.arrow {
+			content: '';
+			display: inline-flex;
+			width: 0;
+			height: 0;
+			border-top: 8px solid #404040;
+			border-right: 8px solid transparent;
+			border-left: 8px solid transparent;
+			transform-origin: center center;
+			margin-right: 5px;
+		}
+	}
+}

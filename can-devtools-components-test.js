@@ -1,6 +1,7 @@
 import "bindings-graph/bindings-graph-test";
 import "component-tree/component-tree-test";
 import "editable-span/editable-span-test";
+import "expandable-section/expandable-section-test";
 import "json-tree-editor/json-tree-editor-test";
 import "panel/panel-test";
 import "queues-logstack/queues-logstack-test";
