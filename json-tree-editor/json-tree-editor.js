@@ -23,6 +23,10 @@ const getType = (val) => {
 		}
 	}
 
+	if (val === null) {
+		return "Null";
+	}
+
 	return capitalize(typeof val);
 };
 
@@ -293,6 +297,12 @@ export const JSONTreeEditor = Component.extend({
 	view: `
 		{{< singleValueTemplate }}
 			{{# switch(type) }}
+				{{# case("Null") }}
+					<div class="value">
+						<editable-span text:raw="null" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
+					</div>
+				{{/ case }}
+
 				{{# case("String") }}
 					<div class="value string">
 						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />

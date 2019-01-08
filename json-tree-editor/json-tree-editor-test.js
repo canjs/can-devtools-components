@@ -97,7 +97,8 @@ describe("JSONTreeEditor - ViewModel", () => {
 			json: {
 				name: "Kevin",
 				age: 30,
-				likesPizza: true
+				likesPizza: true,
+				aNull: null
 			},
 			output: [{
 				key: "name",
@@ -114,6 +115,11 @@ describe("JSONTreeEditor - ViewModel", () => {
 				path: "likesPizza",
 				type: "Boolean",
 				value: true
+			}, {
+				key: "aNull",
+				path: "aNull",
+				type: "Null",
+				value: null
 			}],
 			name: "simple object"
 		}, {
