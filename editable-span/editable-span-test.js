@@ -5,17 +5,22 @@ import Component from "./editable-span";
 const ViewModel = Component.ViewModel;
 const assert = chai.assert;
 
+const noop = () => { };
+const ev = { stopPropagation: noop };
+
 describe("editable-span", () => {
 	it("edit() / save()", () => {
 		const vm = new ViewModel();
+		vm.listenTo("editing", () => {});
+		vm.listenTo("text", () => {});
 
-		vm.edit();
+		vm.edit(ev);
 
 		assert.ok(vm.editing, "edit() sets editing to true");
 
 		vm.save("foo");
 		assert.notOk(vm.editing, "save() sets editing to false");
-		assert.equal(vm.value, "foo", "save() sets value");
+		assert.equal(vm.text, "foo", "save() sets text");
 	});
 
 	it("showOptions", () => {
