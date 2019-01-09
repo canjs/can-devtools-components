@@ -5,6 +5,7 @@ export default Component.extend({
 	tag: "expandable-section",
 
 	ViewModel: {
+		height: { type: "number", default: 300 },
 		title: { type: "string", default: "Expandable Section" },
 		collapsible: { type: "boolean", default: true },
 		expanded: {
@@ -32,7 +33,7 @@ export default Component.extend({
 	},
 
 	view: `
-		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)">
+		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="height: {{height}}px"{{/ if }}>
 			<div class="title">
 				{{# if(collapsible) }}<span class="arrow"></span>{{/ if }}<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
 			</div>

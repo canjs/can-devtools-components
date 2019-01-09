@@ -13,7 +13,6 @@ components-panel {
 			"tree-view tree-view tree-view tree-view tree-view sidebar sidebar sidebar";
 
 		.tree-view {
-			height: 100%;
 			grid-area: tree-view;
 			padding: 0 0 @third-unit;
 			line-height: 1.5;
@@ -33,12 +32,18 @@ components-panel {
 				border-bottom: 1px solid #d0d0d0;
 				padding-left: @half-unit;
 				margin-bottom: @sm-unit;
+				flex-shrink: 0; // needed for scrollbar
 				h1 {
 					font-family: sans-serif;
 					text-align: left;
 					display: inline-block;
 					color: @brand-color;
 				}
+			}
+
+			.component-tree {
+				overflow-y: auto; // needed for scrollbar
+				flex-grow: 1; // needed for scrollbar
 			}
 		}
 

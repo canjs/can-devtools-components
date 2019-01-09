@@ -1,12 +1,30 @@
 import { Component, DefineMap, DefineList, Reflect } from "can";
 
+import "panel/panel.less";
+
 import "component-tree/component-tree";
 import "viewmodel-editor/viewmodel-editor";
-import "panel/panel.less";
+import "expandable-section/expandable-section";
 
 export default Component.extend({
 	tag: "components-panel",
 	ViewModel: {
+		connectedCallback(el) {
+			const setHeight = () => {
+				this.scrollableAreaHeight = el.clientHeight;
+			};
+
+			// set default height
+			setHeight();
+
+			// set height when page is resized
+			window.addEventListener("resize", setHeight);
+
+			return () => {
+				window.removeEventListener("resize", setHeight);
+			};
+		},
+		scrollableAreaHeight: { type: "number", default: 400 },
 		componentTree: DefineList,
 		selectedNode: DefineMap,
 		viewModelData: DefineMap,
@@ -23,7 +41,7 @@ export default Component.extend({
 	},
 	view: `
 		<div class="grid-container">
-			<div class="tree-view">
+			<div class="tree-view" style="height: {{scrollableAreaHeight}}px">
 				<div class="component-tree-header">
 					<h1>CanJS Components</h1>
 					<div class="filters">
@@ -38,21 +56,16 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar">
-				<div class="viewmodel-editor">
-					<h2>
-						ViewModel Editor
-					</h2>
-					<div class="sidebar-container">
-						<viewmodel-editor
-							tagName:from="this.selectedNode.tagName"
-							viewModelData:bind="viewModelData"
-							typeNamesData:bind="typeNamesData"
-							messages:bind="messages"
-							updateValues:from="updateValues"
-							expandedKeys:to="expandedKeys"
-						></viewmodel-editor>
-					</div>
-				</div>
+				<expandable-section title:raw="ViewModel Editor" collapsible:from="false" height:bind="scrollableAreaHeight">
+					<viewmodel-editor
+						tagName:from="this.selectedNode.tagName"
+						viewModelData:bind="viewModelData"
+						typeNamesData:bind="typeNamesData"
+						messages:bind="messages"
+						updateValues:from="updateValues"
+						expandedKeys:to="expandedKeys"
+					></viewmodel-editor>
+				</expandable-section>
 			</div>
 		</div>
 	`
