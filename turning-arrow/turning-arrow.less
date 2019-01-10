@@ -1,0 +1,49 @@
+@import '../styles.less';
+
+@arrow-border: 7px;
+@arrow-margin: @sm-unit;
+
+turning-arrow {
+	display: inline-block;
+	margin: 0 @sm-unit;
+
+	.arrow {
+		content: '';
+		display: inline-flex;
+		width: 0;
+		height: 0;
+		border-top: @arrow-border solid transparent;
+		border-bottom: @arrow-border solid transparent;
+		border-left: (2 * @arrow-border) solid @base-color;
+		transform-origin: center center;
+
+		&.right {
+			transform: rotate(0deg);
+			&.animate {
+				animation: rotateRight 0.25s ease-in-out forwards;
+			}
+		}
+		&.down {
+			transform: rotate(90deg);
+			&.animate {
+				animation: rotateDown 0.25s ease-in-out forwards;
+			}
+		}
+	}
+	@keyframes rotateRight {
+		from {
+			transform: rotate(90deg);
+		}
+		to {
+			transform: rotate(0deg);
+		}
+	}
+	@keyframes rotateDown {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(90deg);
+		}
+	}
+}

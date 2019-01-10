@@ -1,5 +1,6 @@
 import { Component, DefineList, DefineMap, stache, key, Reflect, stringToAny } from "can";
 
+import "../turning-arrow/turning-arrow";
 import "../editable-span/editable-span";
 import "./json-tree-editor.less";
 
@@ -372,12 +373,8 @@ export const JSONTreeEditor = Component.extend({
 			<div class="wrapper">
 				{{# if( isList(value) ) }}
 					<div on:click="scope.vm.toggleExpanded(scope.event, path)">
-						<div class="header-container {{# if( showOptions ) }}highlighted-item{{/ if }}" on:mouseenter="showOptions = true" on:mouseleave="showOptions = false" on:click="showArrowAnimation = true">
-							{{# if( scope.vm.isExpanded(path) ) }}
-								<div class="arrow-toggle down {{# if(showArrowAnimation) }}animate{{/ if }}"></div>
-							{{ else }}
-								<div class="arrow-toggle right {{# if(showArrowAnimation) }}animate{{/ if }}"></div>
-							{{/ if }}
+						<div class="header-container {{# if( showOptions ) }}highlighted-item{{/ if }}" on:mouseenter="showOptions = true" on:mouseleave="showOptions = false">
+							<turning-arrow down:bind="scope.vm.isExpanded(path)" />
 
 							{{> keyValueTemplate }}
 						</div>
@@ -396,7 +393,6 @@ export const JSONTreeEditor = Component.extend({
 
 						<div class="list-container" on:click="scope.vm.addChild(scope.event, path)">
 							{{# for(child of value) }}
-								{{ let showArrowAnimation = false }}
 								{{> nodeTemplate child }}
 							{{/ for }}
 
@@ -425,7 +421,6 @@ export const JSONTreeEditor = Component.extend({
 		<div class="wrapper" on:click="scope.vm.addChild(scope.event, '')">
 			<div class="list-container">
 				{{# for(node of parsedJSON) }}
-					{{ let showArrowAnimation = false }}
 					{{> nodeTemplate node }}
 				{{/ for }}
 

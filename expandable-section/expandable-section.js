@@ -1,4 +1,7 @@
 import { Component } from "can";
+
+import "../turning-arrow/turning-arrow";
+
 import "./expandable-section.less";
 
 export default Component.extend({
@@ -35,9 +38,12 @@ export default Component.extend({
 	view: `
 		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="height: {{height}}px"{{/ if }}>
 			<div class="title">
-				{{# if(collapsible) }}<span class="arrow"></span>{{/ if }}<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
+				{{# if(collapsible) }}
+					<turning-arrow down:bind="expanded" />
+				{{/ if }}
+				<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
 			</div>
-			<div class="content-container {{# if(expanded) }}expanded{{/ if }}">
+			<div class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()">
 				<content/>
 			</div>
 		</div>

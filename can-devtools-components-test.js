@@ -5,4 +5,5 @@ import "expandable-section/expandable-section-test";
 import "json-tree-editor/json-tree-editor-test";
 import "panel/panel-test";
 import "queues-logstack/queues-logstack-test";
+import "turning-arrow/turning-arrow-test";
 import "viewmodel-editor/viewmodel-editor-test";
