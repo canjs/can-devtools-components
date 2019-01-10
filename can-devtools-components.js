@@ -1,4 +1,5 @@
 export * from "bindings-graph/bindings-graph";
+export * from "breakpoints-editor/breakpoints-editor";
 export * from "component-tree/component-tree";
 export * from "editable-span/editable-span";
 export * from "expandable-section/expandable-section";

@@ -1,0 +1,31 @@
+@import '../styles.less';
+
+breakpoints-editor {
+	display: block;
+
+	.breakpoints-list {
+		text-align: center;
+		margin: @sm-unit;
+
+		.breakpoint-container {
+			display: flex;
+			justify-content: space-between;
+			margin: @third-unit 0;
+		}
+	}
+
+	.no-breakpoints {
+		font-size: @font-lg;
+	}
+
+	.delete-button {
+		font-weight: bold;
+		height: @half-unit;
+		font-size: @font-lg;
+		color: rgba(0, 0, 0, 0.6);
+		display: inline-block;
+		margin-right: @half-unit;
+		cursor: pointer;
+		box-shadow: 0 0 0 0 rgba(0,0,0,0);
+	}
+}
