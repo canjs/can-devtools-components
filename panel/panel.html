@@ -141,6 +141,38 @@
 				sourceVm = el.viewModel;
 				Reflect.updateDeep(vm.viewModelData, sourceVm.serialize());
 			});
+
+			const breakpoints = {};
+
+			const breakPointsToArray = () => {
+				const arr = [];
+
+				for (let key in breakpoints) {
+					arr.push(breakpoints[key]);
+				}
+
+				return arr;
+			};
+
+			vm.addBreakpoint = (key) => {
+				breakpoints[key] = {
+					key: key,
+					enabled: true
+				};
+				vm.breakpoints = breakPointsToArray();
+			};
+
+			vm.toggleBreakpoint = (key) => {
+				const bp = breakpoints[key];
+				bp.enabled = !bp.enabled;
+				breakpoints[key] = bp;
+				vm.breakpoints = breakPointsToArray();
+			};
+
+			vm.deleteBreakpoint = (key) => {
+				delete breakpoints[key];
+				vm.breakpoints = breakPointsToArray();
+			};
 		</script>
 	</body>
 	<html>

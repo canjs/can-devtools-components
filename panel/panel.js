@@ -5,6 +5,7 @@ import "panel/panel.less";
 import "component-tree/component-tree";
 import "viewmodel-editor/viewmodel-editor";
 import "expandable-section/expandable-section";
+import "breakpoints-editor/breakpoints-editor";
 
 export default Component.extend({
 	tag: "components-panel",
@@ -25,18 +26,37 @@ export default Component.extend({
 			};
 		},
 		scrollableAreaHeight: { type: "number", default: 400 },
+		get viewModelEditorHeight() {
+			return Math.ceil((2 * this.scrollableAreaHeight) / 3);
+		},
+		get breakpointsHeight() {
+			return Math.floor((1 * this.scrollableAreaHeight) / 3);
+		},
 		componentTree: DefineList,
 		selectedNode: DefineMap,
 		viewModelData: DefineMap,
 		typeNamesData: DefineMap,
 		messages: DefineMap,
 		expandedKeys: DefineList,
+		breakpoints: DefineList,
 		updateValues: {
-			default() {
-				return (data) => {
-					console.log("updating viewModel with", data);
-				};
-			}
+			default: () =>
+				(data) => console.log("updating viewModel with", data)
+		},
+
+		addBreakpoint: {
+			default: () =>
+				(key) => console.log(`adding breakpoint for ${key}`)
+		},
+
+		toggleBreakpoint: {
+			default: () =>
+				(key) => console.log(`toggling breakpoint for ${key}`)
+		},
+
+		deleteBreakpoint: {
+			default: () =>
+				(key) => console.log(`deleting breakpoint for ${key}`)
 		}
 	},
 	view: `
@@ -56,7 +76,16 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar">
-				<expandable-section title:raw="ViewModel Editor" collapsible:from="false" height:bind="scrollableAreaHeight">
+				<expandable-section title:raw="Breakpoints" height:bind="breakpointsHeight">
+					<breakpoints-editor
+						breakpoints:bind="breakpoints"
+						addBreakpoint:from="addBreakpoint"
+						toggleBreakpoint:from="toggleBreakpoint"
+						deleteBreakpoint:from="deleteBreakpoint"
+					></breakpoints-editor>
+				</expandable-section>
+
+				<expandable-section title:raw="ViewModel Editor" expanded:from="true" height:bind="viewModelEditorHeight">
 					<viewmodel-editor
 						tagName:from="this.selectedNode.tagName"
 						viewModelData:bind="viewModelData"
