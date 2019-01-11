@@ -1,8 +1,6 @@
-import { Component, DefineList, domEvents, enterEvent } from "can";
+import { Component, DefineList } from "can";
+import "../utils/add-enter-event";
 import "./editable-span.less";
-
-// add support for on:enter
-domEvents.addEvent(enterEvent);
 
 const selectContents = (el) => {
 	setTimeout(() => {

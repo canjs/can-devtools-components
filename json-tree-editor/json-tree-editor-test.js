@@ -559,7 +559,6 @@ describe("JSONTreeEditor - Component", () => {
 
 		vm.typeNames = { people: "People[]", "people.0": "Person{}" };
 
-		console.log("asserting");
 		assert.equal(el.querySelectorAll(".type")[0].innerHTML.trim(), "People(1)", "correct type for people");
 		assert.equal(el.querySelectorAll(".type")[1].innerHTML.trim(), "Person", "correct type for person");
 	});
