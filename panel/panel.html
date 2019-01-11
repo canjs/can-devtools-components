@@ -142,36 +142,41 @@
 				Reflect.updateDeep(vm.viewModelData, sourceVm.serialize());
 			});
 
-			const breakpoints = {};
+			const breakpoints = [];
+			let nextBreakpointId = 0;
 
-			const breakPointsToArray = () => {
-				const arr = [];
+			const getIndexOfBreakpoint = (id) => {
+				let index = -1;
 
-				for (let key in breakpoints) {
-					arr.push(breakpoints[key]);
-				}
+				breakpoints.some((bp, i) => {
+					if (bp.id === id) {
+						index = i;
+						return true;
+					}
+				});
 
-				return arr;
+				return index;
 			};
 
-			vm.addBreakpoint = (key) => {
-				breakpoints[key] = {
-					key: key,
+			vm.addBreakpoint = (expression) => {
+				breakpoints.push({
+					id: nextBreakpointId++,
+					expression: expression,
 					enabled: true
-				};
-				vm.breakpoints = breakPointsToArray();
+				});
+				vm.breakpoints = breakpoints;
 			};
 
-			vm.toggleBreakpoint = (key) => {
-				const bp = breakpoints[key];
-				bp.enabled = !bp.enabled;
-				breakpoints[key] = bp;
-				vm.breakpoints = breakPointsToArray();
+			vm.toggleBreakpoint = (bp) => {
+				const index = getIndexOfBreakpoint(bp.id);
+				breakpoints[index].enabled = !breakpoints[index].enabled;
+				vm.breakpoints = breakpoints;
 			};
 
-			vm.deleteBreakpoint = (key) => {
-				delete breakpoints[key];
-				vm.breakpoints = breakPointsToArray();
+			vm.deleteBreakpoint = (bp) => {
+				const index = getIndexOfBreakpoint(bp.id);
+				breakpoints.splice(index, 1);
+				vm.breakpoints = breakpoints;
 			};
 		</script>
 	</body>

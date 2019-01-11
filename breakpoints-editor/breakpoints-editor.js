@@ -23,17 +23,17 @@ export default Component.extend({
 
 		addBreakpoint: {
 			default: () =>
-				(key) => console.log(`adding breakpoint for ${key}`)
+				(expression) => console.log(`adding breakpoint for ${expression}`)
 		},
 
 		toggleBreakpoint: {
 			default: () =>
-				(key) => console.log(`toggling breakpoint for ${key}`)
+				(breakpoint) => console.log("toggling breakpoint", breakpoint)
 		},
 
 		deleteBreakpoint: {
 			default: () =>
-				(key) => console.log(`deleting breakpoint for ${key}`)
+				(breakpoint) => console.log("deleting breakpoint", breakpoint)
 		}
 	},
 	view: `
@@ -61,14 +61,14 @@ export default Component.extend({
 							type="checkbox"
 							checked:from="bp.enabled"
 							title="Toggle breakpoint"
-							on:click="this.toggleBreakpoint(bp.key)">
+							on:click="this.toggleBreakpoint(bp)">
 
-						<div>{{ bp.key }}</div>
+						<div>{{ bp.expression }}</div>
 
 						<div
 							class="delete-button"
 							title="Delete breakpoint"
-							on:click="this.deleteBreakpoint(bp.key)"
+							on:click="this.deleteBreakpoint(bp)"
 						>&minus;</div>
 					</div>
 				{{/ for }}
