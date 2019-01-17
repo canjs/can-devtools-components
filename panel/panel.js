@@ -32,18 +32,30 @@ export default Component.extend({
 		get breakpointsHeight() {
 			return Math.floor((1 * this.scrollableAreaHeight) / 3);
 		},
+
+		// component tree fields
 		componentTree: DefineList,
 		selectedNode: DefineMap,
+		componentTreeError: "string",
+
+		// viewmodel editor fields
 		viewModelData: DefineMap,
 		typeNamesData: DefineMap,
 		messages: DefineMap,
 		expandedKeys: DefineList,
+		viewModelEditorError: "string",
+
+		// breakpoints fields
 		breakpoints: DefineList,
+		breakpointsError: "string",
+
+		// viewmodel editor functions
 		updateValues: {
 			default: () =>
 				(data) => console.log("updating viewModel with", data)
 		},
 
+		// breakpoints functions
 		addBreakpoint: {
 			default: () =>
 				(key) => console.log(`adding breakpoint for ${key}`)
@@ -72,6 +84,7 @@ export default Component.extend({
 					<component-tree
 						componentTree:bind="componentTree"
 						selectedNode:to="selectedNode"
+						error:bind="componentTreeError"
 					></component-tree>
 				</div>
 			</div>
@@ -82,6 +95,7 @@ export default Component.extend({
 						addBreakpoint:from="addBreakpoint"
 						toggleBreakpoint:from="toggleBreakpoint"
 						deleteBreakpoint:from="deleteBreakpoint"
+						error:bind="breakpointsError"
 					></breakpoints-editor>
 				</expandable-section>
 
@@ -93,6 +107,7 @@ export default Component.extend({
 						messages:bind="messages"
 						updateValues:from="updateValues"
 						expandedKeys:to="expandedKeys"
+						error:bind="viewModelEditorError"
 					></viewmodel-editor>
 				</expandable-section>
 			</div>

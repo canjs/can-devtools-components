@@ -7,6 +7,7 @@ export default Component.extend({
 	tag: "breakpoints-editor",
 	ViewModel: {
 		breakpoints: { Type: DefineList, Default: DefineList },
+		error: "string",
 
 		newBreakpointKey: {
 			default: "",
@@ -73,7 +74,11 @@ export default Component.extend({
 					</div>
 				{{/ for }}
 			{{ else }}
-				<p class="no-breakpoints">No breakpoints</p>
+				{{# if(error) }}
+					<p class="error">{{error}}</p>
+				{{ else }}
+					<p class="no-breakpoints">No breakpoints</p>
+				{{/ if }}
 			{{/ if }}
 		</div>
 	`
