@@ -89,7 +89,7 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar">
-				<expandable-section title:raw="Breakpoints" height:bind="breakpointsHeight">
+				<expandable-section title:raw="ViewModel Mutation Breakpoints" height:bind="breakpointsHeight">
 					<breakpoints-editor
 						breakpoints:bind="breakpoints"
 						addBreakpoint:from="addBreakpoint"
