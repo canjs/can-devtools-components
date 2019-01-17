@@ -36,7 +36,7 @@ export default Component.extend({
 	},
 
 	view: `
-		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="height: {{height}}px"{{/ if }}>
+		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
 			<div class="title">
 				{{# if(collapsible) }}
 					<turning-arrow down:bind="expanded" />
