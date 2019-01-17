@@ -11,25 +11,55 @@ breakpoints-editor {
 			display: flex;
 			justify-content: space-between;
 			margin: @third-unit 0;
+			.check-list {
+				display: flex;
+				width: 100%;
+				input[type='checkbox'] {
+					margin-right: @third-unit
+				}
+			}
 		}
 	}
 
 	.no-breakpoints {
 		font-size: @font-lg;
+		color: @info-color;
+		background-color: @info-bg-color;
+		border: 1px solid @info-color;
+		border-radius: 3px;
+		padding: @half-unit @base-unit;
+		font-style: italic;
 	}
 
 	.error {
+		font-size: @font-lg;
 		color: @error-color;
+		background-color: @error-bg-color;
+		border: 1px solid @error-color;
+		border-radius: 3px;
+		padding: @half-unit @base-unit;
+		font-style: italic;
 	}
 
 	.delete-button {
 		font-weight: bold;
 		height: @half-unit;
 		font-size: @font-lg;
-		color: rgba(0, 0, 0, 0.6);
-		display: inline-block;
+		color: @gray;
+		background-color: @light-gray;
+		border-radius: 50%;
+		width: @half-unit;
+		height: @half-unit;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		margin-right: @half-unit;
 		cursor: pointer;
 		box-shadow: 0 0 0 0 rgba(0,0,0,0);
+		transition: all .25s ease-in-out;
+		&:hover {
+			background-color: @gray;
+			color: @base-color;
+		}
 	}
 }
