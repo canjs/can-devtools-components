@@ -136,7 +136,10 @@
 				}
 			};
 
+			let selectedNode = null;
 			vm.listenTo("selectedNode", (ev, node) => {
+				vm.breakpointsError = null;
+				selectedNode = node;
 				const el = elsById[node.id];
 				sourceVm = el.viewModel;
 				Reflect.updateDeep(vm.viewModelData, sourceVm.serialize());
@@ -159,6 +162,10 @@
 			};
 
 			vm.addBreakpoint = (expression) => {
+				if(!selectedNode) {
+					vm.breakpointsError = "Select a component in order to create a mutation breakpoint for its ViewModel";
+					return;
+				}
 				breakpoints.push({
 					id: nextBreakpointId++,
 					expression: expression,

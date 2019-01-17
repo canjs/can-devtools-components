@@ -1,7 +1,7 @@
 @import '../styles.less';
 
-@arrow-border: 7px;
-@arrow-margin: @sm-unit;
+@arrow-border: 6px;
+@arrow-margin: 2* @arrow-border;
 
 turning-arrow {
 	display: inline-block;
@@ -16,6 +16,7 @@ turning-arrow {
 		border-bottom: @arrow-border solid transparent;
 		border-left: (2 * @arrow-border) solid @base-color;
 		transform-origin: center center;
+		vertical-align: middle;
 
 		&.right {
 			transform: rotate(0deg);

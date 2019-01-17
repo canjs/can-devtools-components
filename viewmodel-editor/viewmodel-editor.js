@@ -25,6 +25,7 @@ export default Component.extend({
 		typeNamesData: { Type: DefineMap, Default: DefineMap },
 		messages: { Type: DefineMap, Default: DefineMap },
 		expandedKeys: DefineList,
+		error: "string",
 
 		get serializedViewModelData() {
 			return this.viewModelData.serialize();

@@ -2,6 +2,9 @@
 @level-colors: #C90131, #01A54C, #DA5E00, #01547B, #D7A000, #6D007B;
 
 component-tree {
+	display: block;
+	padding: @sm-unit;
+
 	.tag {
 		cursor: pointer;
 		color: @tag-color;
@@ -11,7 +14,7 @@ component-tree {
 			.levels-loop(@i - 1);
 
 			&.level-@{i} {
-				padding-left: (@i + 1) * @half-unit;
+				padding-left: @i * @half-unit;
 				color: extract(@level-colors, mod(@i, 6) + 1);
 			}
 		}

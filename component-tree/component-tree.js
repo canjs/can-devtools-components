@@ -24,7 +24,8 @@ export default Component.extend({
 	tag: "component-tree",
 	ViewModel: {
 		componentTree: { Type: ComponentTreeList, Default: ComponentTreeList },
-		selectedNode: DefineMap
+		selectedNode: DefineMap,
+		error: "string"
 	},
 	view: `
 		{{< treeNodeTemplate }}

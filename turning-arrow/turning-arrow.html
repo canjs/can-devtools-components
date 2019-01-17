@@ -1,18 +1,19 @@
-<h1>
-	<p>
-		&nbsp;&nbsp;right:
-		<turning-arrow />
-	</p>
+<style>
+	p {
+		border: 1px solid green;
+		margin: 5px;
+	}
+</style>
+<p>
+	<turning-arrow></turning-arrow> right&nbsp;&nbsp;
+</p>
 
-	<p>
-		&nbsp;&nbsp;&nbsp;down:
-		<turning-arrow down:from="true" />
-	</p>
-	<p>
-		turning:
-		<turning-arrow class="toggling" />
-	</p>
-</h1>
+<p>
+	<turning-arrow down:from="true"></turning-arrow> down&nbsp;&nbsp;&nbsp;
+</p>
+<p>
+	<turning-arrow class="toggling"></turning-arrow> turning
+</p>
 <script src="../node_modules/steal/steal.js" main="can-devtools-components/turning-arrow/turning-arrow">
 	const togglingVM = document.querySelector("turning-arrow.toggling").viewModel;
 
