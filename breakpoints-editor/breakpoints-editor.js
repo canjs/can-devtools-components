@@ -58,13 +58,15 @@ export default Component.extend({
 			{{# if(this.breakpoints.length) }}
 				{{# for(bp of this.breakpoints) }}
 					<div class="breakpoint-container">
-						<input
-							type="checkbox"
-							checked:from="bp.enabled"
-							title="Toggle breakpoint"
-							on:click="this.toggleBreakpoint(bp)">
+						<div class="check-list">
+							<input
+								type="checkbox"
+								checked:from="bp.enabled"
+								title="Toggle breakpoint"
+								on:click="this.toggleBreakpoint(bp)">
 
-						<div>{{ bp.expression }}</div>
+							<div>{{ bp.expression }}</div>
+						</div>
 
 						<div
 							class="delete-button"
