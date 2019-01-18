@@ -1,4 +1,4 @@
-import { Component, DefineList, DefineMap, stache } from "can";
+import { Component, DefineList, DefineMap, stache, value } from "can";
 
 import "component-tree/component-tree.less";
 
@@ -7,6 +7,7 @@ stache.addHelper("plusOne", (num) => num + 1);
 let ComponentTreeList;
 
 const ComponentTreeNode = DefineMap.extend("ComponentTreeNode", {
+	selected: "boolean",
 	tagName: "string",
 	id: { type: "number", identity: true },
 	children: {
@@ -24,7 +25,38 @@ export default Component.extend({
 	tag: "component-tree",
 	ViewModel: {
 		componentTree: { Type: ComponentTreeList, Default: ComponentTreeList },
-		selectedNode: DefineMap,
+		selectedNode: {
+			value({ listenTo, lastSet, resolve }) {
+				listenTo(lastSet, resolve);
+
+				// recursively find a node in a tree that has `selected: true`
+				const findSelectedNode = (list) => {
+					let selectedNode;
+
+					list.some((node) => {
+						if (node.selected) {
+							selectedNode = node;
+							return true;
+						}
+						selectedNode = findSelectedNode(node.children);
+					});
+
+					return selectedNode;
+				};
+
+				// create an observable that represents the `selected: true` node
+				const selectedComponentTreeNode = value.returnedBy(() =>
+					findSelectedNode(this.componentTree)
+				);
+
+				// when a new node has `selected: true`, resolve selectedNode
+				listenTo(selectedComponentTreeNode, (node) => {
+					if (node) {
+						resolve(node);
+					}
+				});
+			}
+		},
 		error: "string"
 	},
 	view: `
