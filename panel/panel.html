@@ -103,17 +103,21 @@
 			const vm = document.querySelector("components-panel").viewModel;
 
 			vm.componentTree.updateDeep([{
+				selected: false,
 				tagName: "todo-list",
 				id: 0,
 				children: [{
+					selected: false,
 					tagName: "todo-item",
 					id: 1,
 					children: []
 				},{
+					selected: true,
 					tagName: "todo-editor",
 					id: 2,
 					children: []
 				},{
+					selected: false,
 					tagName: "todo-item",
 					id: 3,
 					children: []
