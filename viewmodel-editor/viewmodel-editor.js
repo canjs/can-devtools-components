@@ -115,7 +115,7 @@ export default Component.extend({
 	view: `
 		<div class="header">
 			{{# unless(tagName) }}
-				<h1>Select an Element to see its ViewModel</h1>
+				<h1 class="select-vm">Select an Element to see its ViewModel</h1>
 			{{ else }}
 				{{# unless(viewModelData) }}
 					<h1>{{tagName}} does not have a ViewModel</h1>
