@@ -98,6 +98,11 @@ export const JSONTreeEditor = Component.extend({
 	tag: "json-tree-editor",
 
 	ViewModel: {
+		connectedCallback() {
+			this.listenTo(window, "click", () => {
+				this.dispatch("hide-all-key-value-editors");
+			});
+		},
 		rootNodeName: { type: "string", default: "JSON" },
 		typeNames: { Type: DefineMap, Default: DefineMap },
 		messages: { Type: DefineMap, Default: DefineMap },
@@ -236,6 +241,10 @@ export const JSONTreeEditor = Component.extend({
 						displayedEditors.push(path);
 					}
 				});
+
+				listenTo("hide-all-key-value-editors", () => {
+					displayedEditors.splice(0);
+				});
 			}
 		},
 
@@ -306,7 +315,7 @@ export const JSONTreeEditor = Component.extend({
 
 				{{# case("String") }}
 					<div class="value string">
-						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
+						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" wrapInQuotes:from="true" />
 					</div>
 				{{/ case }}
 

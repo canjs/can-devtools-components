@@ -10,6 +10,18 @@ const ev = { stopPropagation: noop };
 describe("JSONTreeEditor - ViewModel", () => {
 	const ViewModel = JSONTreeEditor.ViewModel;
 
+	it("connectedCallback", (done) => {
+		const vm = new ViewModel();
+		vm.connectedCallback();
+
+		vm.listenTo("hide-all-key-value-editors", () => {
+			assert.ok(true, "hide-all-key-value-editors dispatched");
+			done();
+		});
+
+		window.dispatchEvent( new Event("click") );
+	});
+
 	it("expandedKeys", () => {
 		const vm = new ViewModel();
 		vm.listenTo("expandedKeys", noop);
@@ -315,6 +327,11 @@ describe("JSONTreeEditor - ViewModel", () => {
 
 		vm.dispatch("add-child", [ "arr" ]);
 		assert.deepEqual(vm.displayedKeyValueEditors.serialize(), [ "arr.0" ], "dispatching add-child event twice only adds key-value editor once");
+
+		vm.dispatch("display-key-value-editor", [ "obj" ]);
+		vm.dispatch("display-key-value-editor", [ "other" ]);
+		vm.dispatch("hide-all-key-value-editors");
+		assert.deepEqual(vm.displayedKeyValueEditors.serialize(), [ ], "dispatching hide-all-key-value-editors hides all key-value editors");
 	});
 
 	it("isExpanded", () => {

@@ -8,13 +8,22 @@ editable-span {
 	span {
 		display: inline-block;
 		margin: 0;
-		padding: 2px;
 		cursor: text;
 		overflow: hidden;
 		vertical-align: middle;
 		&:hover,
 		&.editing {
 			outline: 1px solid #ccc;
+		}
+		&.quotes {
+			&:before {
+				content: open-quote;
+				user-select: none;
+			}
+			&:after {
+				content: close-quote;
+				user-select: none;
+			}
 		}
 	}
 
