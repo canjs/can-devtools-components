@@ -98,6 +98,11 @@ export const JSONTreeEditor = Component.extend({
 	tag: "json-tree-editor",
 
 	ViewModel: {
+		connectedCallback() {
+			this.listenTo(window, "click", () => {
+				this.dispatch("hide-all-key-value-editors");
+			});
+		},
 		rootNodeName: { type: "string", default: "JSON" },
 		typeNames: { Type: DefineMap, Default: DefineMap },
 		messages: { Type: DefineMap, Default: DefineMap },
@@ -235,6 +240,10 @@ export const JSONTreeEditor = Component.extend({
 					if ( displayedEditors.indexOf(path) < 0 ) {
 						displayedEditors.push(path);
 					}
+				});
+
+				listenTo("hide-all-key-value-editors", () => {
+					displayedEditors.splice(0);
 				});
 			}
 		},
