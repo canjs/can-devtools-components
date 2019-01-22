@@ -19,6 +19,7 @@ export default Component.extend({
 
 	ViewModel: {
 		options: DefineList,
+		wrapInQuotes: { default: false, type: "boolean" },
 
 		text: {
 			value({ listenTo, lastSet, resolve }) {
@@ -89,7 +90,8 @@ export default Component.extend({
 			on:click="edit(scope.event)"
 			on:blur="save(scope.element.innerText)"
 			on:enter="save(scope.element.innerText)"
-			{{#if(editing)}}class="editing" contenteditable="true"{{/if}}
+			class="{{#if(editing)}}editing{{/if}} {{#if(wrapInQuotes)}}quotes{{/if}}"
+			{{#if(editing)}}contenteditable="true"{{/if}}
 			tabindex="0"
 		>
 			{{text}}
