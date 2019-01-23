@@ -1,4 +1,4 @@
-import { diff } from "can";
+import { diff, Reflect } from "can";
 import Component from "./viewmodel-editor";
 import "steal-mocha";
 import chai from "chai";
@@ -38,6 +38,16 @@ describe("viewmodel-editor", () => {
 
 		vm.viewModelData = { abc: "hij", def: "uvw", ghi: [] };
 		assert.deepEqual(vm.json.serialize(), { abc: "hij", def: "nop", ghi: [ "rst" ] }, "persists changes made by json-editor after viewModelData is set");
+
+		vm.undefineds = [ "jkl" ];
+		assert.equal(Reflect.hasOwnKey(vm.json, "jkl"), true, "sets keys in `undefineds` in json");
+		assert.equal(vm.json.jkl, undefined, "sets keys in `undefineds` as `undefined` in json");
+
+		vm.json.jkl = "ace";
+		assert.equal(vm.json.jkl, "ace", "`undefined` properties can be set");
+
+		vm.undefineds = [ "jkl" ];
+		assert.equal(vm.json.jkl, "ace", "`undefined` properties that are set don't reset to `undefined`");
 
 		vm.dispatch("reset-json-patches");
 		vm.viewModelData = { abc: "hij", def: "nop", ghi: [ "rst" ] };

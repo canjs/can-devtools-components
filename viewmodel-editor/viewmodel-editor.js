@@ -24,6 +24,7 @@ export default Component.extend({
 		viewModelData: { Type: DefineMap, Default: DefineMap },
 		typeNamesData: { Type: DefineMap, Default: DefineMap },
 		messages: { Type: DefineMap, Default: DefineMap },
+		undefineds: { Type: DefineList, Default: DefineList },
 		expandedKeys: DefineList,
 		error: "string",
 
@@ -57,6 +58,28 @@ export default Component.extend({
 					// due to viewModel data being updated
 					Reflect.offValue(serializedJSON, setPatches);
 					Reflect.updateDeep(json, newJson);
+					Reflect.onValue(serializedJSON, setPatches);
+				});
+
+				listenTo("undefineds", (ev, undefineds) => {
+					// don't set patches when json is changed
+					// due to undefineds data being updated
+					Reflect.offValue(serializedJSON, setPatches);
+
+					// create an object with undefined values
+					let undefinedsObject = undefineds.reduce((obj, key) => {
+						obj[key] = undefined;
+						return obj;
+					}, {});
+					// create list of patches to apply to set undefineds
+					let undefinedPatches = diff.deep({}, undefinedsObject);
+
+					// apply patches to json to set all undefined values from `undefineds`
+					// and then set all patches from changes made to json
+					let allPatches = [ ...undefinedPatches, ...jsonPatches ];
+					let newJson = this.getPatchedData(json.serialize(), allPatches);
+					Reflect.updateDeep(json, newJson);
+
 					Reflect.onValue(serializedJSON, setPatches);
 				});
 
@@ -136,6 +159,7 @@ export default Component.extend({
 				json:from="json"
 				typeNames:from="typeNamesData"
 				messages:from="messages"
+				undefineds:from="undefineds"
 				rootNodeName:raw="ViewModel"
 				expandedKeys:to="expandedKeys"
 			></json-tree-editor>
