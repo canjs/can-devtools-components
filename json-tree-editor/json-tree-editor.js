@@ -313,6 +313,12 @@ export const JSONTreeEditor = Component.extend({
 					</div>
 				{{/ case }}
 
+				{{# case("Undefined") }}
+					<div class="value">
+						<editable-span text:raw="undefined" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" />
+					</div>
+				{{/ case }}
+
 				{{# case("String") }}
 					<div class="value string">
 						<editable-span text:from="value" on:text="scope.vm.setPathValue(null, path, scope.event.target.text)" wrapInQuotes:from="true" />

@@ -42,6 +42,7 @@ export default Component.extend({
 		viewModelData: DefineMap,
 		typeNamesData: DefineMap,
 		messages: DefineMap,
+		undefineds: DefineList,
 		expandedKeys: DefineList,
 		viewModelEditorError: "string",
 
@@ -105,6 +106,7 @@ export default Component.extend({
 						viewModelData:bind="viewModelData"
 						typeNamesData:bind="typeNamesData"
 						messages:bind="messages"
+						undefineds:bind="undefineds"
 						updateValues:from="updateValues"
 						expandedKeys:to="expandedKeys"
 						error:bind="viewModelEditorError"
