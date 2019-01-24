@@ -61,5 +61,29 @@ describe("component-tree", () => {
 		}]);
 
 		assert.equal(vm.selectedNode, vm.componentTree[0].children[2], "selectedNode persists after tree is updated");
+
+		vm.componentTree.updateDeep([{
+			selected: false,
+			tagName: "todo-list",
+			id: 0,
+			children: [{
+				selected: false,
+				tagName: "todo-editor",
+				id: 4,
+				children: []
+			},{
+				selected: false,
+				tagName: "todo-item",
+				id: 5,
+				children: []
+			}]
+		}]);
+		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if selected node is removed from tree");
+
+		vm.selectedNode = vm.componentTree[0].children[2];
+		assert.equal(vm.selectedNode, vm.componentTree[0].children[2], "selectedNode set again");
+
+		vm.componentTree.updateDeep([]);
+		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if tree is cleared");
 	});
 });

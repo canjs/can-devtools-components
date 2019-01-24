@@ -27,18 +27,22 @@ export default Component.extend({
 		componentTree: { Type: ComponentTreeList, Default: ComponentTreeList },
 		selectedNode: {
 			value({ listenTo, lastSet, resolve }) {
-				listenTo(lastSet, resolve);
+				let selectedNode = resolve(lastSet.get());
+
+				listenTo(lastSet, (node) => {
+					selectedNode = resolve(node);
+				});
 
 				// recursively find a node in a tree that has `selected: true`
-				const findSelectedNode = (list) => {
+				const findNode = (list, filterFn) => {
 					let selectedNode;
 
 					list.some((node) => {
-						if (node.selected) {
+						if (filterFn(node)) {
 							selectedNode = node;
 							return true;
 						}
-						selectedNode = findSelectedNode(node.children);
+						selectedNode = findNode(node.children, filterFn);
 					});
 
 					return selectedNode;
@@ -46,13 +50,25 @@ export default Component.extend({
 
 				// create an observable that represents the `selected: true` node
 				const selectedComponentTreeNode = value.returnedBy(() =>
-					findSelectedNode(this.componentTree)
+					findNode(this.componentTree, (node) => node.selected)
 				);
 
 				// when a new node has `selected: true`, resolve selectedNode
 				listenTo(selectedComponentTreeNode, (node) => {
 					if (node) {
-						resolve(node);
+						selectedNode = resolve(node);
+					}
+				});
+
+				// create an observable that represents whether the selectedNode is in the tree
+				const selectedNodeInTree = value.returnedBy(() =>
+					findNode(this.componentTree, (node) => selectedNode && (node.id === selectedNode.id))
+				);
+
+				// if the selectedNode is removed from the tree, reset
+				listenTo(selectedNodeInTree, (selectedNodeInTree) => {
+					if (selectedNode && !selectedNodeInTree) {
+						selectedNode = resolve(undefined);
 					}
 				});
 			}
