@@ -80,6 +80,8 @@ export default Component.extend({
 
 		{{# for(node of componentTree) }}
 			{{ treeNodeTemplate(node=node level=0 tree=this) }}
+		{{/ else }}
+			<h1 class="no-components">No Components Found</h1>
 		{{/ for }}
 	`
 });
