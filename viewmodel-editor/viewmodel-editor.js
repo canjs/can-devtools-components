@@ -159,7 +159,6 @@ export default Component.extend({
 				json:from="json"
 				typeNames:from="typeNamesData"
 				messages:from="messages"
-				undefineds:from="undefineds"
 				rootNodeName:raw="ViewModel"
 				expandedKeys:to="expandedKeys"
 			></json-tree-editor>
