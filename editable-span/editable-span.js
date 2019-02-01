@@ -93,9 +93,7 @@ export default Component.extend({
 			class="{{#if(editing)}}editing{{/if}} {{#if(wrapInQuotes)}}quotes{{/if}}"
 			{{#if(editing)}}contenteditable="true"{{/if}}
 			tabindex="0"
-		>
-			{{text}}
-		</span>
+		>{{text}}</span>
 
 		{{#if(showOptions)}}
 			<ul>
