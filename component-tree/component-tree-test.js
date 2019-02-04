@@ -85,5 +85,24 @@ describe("component-tree", () => {
 
 		vm.componentTree.updateDeep([]);
 		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if tree is cleared");
+
+		vm.componentTree.updateDeep([{
+			selected: false,
+			tagName: "todo-list",
+			id: 0,
+			children: []
+		}]);
+
+		vm.selectedNode = vm.componentTree[0];
+		assert.equal(vm.selectedNode, vm.componentTree[0], "selectedNode set to only node");
+
+		vm.componentTree.updateDeep([{
+			selected: false,
+			tagName: "other-list",
+			id: 1,
+			children: []
+		}]);
+
+		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if only node is replaced");
 	});
 });
