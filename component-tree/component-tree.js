@@ -1,4 +1,4 @@
-import { Component, DefineList, DefineMap, stache, value } from "can";
+import { Component, DefineList, DefineMap, stache, value, Reflect } from "can";
 
 import "component-tree/component-tree.less";
 
@@ -30,22 +30,34 @@ export default Component.extend({
 				let selectedNode = resolve(lastSet.get());
 
 				listenTo(lastSet, (node) => {
+					// tear down old listeners
+					if (selectedNode) {
+						Reflect.offKeyValue(selectedNode, "id");
+					}
+
 					selectedNode = resolve(node);
+
+					if (selectedNode) {
+						// if node is replaced by a node with a different id, deselect it
+						Reflect.onKeyValue(selectedNode, "id", () => {
+							selectedNode = resolve(undefined);
+						});
+					}
 				});
 
 				// recursively find a node in a tree that has `selected: true`
 				const findNode = (list, filterFn) => {
-					let selectedNode;
+					let foundNode;
 
 					list.some((node) => {
 						if (filterFn(node)) {
-							selectedNode = node;
+							foundNode = node;
 							return true;
 						}
-						selectedNode = findNode(node.children, filterFn);
+						foundNode = findNode(node.children, filterFn);
 					});
 
-					return selectedNode;
+					return foundNode;
 				};
 
 				// create an observable that represents the `selected: true` node
@@ -102,4 +114,4 @@ export default Component.extend({
 	`
 });
 
-export { Component, DefineList, DefineMap, stache };
+export { Component, DefineList, DefineMap, stache, value, Reflect };
