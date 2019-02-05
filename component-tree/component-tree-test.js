@@ -89,7 +89,7 @@ describe("component-tree", () => {
 		vm.componentTree.updateDeep([{
 			selected: false,
 			tagName: "todo-list",
-			id: 0,
+			id: 6,
 			children: []
 		}]);
 
@@ -99,10 +99,58 @@ describe("component-tree", () => {
 		vm.componentTree.updateDeep([{
 			selected: false,
 			tagName: "other-list",
-			id: 1,
+			id: 7,
 			children: []
 		}]);
 
 		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if only node is replaced");
+
+		vm.componentTree.updateDeep([{
+			selected: false,
+			tagName: "todo-list",
+			id: 8,
+			children: [{
+				selected: true,
+				tagName: "todo-item",
+				id: 9,
+				children: []
+			},{
+				selected: false,
+				tagName: "todo-editor",
+				id: 10,
+				children: []
+			},{
+				selected: false,
+				tagName: "todo-item",
+				id: 11,
+				children: []
+			}]
+		}]);
+
+		assert.equal(vm.selectedNode, vm.componentTree[0].children[0], "selectedNode set again to node with `selected: true`");
+
+		vm.componentTree.updateDeep([{
+			selected: false,
+			tagName: "todo-list",
+			id: 8,
+			children: [{
+				selected: false,
+				tagName: "todo-item",
+				id: 12,
+				children: []
+			},{
+				selected: false,
+				tagName: "todo-editor",
+				id: 10,
+				children: []
+			},{
+				selected: false,
+				tagName: "todo-item",
+				id: 11,
+				children: []
+			}]
+		}]);
+
+		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if selectedNode is replaced");
 	});
 });
