@@ -24,25 +24,36 @@ ComponentTreeList = DefineList.extend("ComponentTreeList", {
 export default Component.extend({
 	tag: "component-tree",
 	ViewModel: {
+		error: "string",
+
 		componentTree: { Type: ComponentTreeList, Default: ComponentTreeList },
+
 		selectedNode: {
 			value({ listenTo, lastSet, resolve }) {
 				let selectedNode = resolve(lastSet.get());
 
-				listenTo(lastSet, (node) => {
-					// tear down old listeners
+				// if node is replaced by a node with a different id, deselect it
+				const resetOnIdChange = () => {
 					if (selectedNode) {
-						Reflect.offKeyValue(selectedNode, "id");
+						Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
+					}
+					selectedNode = resolve(undefined);
+				};
+
+				const setSelectedNode = (node) => {
+					if (selectedNode) {
+						Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
 					}
 
 					selectedNode = resolve(node);
 
 					if (selectedNode) {
-						// if node is replaced by a node with a different id, deselect it
-						Reflect.onKeyValue(selectedNode, "id", () => {
-							selectedNode = resolve(undefined);
-						});
+						Reflect.onKeyValue(selectedNode, "id", resetOnIdChange);
 					}
+				};
+
+				listenTo(lastSet, (node) => {
+					setSelectedNode(node);
 				});
 
 				// recursively find a node in a tree that has `selected: true`
@@ -61,31 +72,34 @@ export default Component.extend({
 				};
 
 				// create an observable that represents the `selected: true` node
-				const selectedComponentTreeNode = value.returnedBy(() =>
-					findNode(this.componentTree, (node) => node.selected)
-				);
+				const selectedComponentTreeNode = value.returnedBy(() => {
+					return findNode(this.componentTree, (node) => {
+						return node.selected;
+					});
+				});
 
 				// when a new node has `selected: true`, resolve selectedNode
-				listenTo(selectedComponentTreeNode, (node) => {
-					if (node) {
-						selectedNode = resolve(node);
+				listenTo(selectedComponentTreeNode, (selectedComponentTreeNode) => {
+					if (selectedComponentTreeNode) {
+						setSelectedNode(selectedComponentTreeNode);
 					}
 				});
 
 				// create an observable that represents whether the selectedNode is in the tree
-				const selectedNodeInTree = value.returnedBy(() =>
-					findNode(this.componentTree, (node) => selectedNode && (node.id === selectedNode.id))
-				);
+				const selectedNodeInTree = value.returnedBy(() => {
+					return findNode(this.componentTree, (node) => {
+						return selectedNode && (node.id === selectedNode.id);
+					});
+				});
 
 				// if the selectedNode is removed from the tree, reset
 				listenTo(selectedNodeInTree, (selectedNodeInTree) => {
 					if (selectedNode && !selectedNodeInTree) {
-						selectedNode = resolve(undefined);
+						setSelectedNode(undefined);
 					}
 				});
 			}
-		},
-		error: "string"
+		}
 	},
 	view: `
 		{{< treeNodeTemplate }}
