@@ -152,5 +152,23 @@ describe("component-tree", () => {
 		}]);
 
 		assert.equal(vm.selectedNode, undefined, "selectedNode is cleared if selectedNode is replaced");
+
+		vm.componentTree.updateDeep([{
+			selected: true,
+			tagName: "todo-list",
+			id: 13,
+			children: []
+		}]);
+
+		assert.equal(vm.selectedNode, vm.componentTree[0], "selectedNode set to only node again");
+
+		vm.componentTree.updateDeep([{
+			selected: true,
+			tagName: "other-list",
+			id: 14,
+			children: []
+		}]);
+
+		assert.equal(vm.selectedNode, vm.componentTree[0], "selectedNode not reset if its ID changes");
 	});
 });

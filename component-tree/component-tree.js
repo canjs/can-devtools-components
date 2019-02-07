@@ -32,9 +32,13 @@ export default Component.extend({
 			value({ listenTo, lastSet, resolve }) {
 				let selectedNode = resolve(lastSet.get());
 
-				// if node is replaced by a node with a different id, deselect it
+				// if node is replaced by a node with a different id,
+				// deselect it unless the node is still selected
 				const resetOnIdChange = () => {
 					if (selectedNode) {
+						if (selectedNode.selected) {
+							return;
+						}
 						Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
 					}
 					selectedNode = resolve(undefined);
