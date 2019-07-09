@@ -11,6 +11,37 @@ export default Component.extend({
 		height: { type: "number", default: 300 },
 		title: { type: "string", default: "Expandable Section" },
 		collapsible: { type: "boolean", default: true },
+		/**
+		 * The section element
+		 */
+		sectionEl: {
+			type: "any"
+		},
+		/**
+		 * Section header
+		 */
+		sectionTitle: {
+			type: "any"
+		},
+		/**
+		 * the actual section height (height property is for max-height)
+		 */
+		sectionHeight: {
+			value({lastSet, listenTo, resolve}) {
+				resolve(lastSet.get());
+				listenTo("sectionEl", (ev, el) => {
+					resolve(el.clientHeight);
+				});
+			}
+		},
+		sectionTitleHeight: {
+			value({lastSet, listenTo, resolve}) {
+				resolve(lastSet.get());
+				listenTo("sectionTitle", (ev, el) => {
+					resolve(el.clientHeight);
+				});
+			}
+		},
 		expanded: {
 			default: false,
 			value({ lastSet, listenTo, resolve }) {
@@ -36,8 +67,8 @@ export default Component.extend({
 	},
 
 	view: `
-		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
-			<div class="title">
+		<div this:to="sectionEl" class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
+			<div this:to="sectionTitle" class="title">
 				{{# if(collapsible) }}
 					<turning-arrow down:bind="expanded" />
 				{{/ if }}

@@ -27,7 +27,12 @@ export default Component.extend({
 		},
 		scrollableAreaHeight: { type: "number", default: 400 },
 		get viewModelEditorHeight() {
-			return Math.ceil((2 * this.scrollableAreaHeight) / 3);
+			if (this.breakpointsExpanded) {
+				// Increase the height of the view-model editor by the actual breakpoint section height
+				return Math.ceil(2 * this.scrollableAreaHeight / 3) + this.breakpointsCurrentHeight;
+			}
+			// remove the title height in order to prevent scroll over breakpoint section
+			return this.scrollableAreaHeight - this.viewModelEditorTitleHeight || 0 ;
 		},
 		get breakpointsHeight() {
 			return Math.floor((1 * this.scrollableAreaHeight) / 3);
@@ -50,11 +55,17 @@ export default Component.extend({
 		breakpoints: DefineList,
 		breakpointsError: "string",
 
+		//breakpoints DOM fields
+		breakpointsExpanded: "boolean",
+		breakpointsCurrentHeight: "number",
+		breakpointsTitleHeight: "number",
+
 		// viewmodel editor functions
 		updateValues: {
 			default: () =>
 				(data) => console.log("updating viewModel with", data)
 		},
+		
 
 		// breakpoints functions
 		addBreakpoint: {
@@ -90,7 +101,11 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar">
-				<expandable-section title:raw="ViewModel Mutation Breakpoints" height:bind="breakpointsHeight">
+				<expandable-section title:raw="ViewModel Mutation Breakpoints" 
+									height:bind="breakpointsHeight" 
+									sectionTitleHeight:to="breakpointsTitleHeight" 
+									sectionHeight:to="breakpointsCurrentHeight"
+				>
 					<breakpoints-editor
 						breakpoints:bind="breakpoints"
 						addBreakpoint:from="addBreakpoint"
