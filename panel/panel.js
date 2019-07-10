@@ -32,7 +32,7 @@ export default Component.extend({
 				return Math.ceil(2 * this.scrollableAreaHeight / 3) + this.breakpointsCurrentHeight;
 			}
 			// remove the title height in order to prevent scroll over breakpoint section
-			return this.scrollableAreaHeight - this.viewModelEditorTitleHeight || 0 ;
+			return this.scrollableAreaHeight - this.breakpointsTitleHeight || 0 ;
 		},
 		get breakpointsHeight() {
 			return Math.floor((1 * this.scrollableAreaHeight) / 3);
