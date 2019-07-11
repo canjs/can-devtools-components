@@ -26,22 +26,18 @@ export default Component.extend({
 		/**
 		 * the actual section height (height property is for max-height)
 		 */
-		sectionHeight: {
-			value({lastSet, listenTo, resolve}) {
-				resolve(lastSet.get());
-				listenTo("sectionEl", (ev, el) => {
-					resolve(el.clientHeight);
-				});
+		get sectionHeight() {
+			if (this.sectionEl) {
+ 				return this.sectionEl.clientHeight;
 			}
-		},
-		sectionTitleHeight: {
-			value({lastSet, listenTo, resolve}) {
-				resolve(lastSet.get());
-				listenTo("sectionTitle", (ev, el) => {
-					resolve(el.clientHeight);
-				});
+			return 0;
+ 		},
+ 		get sectionTitleHeight() {
+			if (this.sectionTitle) {
+				return this.sectionTitle.clientHeight;
 			}
-		},
+			return 0;
+ 		},
 		expanded: {
 			default: false,
 			value({ lastSet, listenTo, resolve }) {

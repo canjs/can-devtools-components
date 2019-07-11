@@ -38,4 +38,16 @@ describe("expandable-section", () => {
 		assert.equal(vm.collapsible, true, "collapsible === true");
 	});
 
+	it('sectionHeight', () => {
+		var expandableComponent = new Component();
+		var viewModel = expandableComponent.viewModel;
+		assert.equal(viewModel.sectionHeight, viewModel.sectionEl.clientHeight, "got section height from the section div");
+	});
+
+	it('sectionTitleHeight', () => {
+		var expandableComponent = new Component();
+		var viewModel = expandableComponent.viewModel;
+		assert.equal(viewModel.sectionTitleHeight, viewModel.sectionTitle.clientHeight, "got section title height");
+	});
+
 });
