@@ -14,30 +14,11 @@ export default Component.extend({
 		/**
 		 * The section element
 		 */
-		sectionEl: {
-			type: "any"
-		},
+		sectionEl: "any",
 		/**
 		 * Section header
 		 */
-		sectionTitle: {
-			type: "any"
-		},
-		/**
-		 * the actual section height (height property is for max-height)
-		 */
-		get sectionHeight() {
-			if (this.sectionEl) {
- 				return this.sectionEl.clientHeight;
-			}
-			return 0;
- 		},
- 		get sectionTitleHeight() {
-			if (this.sectionTitle) {
-				return this.sectionTitle.clientHeight;
-			}
-			return 0;
- 		},
+		sectionTitle: "any",
 		expanded: {
 			default: false,
 			value({ lastSet, listenTo, resolve }) {
@@ -63,14 +44,14 @@ export default Component.extend({
 	},
 
 	view: `
-		<div this:to="sectionEl" class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
+		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
 			<div this:to="sectionTitle" class="title">
 				{{# if(collapsible) }}
 					<turning-arrow down:bind="expanded" />
 				{{/ if }}
 				<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
 			</div>
-			<div class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()">
+			<div this:to="sectionEl" class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()">
 				<content/>
 			</div>
 		</div>
