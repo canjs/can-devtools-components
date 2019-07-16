@@ -22,7 +22,7 @@ export default Component.extend({
 
 			// set height when page is resized
 			window.addEventListener("resize", setHeight);
-			
+
 			return () => {
 				window.removeEventListener("resize", setHeight);
 			};
@@ -54,9 +54,9 @@ export default Component.extend({
 		// breakpoints fields
 		breakpoints: DefineList,
 		breakpointsError: "string",
+		breakpointsExpanded: "boolean",
 
 		//breakpoints DOM fields
-		breakpointsExpanded: "boolean",
 		breakpointsTitle: "any",
 		viewModelTitle: "any",
 		breakpointsTitleHeight: "number",
@@ -103,24 +103,27 @@ export default Component.extend({
 				</div>
 			</div>
 			<div class="sidebar" style="height: {{scrollableAreaHeight}}px">
-					
-					<expandable-section title:raw="ViewModel Mutation Breakpoints" sectionTitle:to="breakpointsTitle" height:from="breakpointsHeight"
-										expanded:bind="breakpointsExpanded"
-					>
-						<breakpoints-editor
-							breakpoints:bind="breakpoints"
-							addBreakpoint:from="addBreakpoint"
-							toggleBreakpoint:from="toggleBreakpoint"
-							deleteBreakpoint:from="deleteBreakpoint"
-							error:bind="breakpointsError"
-						></breakpoints-editor>
-					</expandable-section>
-					
+				<expandable-section 
+					title:raw="ViewModel Mutation Breakpoints" 
+					sectionTitle:to="breakpointsTitle" 
+					height:from="breakpointsHeight"
+					expanded:bind="breakpointsExpanded"
+				>
+					<breakpoints-editor
+						breakpoints:bind="breakpoints"
+						addBreakpoint:from="addBreakpoint"
+						toggleBreakpoint:from="toggleBreakpoint"
+						deleteBreakpoint:from="deleteBreakpoint"
+						error:bind="breakpointsError"
+					></breakpoints-editor>
+				</expandable-section>
 
-					
-					<expandable-section title:raw="ViewModel Editor" expanded:from="true" sectionTitle:to="viewModelTitle"
-										height:from="viewModelEditorHeight"
-					>
+				<expandable-section 
+					title:raw="ViewModel Editor" 
+					expanded:from="true"
+					sectionTitle:to="viewModelTitle"
+					height:from="viewModelEditorHeight"
+				>
 					<viewmodel-editor
 						tagName:from="this.selectedNode.tagName"
 						viewModelData:bind="viewModelData"
@@ -131,9 +134,7 @@ export default Component.extend({
 						expandedKeys:to="expandedKeys"
 						error:bind="viewModelEditorError"
 					></viewmodel-editor>
-						
-					</expandable-section>
-					
+				</expandable-section>
 			</div>
 		</div>
 	`
