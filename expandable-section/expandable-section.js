@@ -11,6 +11,8 @@ export default Component.extend({
 		height: { type: "number", default: 300 },
 		title: { type: "string", default: "Expandable Section" },
 		collapsible: { type: "boolean", default: true },
+		sectionTitle: "any",
+		
 		expanded: {
 			default: false,
 			value({ lastSet, listenTo, resolve }) {
@@ -32,18 +34,18 @@ export default Component.extend({
 					}
 				});
 			}
-		},
+		}
 	},
 
 	view: `
-		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)" {{# if(expanded) }}style="max-height: {{height}}px"{{/ if }}>
-			<div class="title">
+		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)">
+			<div this:to="sectionTitle" class="title">
 				{{# if(collapsible) }}
 					<turning-arrow down:bind="expanded" />
 				{{/ if }}
 				<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
 			</div>
-			<div class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()">
+			<div class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()" style="height: {{height}}px">
 				<content/>
 			</div>
 		</div>

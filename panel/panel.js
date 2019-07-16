@@ -13,6 +13,8 @@ export default Component.extend({
 		connectedCallback(el) {
 			const setHeight = () => {
 				this.scrollableAreaHeight = el.clientHeight;
+				this.breakpointsTitleHeight = this.breakpointsTitle.clientHeight;
+				this.viewModelTitleHeight = this.viewModelTitle.clientHeight;
 			};
 
 			// set default height
@@ -27,10 +29,13 @@ export default Component.extend({
 		},
 		scrollableAreaHeight: { type: "number", default: 400 },
 		get viewModelEditorHeight() {
-			return Math.ceil((2 * this.scrollableAreaHeight) / 3);
+			if (this.breakpointsExpanded) {
+				return (this.scrollableAreaHeight - this.breakpointsHeight) - (this.breakpointsTitleHeight + this.viewModelTitleHeight);
+			}
+			return this.scrollableAreaHeight - (this.breakpointsTitleHeight + this.viewModelTitleHeight);
 		},
 		get breakpointsHeight() {
-			return Math.floor((1 * this.scrollableAreaHeight) / 3);
+			return Math.floor((1 * this.scrollableAreaHeight) / 3)  - this.breakpointsTitleHeight;
 		},
 
 		// component tree fields
@@ -49,12 +54,20 @@ export default Component.extend({
 		// breakpoints fields
 		breakpoints: DefineList,
 		breakpointsError: "string",
+		breakpointsExpanded: "boolean",
+
+		//breakpoints DOM fields
+		breakpointsTitle: "any",
+		viewModelTitle: "any",
+		breakpointsTitleHeight: "number",
+		viewModelTitleHeight: "number",
 
 		// viewmodel editor functions
 		updateValues: {
 			default: () =>
 				(data) => console.log("updating viewModel with", data)
 		},
+		
 
 		// breakpoints functions
 		addBreakpoint: {
@@ -89,8 +102,13 @@ export default Component.extend({
 					></component-tree>
 				</div>
 			</div>
-			<div class="sidebar">
-				<expandable-section title:raw="ViewModel Mutation Breakpoints" height:bind="breakpointsHeight">
+			<div class="sidebar" style="height: {{scrollableAreaHeight}}px">
+				<expandable-section 
+					title:raw="ViewModel Mutation Breakpoints" 
+					sectionTitle:to="breakpointsTitle" 
+					height:from="breakpointsHeight"
+					expanded:bind="breakpointsExpanded"
+				>
 					<breakpoints-editor
 						breakpoints:bind="breakpoints"
 						addBreakpoint:from="addBreakpoint"
@@ -100,7 +118,12 @@ export default Component.extend({
 					></breakpoints-editor>
 				</expandable-section>
 
-				<expandable-section title:raw="ViewModel Editor" expanded:from="true" height:bind="viewModelEditorHeight">
+				<expandable-section 
+					title:raw="ViewModel Editor" 
+					expanded:from="true"
+					sectionTitle:to="viewModelTitle"
+					height:from="viewModelEditorHeight"
+				>
 					<viewmodel-editor
 						tagName:from="this.selectedNode.tagName"
 						viewModelData:bind="viewModelData"

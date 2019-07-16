@@ -1,4 +1,5 @@
 import Component from "./panel";
+
 import "steal-mocha";
 import chai from "chai";
 

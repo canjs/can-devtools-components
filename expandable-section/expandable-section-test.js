@@ -37,5 +37,4 @@ describe("expandable-section", () => {
 
 		assert.equal(vm.collapsible, true, "collapsible === true");
 	});
-
 });
