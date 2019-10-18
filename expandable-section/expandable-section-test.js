@@ -1,40 +1,46 @@
-import "steal-mocha";
-import chai from "chai";
-import Component from "./expandable-section";
+import { assert } from "chai";
+import ExpandableSection from "./expandable-section";
 
-const ViewModel = Component.ViewModel;
-const assert = chai.assert;
+import "steal-mocha";
 
 describe("expandable-section", () => {
 	it("expanded", () => {
-		let vm = new ViewModel();
-		vm.listenTo("expanded", () => {});
+		let el = new ExpandableSection();
+		el.initialize();
 
-		assert.equal(vm.expanded, false, "defaults to false");
+		el.listenTo("expanded", () => {});
+		assert.equal(el.expanded, false, "defaults to false");
 
-		vm.expanded = true;
+		el.expanded = true;
+		assert.equal(el.expanded, true, "can be set to true");
 
-		assert.equal(vm.expanded, true, "can be set to true");
+		el.expanded = false;
+		assert.equal(el.expanded, false, "can be set to false");
 
-		vm.expanded = false;
+		el.collapsible = false;
+		assert.equal(
+			el.expanded,
+			true,
+			"setting collapsible to false sets expanded to true"
+		);
 
-		assert.equal(vm.expanded, false, "can be set to false");
+		el.expanded = false;
+		assert.equal(
+			el.expanded,
+			true,
+			"cannot set expanded if collapsible is false"
+		);
 
-		vm.collapsible = false;
-
-		assert.equal(vm.expanded, true, "setting collapsible to false sets expanded to true");
-
-		vm.expanded = false;
-
-		assert.equal(vm.expanded, true, "cannot set expanded if collapsible is false");
-
-		vm = new ViewModel({ collapsible: false });
-		assert.equal(vm.expanded, true, "when collapsible is defaulted to false, expanded defaults to true");
+		el = new ExpandableSection().initialize({ collapsible: false });
+		assert.equal(
+			el.expanded,
+			true,
+			"when collapsible is defaulted to false, expanded defaults to true"
+		);
 	});
 
 	it("collapsible", () => {
-		const vm = new ViewModel();
-
-		assert.equal(vm.collapsible, true, "collapsible === true");
+		const el = new ExpandableSection();
+		assert.equal(el.collapsible, true, "collapsible === true");
 	});
 });

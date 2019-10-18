@@ -1,18 +1,21 @@
-import "steal-mocha";
-import chai from "chai";
-import Component from "./turning-arrow";
+import { assert } from "chai";
+import TurningArrow from "./turning-arrow";
 
-const ViewModel = Component.ViewModel;
-const assert = chai.assert;
+import "steal-mocha";
 
 describe("turning-arrow", () => {
 	it("animate", () => {
-		const vm = new ViewModel();
-		vm.listenTo("animate", () => {});
+		const el = new TurningArrow();
+		el.initialize();
 
-		assert.equal(vm.animate, false, "defaults to false");
+		el.listenTo("animate", () => {});
+		assert.equal(el.animate, false, "defaults to false");
 
-		vm.down = true;
-		assert.equal(vm.animate, true, "changes to true first time vm.down changes");
+		el.down = true;
+		assert.equal(
+			el.animate,
+			true,
+			"changes to true first time el.down changes"
+		);
 	});
 });

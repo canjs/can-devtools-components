@@ -1,135 +1,164 @@
-import { Component, DefineList, DefineMap, stache, value, Reflect } from "can";
+import {
+	ObservableArray,
+	ObservableObject,
+	Reflect,
+	stache,
+	StacheElement,
+	type,
+	value
+} from "can";
 
 import "component-tree/component-tree.less";
 
-stache.addHelper("plusOne", (num) => num + 1);
+stache.addHelper("plusOne", num => num + 1);
 
-let ComponentTreeList;
-
-const ComponentTreeNode = DefineMap.extend("ComponentTreeNode", {
-	selected: "boolean",
-	tagName: "string",
-	id: { type: "number", identity: true },
-	children: {
-		type(newVal) {
-			return new ComponentTreeList(newVal);
-		}
+class ComponentTreeNode extends ObservableObject {
+	static get props() {
+		return {
+			selected: Boolean,
+			tagName: String,
+			id: { type: Number, identity: true },
+			children: type.late(() => type.convert(ComponentTreeList))
+		};
 	}
-});
+}
 
-ComponentTreeList = DefineList.extend("ComponentTreeList", {
-	"#": ComponentTreeNode
-});
+/* jshint -W003 */
+class ComponentTreeList extends ObservableArray {
+	static get items() {
+		return type.convert(ComponentTreeNode);
+	}
+}
+/* jshint +W003 */
 
-export default Component.extend({
-	tag: "component-tree",
-	ViewModel: {
-		error: "string",
+export default class ComponentTree extends StacheElement {
+	static get view() {
+		return `
+			{{< treeNodeTemplate }}
+				{{# unless(node.children.length) }}
+					<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
+						<span>&#x3C;</span>{{ node.tagName }}<span>/&#x3E;</span>
+					</p>
+				{{ else }}
+					<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
+						<span>&#x3C;</span>{{ node.tagName }}<span>&#x3E;</span>
+					</p>
+					{{# for(child of node.children) }}
+						{{ treeNodeTemplate(node=child level=plusOne(level) tree=tree) }}
+					{{/ for }}
+					<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
+						<span>&#x3C;/</span>{{ node.tagName }}<span>&#x3E;</span>
+					</p>
+				{{/ unless }}
+			{{/ treeNodeTemplate }}
 
-		componentTree: { Type: ComponentTreeList, Default: ComponentTreeList },
+			{{# for(node of this.componentTree) }}
+				{{ treeNodeTemplate(node=node level=0 tree=this) }}
+			{{/ else }}
+				<h1 class="no-components">No Components Found</h1>
+			{{/ for }}
+		`;
+	}
 
-		selectedNode: {
-			value({ listenTo, lastSet, resolve }) {
-				let selectedNode = resolve(lastSet.get());
+	static get props() {
+		return {
+			treeError: String,
 
-				// if node is replaced by a node with a different id,
-				// deselect it unless the node is still selected
-				const resetOnIdChange = () => {
-					if (selectedNode) {
-						if (selectedNode.selected) {
-							return;
+			componentTree: {
+				type: type.maybeConvert(ComponentTreeList),
+
+				get default() {
+					return new ComponentTreeList();
+				}
+			},
+
+			selectedNode: {
+				value({ listenTo, lastSet, resolve }) {
+					let selectedNode = resolve(lastSet.get());
+
+					// if node is replaced by a node with a different id,
+					// deselect it unless the node is still selected
+					const resetOnIdChange = () => {
+						if (selectedNode) {
+							if (selectedNode.selected) {
+								return;
+							}
+							Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
 						}
-						Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
-					}
-					selectedNode = resolve(undefined);
-				};
+						selectedNode = resolve(undefined);
+					};
 
-				const setSelectedNode = (node) => {
-					if (selectedNode) {
-						Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
-					}
-
-					selectedNode = resolve(node);
-
-					if (selectedNode) {
-						Reflect.onKeyValue(selectedNode, "id", resetOnIdChange);
-					}
-				};
-
-				listenTo(lastSet, (node) => {
-					setSelectedNode(node);
-				});
-
-				// recursively find a node in a tree that has `selected: true`
-				const findNode = (list, filterFn) => {
-					let foundNode;
-
-					list.some((node) => {
-						if (filterFn(node)) {
-							foundNode = node;
-							return true;
+					const setSelectedNode = node => {
+						if (selectedNode) {
+							Reflect.offKeyValue(selectedNode, "id", resetOnIdChange);
 						}
-						foundNode = findNode(node.children, filterFn);
+
+						selectedNode = resolve(node);
+
+						if (selectedNode) {
+							Reflect.onKeyValue(selectedNode, "id", resetOnIdChange);
+						}
+					};
+
+					listenTo(lastSet, node => {
+						setSelectedNode(node);
 					});
 
-					return foundNode;
-				};
+					// recursively find a node in a tree that has `selected: true`
+					const findNode = (list, filterFn) => {
+						let foundNode;
 
-				// create an observable that represents the `selected: true` node
-				const selectedComponentTreeNode = value.returnedBy(() => {
-					return findNode(this.componentTree, (node) => {
-						return node.selected;
+						list.some(node => {
+							if (filterFn(node)) {
+								foundNode = node;
+								return true;
+							}
+							foundNode = findNode(node.children, filterFn);
+						});
+
+						return foundNode;
+					};
+
+					// create an observable that represents the `selected: true` node
+					const selectedComponentTreeNode = value.returnedBy(() => {
+						return findNode(this.componentTree, node => {
+							return node.selected;
+						});
 					});
-				});
 
-				// when a new node has `selected: true`, resolve selectedNode
-				listenTo(selectedComponentTreeNode, (selectedComponentTreeNode) => {
-					if (selectedComponentTreeNode) {
-						setSelectedNode(selectedComponentTreeNode);
-					}
-				});
-
-				// create an observable that represents whether the selectedNode is in the tree
-				const selectedNodeInTree = value.returnedBy(() => {
-					return findNode(this.componentTree, (node) => {
-						return selectedNode && (node.id === selectedNode.id);
+					// when a new node has `selected: true`, resolve selectedNode
+					listenTo(selectedComponentTreeNode, selectedComponentTreeNode => {
+						if (selectedComponentTreeNode) {
+							setSelectedNode(selectedComponentTreeNode);
+						}
 					});
-				});
 
-				// if the selectedNode is removed from the tree, reset
-				listenTo(selectedNodeInTree, (selectedNodeInTree) => {
-					if (selectedNode && !selectedNodeInTree) {
-						setSelectedNode(undefined);
-					}
-				});
+					// create an observable that represents whether the selectedNode is in the tree
+					const selectedNodeInTree = value.returnedBy(() => {
+						return findNode(this.componentTree, node => {
+							return selectedNode && node.id === selectedNode.id;
+						});
+					});
+
+					// if the selectedNode is removed from the tree, reset
+					listenTo(selectedNodeInTree, selectedNodeInTree => {
+						if (selectedNode && !selectedNodeInTree) {
+							setSelectedNode(undefined);
+						}
+					});
+				}
 			}
-		}
-	},
-	view: `
-		{{< treeNodeTemplate }}
-			{{# unless(node.children.length) }}
-				<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
-					<span>&#x3C;</span>{{ node.tagName }}<span>/&#x3E;</span>
-				</p>
-			{{ else }}
-				<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
-					<span>&#x3C;</span>{{ node.tagName }}<span>&#x3E;</span>
-				</p>
-				{{# for(child of node.children) }}
-					{{ treeNodeTemplate(node=child level=plusOne(level) tree=tree) }}
-				{{/ for }}
-				<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
-					<span>&#x3C;/</span>{{ node.tagName }}<span>&#x3E;</span>
-				</p>
-			{{/ unless }}
-		{{/ treeNodeTemplate }}
+		};
+	}
+}
 
-		{{# for(node of componentTree) }}
-			{{ treeNodeTemplate(node=node level=0 tree=this) }}
-		{{/ else }}
-			<h1 class="no-components">No Components Found</h1>
-		{{/ for }}
-	`
-});
+customElements.define("component-tree", ComponentTree);
 
-export { Component, DefineList, DefineMap, stache, value, Reflect };
+export {
+	StacheElement,
+	ObservableArray,
+	ObservableObject,
+	stache,
+	value,
+	Reflect
+};

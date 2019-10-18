@@ -1,14 +1,19 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>~/breakpoints-editor</title>
 	</head>
-
 	<body>
 		<breakpoints-editor></breakpoints-editor>
 
-		<script src="../node_modules/steal/steal.js"
-			main="can-devtools-components/breakpoints-editor/breakpoints-editor">
-			const vm = document.querySelector("breakpoints-editor").viewModel;
+		<script
+			src="../node_modules/steal/steal.js"
+			main="can-devtools-components/breakpoints-editor/breakpoints-editor"
+		>
+			const el = document.querySelector("breakpoints-editor");
 
 			const breakpoints = [];
 			let nextBreakpointId = 0;
@@ -26,26 +31,26 @@
 				return index;
 			};
 
-			vm.addBreakpoint = (expression) => {
+			el.addBreakpoint = (expression) => {
 				breakpoints.push({
 					id: nextBreakpointId++,
 					expression: expression,
 					enabled: true
 				});
-				vm.breakpoints = breakpoints;
+				el.breakpoints = breakpoints;
 			};
 
-			vm.toggleBreakpoint = (bp) => {
+			el.toggleBreakpoint = (bp) => {
 				const index = getIndexOfBreakpoint(bp.id);
 				breakpoints[index].enabled = !breakpoints[index].enabled;
-				vm.breakpoints = breakpoints;
+				el.breakpoints = breakpoints;
 			};
 
-			vm.deleteBreakpoint = (bp) => {
+			el.deleteBreakpoint = (bp) => {
 				const index = getIndexOfBreakpoint(bp.id);
 				breakpoints.splice(index, 1);
-				vm.breakpoints = breakpoints;
+				el.breakpoints = breakpoints;
 			};
 		</script>
 	</body>
-<html>
+</html>

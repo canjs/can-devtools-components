@@ -1,13 +1,20 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>key-value-editor</title>
 	</head>
 	<body>
 		<p></p>
 		<button>Toggle showing</button>
-		<hr>
+		<hr />
 
-		<script src="../node_modules/steal/steal.js" main="can-devtools-components/json-tree-editor/json-tree-editor">
+		<script
+			src="../node_modules/steal/steal.js"
+			main="can-devtools-components/json-tree-editor/json-tree-editor"
+		>
 			const p = document.querySelector("p");
 			const button = document.querySelector("button");
 			const obj = {};
@@ -17,7 +24,7 @@
 				if (!keyValueEditor) {
 					keyValueEditor = document.createElement("key-value-editor")
 					document.body.appendChild(keyValueEditor);
-					keyValueEditor.viewModel.setKeyValue = (key, value) => {
+					keyValueEditor.setKeyValue = (key, value) => {
 						obj[key] = value;
 						p.innerHTML = JSON.stringify(obj, null, "\t");
 					};

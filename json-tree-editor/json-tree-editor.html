@@ -1,6 +1,10 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>~/json-tree-editor</title>
 		<style>
 			textarea {
 				width: 400px;
@@ -10,16 +14,17 @@
 	</head>
 	<body>
 		<textarea></textarea>
-		<hr>
+		<hr />
 		<json-tree-editor></json-tree-editor>
 
-		<script src="../node_modules/steal/steal.js" main="can-devtools-components/json-tree-editor/json-tree-editor">
+		<script
+			src="../node_modules/steal/steal.js"
+			main="can-devtools-components/json-tree-editor/json-tree-editor"
+		>
 			const treeEditor = document.querySelector("json-tree-editor")
 			const textarea = document.querySelector("textarea");
 
-			const vm = treeEditor.viewModel;
-
-			vm.json = {
+			treeEditor.json = {
 				nullProp: null,
 				emptyString: "",
 				name: {
@@ -41,13 +46,13 @@
 				warning: "something??"
 			};
 
-			vm.typeNames = {
+			treeEditor.typeNames = {
 				hobbies: "Hobbies",
 				element: "HTMLParagraphElement",
 				recursive: "Object"
 			};
 
-			vm.messages = {
+			treeEditor.messages = {
 				element: {
 					type: "info",
 					message: "CanJS Devtools does not expand HTML Elements"
@@ -63,12 +68,12 @@
 			};
 
 			(function updateTextAreaValue() {
-				textarea.value = JSON.stringify(vm.json, null, "\t");
+				textarea.value = JSON.stringify(treeEditor.json, null, "\t");
 				setTimeout(updateTextAreaValue, 50);
 			}());
 
 			textarea.addEventListener("change", (ev) => {
-				vm.json = JSON.parse(ev.target.value);
+				treeEditor.json = JSON.parse(ev.target.value);
 			});
 		</script>
 	</body>

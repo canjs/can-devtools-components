@@ -1,57 +1,67 @@
-import "steal-mocha";
-import chai from "chai";
+import { assert } from "chai";
 import EditableSpan from "./editable-span";
 
-const ViewModel = EditableSpan.ViewModel;
-const assert = chai.assert;
+import "steal-mocha";
 
-const noop = () => { };
+const noop = () => {};
 const ev = { stopPropagation: noop };
 
 describe("editable-span", () => {
 	describe("ViewModel", () => {
 		it("edit() / save()", () => {
-			const vm = new ViewModel();
-			vm.listenTo("editing", () => {});
-			vm.listenTo("text", () => {});
+			const el = new EditableSpan();
+			el.initialize();
 
-			vm.edit(ev);
+			el.listenTo("editing", () => {});
+			el.listenTo("text", () => {});
 
-			assert.ok(vm.editing, "edit() sets editing to true");
+			el.edit(ev);
 
-			vm.save("foo");
-			assert.notOk(vm.editing, "save() sets editing to false");
-			assert.equal(vm.text, "foo", "save() sets text");
+			assert.ok(el.editing, "edit() sets editing to true");
+
+			el.save("foo");
+			assert.notOk(el.editing, "save() sets editing to false");
+			assert.equal(el.text, "foo", "save() sets text");
 		});
 
 		it("showOptions", () => {
-			const vm = new ViewModel();
+			const el = new EditableSpan();
 
-			assert.notOk(vm.showOptions, "showOptions defaults to false");
+			assert.notOk(el.showOptions, "showOptions defaults to false");
 
-			vm.editing = true;
-			assert.notOk(vm.showOptions, "showOptions === false when editing === true without options");
+			el.editing = true;
+			assert.notOk(
+				el.showOptions,
+				"showOptions === false when editing === true without options"
+			);
 
-			vm.options = [ "one" ];
-			assert.ok(vm.showOptions, "showOptions === true when editing === true with options");
+			el.options = ["one"];
+			assert.ok(
+				el.showOptions,
+				"showOptions === true when editing === true with options"
+			);
 
-			vm.editing = false;
-			assert.notOk(vm.showOptions, "showOptions === false when editing === false with options");
+			el.editing = false;
+			assert.notOk(
+				el.showOptions,
+				"showOptions === false when editing === false with options"
+			);
 		});
 	});
 
 	describe("Component", () => {
 		it("renders correctly", () => {
-			const c = new EditableSpan({
-				viewModel: {
-					text: "some text"
-				}
+			const el = new EditableSpan().render({
+				text: "some text"
 			});
 
-			const el = c.element;
 			const valueSpan = el.querySelector("span");
 
-			assert.equal(valueSpan.innerText, "some text", "renders text without spaces");
+			assert.equal(
+				valueSpan.innerText,
+				"some text",
+				"renders text without spaces"
+			);
 		});
 	});
 });
