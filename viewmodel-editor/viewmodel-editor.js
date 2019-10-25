@@ -63,7 +63,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 	static get props() {
 		return {
-			tagName: String,
+			tagName: { type: String, default: "" },
 
 			viewModelData: {
 				type: type.convert(ObservableObject),
@@ -226,5 +226,6 @@ export {
 	canKey as key,
 	diff,
 	Reflect,
+	type,
 	Observation
 };

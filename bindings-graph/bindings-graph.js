@@ -89,4 +89,4 @@ export default class BindingsGraph extends StacheElement {
 
 customElements.define("bindings-graph", BindingsGraph);
 
-export { StacheElement, ObservableArray, ObservableObject };
+export { StacheElement, type, ObservableArray, ObservableObject };
