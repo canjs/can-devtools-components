@@ -1,4 +1,10 @@
-import { ObservableArray, ObservableObject, StacheElement, type } from "can";
+import {
+	ObservableArray,
+	ObservableObject,
+	Reflect,
+	StacheElement,
+	type
+} from "can";
 
 import "panel/panel.less";
 
@@ -166,4 +172,4 @@ export default class ComponentsPanel extends StacheElement {
 
 customElements.define("components-panel", ComponentsPanel);
 
-export { StacheElement, ObservableObject, ObservableArray, Reflect };
+export { StacheElement, ObservableObject, ObservableArray, Reflect, type };

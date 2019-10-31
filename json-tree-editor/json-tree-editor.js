@@ -45,7 +45,9 @@ const getType = val => {
 	return capitalize(typeof val);
 };
 
-const NumberOrString = val => val;
+function NumberOrString(val) {
+	return val;
+}
 
 const wrappedInQuotesRegex = /^["|'].*["|']$/;
 
@@ -61,10 +63,6 @@ class ParsedJSONNode extends ObservableObject {
 }
 
 class ParsedJSON extends ObservableArray {
-	static get props() {
-		return {};
-	}
-
 	static get items() {
 		return type.convert(ParsedJSONNode);
 	}
@@ -451,9 +449,9 @@ export class JSONTreeEditor extends StacheElement {
 		};
 	}
 
-	static get propertyDefaults() {
-		return DeepObservable;
-	}
+	// static get propertyDefaults() {
+	// 	return DeepObservable;
+	// }
 
 	isExpanded(path) {
 		return this.expandedKeys.indexOf(path) > -1;

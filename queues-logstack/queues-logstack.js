@@ -125,4 +125,4 @@ export default class QueuesLogstack extends StacheElement {
 
 customElements.define("queues-logstack", QueuesLogstack);
 
-export { StacheElement, ObservableArray };
+export { StacheElement, type, ObservableArray };

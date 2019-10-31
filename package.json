@@ -28,6 +28,7 @@
   "main": "dist/can-devtools-components",
   "steal": {
     "main": "can-devtools-components",
+    "forceES5": false,
     "npmIgnore": [
       "testee",
       "steal-tools"
