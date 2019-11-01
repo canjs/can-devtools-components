@@ -1,10 +1,11 @@
-import { Component, DefineList } from "can";
+import { Control, ObservableArray, StacheElement, type } from "can";
+
 import "../utils/add-enter-event";
 import "./editable-span.less";
 
-const selectContents = (el) => {
+const selectContents = el => {
 	setTimeout(() => {
-		if ( document.body.contains(el) ) {
+		if (document.body.contains(el)) {
 			const selection = window.getSelection();
 			const range = document.createRange();
 			range.selectNodeContents(el);
@@ -14,103 +15,107 @@ const selectContents = (el) => {
 	}, 0);
 };
 
-export default Component.extend({
-	tag: "editable-span",
+export default class EditableSpan extends StacheElement {
+	static get view() {
+		return `
+			<span
+				on:click="this.edit(scope.event)"
+				on:blur="this.save(scope.element.innerText)"
+				on:enter="this.save(scope.element.innerText)"
+				class="{{# if(this.editing) }}editing{{/ if }} {{# if(this.wrapInQuotes) }}quotes{{/ if }}"
+				{{# if(this.editing) }}contenteditable="true"{{/ if }}
+				tabindex="0"
+			>{{ this.text }}</span>
 
-	ViewModel: {
-		options: DefineList,
-		wrapInQuotes: { default: false, type: "boolean" },
+			{{# if(this.showOptions) }}
+				<ul>
+					{{# for(option of this.options) }}
+						<li on:mousedown="this.save(option)">{{ option }}</li>
+					{{/ for }}
+				</ul>
+			{{/ if }}
+		`;
+	}
 
-		text: {
-			value({ listenTo, lastSet, resolve }) {
-				resolve(lastSet.value);
+	static get props() {
+		return {
+			options: type.convert(ObservableArray),
+			wrapInQuotes: { default: false, type: Boolean },
 
-				listenTo(lastSet, resolve);
+			text: {
+				value({ listenTo, lastSet, resolve }) {
+					resolve(lastSet.value);
 
-				listenTo("set-value", (ev, val) => {
-					resolve(val);
-				});
+					listenTo(lastSet, resolve);
+
+					listenTo("set-value", (ev, val) => {
+						resolve(val);
+					});
+				}
+			},
+
+			editing: {
+				value({ listenTo, lastSet, resolve }) {
+					resolve(lastSet.value || false);
+
+					listenTo(lastSet, resolve);
+
+					listenTo("set-value", () => {
+						resolve(false);
+					});
+				}
+			},
+
+			get showOptions() {
+				return this.editing && this.options && this.options.length;
 			}
-		},
+		};
+	}
 
-		editing: {
-			value({ listenTo, lastSet, resolve }) {
-				resolve(lastSet.value || false);
+	connected() {
+		const EventsControl = Control.extend({
+			"li mouseover"(li) {
+				li.classList.add("highlight");
+			},
 
-				listenTo(lastSet, resolve);
-
-				listenTo("set-value", () => {
-					resolve(false);
-				});
+			"li mouseout"(li) {
+				li.classList.remove("highlight");
 			}
-		},
+		});
 
-		get showOptions() {
-			return this.editing && this.options && this.options.length;
-		},
+		new EventsControl(this);
+		const span = this.querySelector("span");
 
-		edit(ev) {
-			ev.stopPropagation();
-			this.editing = true;
-		},
+		const selectSpanContents = () => {
+			selectContents(span);
+		};
 
-		save(value) {
-			this.dispatch("set-value", [ value.trim() ]);
-		},
+		if (this.editing) {
+			selectSpanContents();
+		}
 
-		connectedCallback(el) {
-			const span = el.querySelector("span");
-
-			const selectSpanContents = () => {
-				selectContents(span);
-			};
-
-			if (this.editing) {
+		this.listenTo("editing", (ev, editing) => {
+			if (editing) {
 				selectSpanContents();
 			}
+		});
 
-			this.listenTo("editing", (ev, editing) => {
-				if (editing) {
-					selectSpanContents();
-				}
-			});
+		this.listenTo("set-value", (ev, val) => {
+			span.innerText = val;
+		});
 
-			this.listenTo("set-value", (ev, val) => {
-				span.innerText = val;
-			});
-
-			this.listenTo(el, "focus", () => {
-				this.editing = true;
-			});
-		}
-	},
-
-	view: `
-		<span
-			on:click="edit(scope.event)"
-			on:blur="save(scope.element.innerText)"
-			on:enter="save(scope.element.innerText)"
-			class="{{#if(editing)}}editing{{/if}} {{#if(wrapInQuotes)}}quotes{{/if}}"
-			{{#if(editing)}}contenteditable="true"{{/if}}
-			tabindex="0"
-		>{{text}}</span>
-
-		{{#if(showOptions)}}
-			<ul>
-				{{#each(options)}}
-					<li on:mousedown="scope.vm.save(this)">{{this}}</li>
-				{{/each}}
-			</ul>
-		{{/if}}
-	`,
-
-	events: {
-		"li mouseover"(li) {
-			li.classList.add("highlight");
-		},
-
-		"li mouseout"(li) {
-			li.classList.remove("highlight");
-		}
+		this.listenTo(this, "focus", () => {
+			this.editing = true;
+		});
 	}
-});
+
+	edit(ev) {
+		ev.stopPropagation();
+		this.editing = true;
+	}
+
+	save(value) {
+		this.dispatch("set-value", [value.trim()]);
+	}
+}
+customElements.define("editable-span", EditableSpan);

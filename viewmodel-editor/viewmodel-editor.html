@@ -1,98 +1,118 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
 		<style>
 			my-app {
-				font-family: 'Source Code Pro', monospace;
+				font-family: "Source Code Pro", monospace;
 				display: flex;
 				flex-direction: column;
-				margin: @half-unitMenlo, ;
-				font-family: 'Source Code Pro', monospace;
+				font-family: "Source Code Pro", monospace;
 				line-height: 1.5;
-				border-bottom: 1px solid @base-color;
-				p {
-					padding: 0;
-					margin: 0;
-				}
+				border-bottom: 1px solid red;
+			}
+			my-app p {
+				padding: 0;
+				margin: 0;
 			}
 		</style>
 	</head>
-
 	<body>
 		<my-app></my-app>
 		<viewmodel-editor></viewmodel-editor>
 
-		<script src="../node_modules/steal/steal.js"
-			main="can-devtools-components/viewmodel-editor/viewmodel-editor">
-			import { Component, DefineMap, DefineList, Reflect, diff } from "can"
-			const { mergeDeep } = diff;
+		<script
+			src="../node_modules/steal/steal.js"
+			main="can-devtools-components/viewmodel-editor/viewmodel-editor"
+		>
+			import {ObservableArray,ObservableObject,Reflect,StacheElement,type} from "can";
 
-			const Hobby = DefineMap.extend("Hobby", {
-				name: "string"
-			});
-
-			const Hobbies = DefineList.extend("Hobbies", {
-				"#": Hobby
-			});
-
-			Component.extend({
-				tag: "my-app",
-				view: `
-					<p>Time: {{time}}</p>
-					<p>First: <input type="text" value:bind="first"></p>
-					<p>Last: <input type="text" value:bind="last"></p>
-					<p>Name: {{name}}</p>
-					<p>Name Change Count: {{nameChangeCount}}</p>
-					<p>Hobbies:</p>
-					<ul>
-						{{# each(hobbies) }}
-							<li>{{name}}</li>
-						{{/ each }}
-					</ul>
-				`,
-				ViewModel: {
-					type: "string",
-					time: {
-						value({ resolve }) {
-							resolve( (new Date()).toString() );
-
-							setInterval(() => {
-								resolve( (new Date()).toString() );
-							}, 1000);
-						}
-					},
-					first: { type: "string", default: "Connor" },
-					last: { type: "string", default: "Phillips" },
-					get name() {
-						return `${this.first} ${this.last}`;
-					},
-					nameChangeCount: {
-						value({ listenTo, resolve }) {
-							let count = 0;
-							listenTo("name", () => {
-								resolve(++count);
-							});
-							resolve(count);
-						}
-					},
-					hobbies: {
-						Type: Hobbies,
-						default() {
-							return [{ name: "soccer" }, { name: "dancing" }];
-						}
-					}
+			class Hobby extends ObservableObject {
+				static get props() {
+					return {
+						name: String
+					};
 				}
-			});
+			}
 
-			const vm = document.querySelector("viewmodel-editor").viewModel;
-			const sourceVM = document.querySelector("my-app").viewModel;
+			class Hobbies extends ObservableArray {
+				static get props() {
+					return {};
+				}
+
+				static get items() {
+					return type.convert(Hobby);
+				}
+			}
+
+			class MyApp extends StacheElement {
+				static get view() {
+					return `
+						<p>Time: {{ this.time }}</p>
+						<p>First: <input type="text" value:bind="this.first"></p>
+						<p>Last: <input type="text" value:bind="this.last"></p>
+						<p>Name: {{ this.name }}</p>
+						<p>Name Change Count: {{ this.nameChangeCount }}</p>
+						<p>Hobbies:</p>
+						<ul>
+							{{# for(hobby of this.hobbies) }}
+								<li>{{ hobby.name }}</li>
+							{{/ for }}
+						</ul>
+					`;
+				}
+
+				static get props() {
+					return {
+						type: String,
+						time: {
+							value({ resolve }) {
+								resolve(new Date().toString());
+
+								setInterval(() => {
+									resolve(new Date().toString());
+								}, 1000);
+							}
+						},
+						first: { type: String, default: "Connor" },
+						last: { type: String, default: "Phillips" },
+						get name() {
+							return `${this.first} ${this.last}`;
+						},
+						nameChangeCount: {
+							value({ listenTo, resolve }) {
+								let count = 0;
+								listenTo("name", () => {
+									resolve(++count);
+								});
+								resolve(count);
+							}
+						},
+						hobbies: {
+							type: type.convert(Hobbies),
+
+							get default() {
+								return [{ name: "soccer" }, { name: "dancing" }];
+							}
+						}
+					};
+				}
+			}
+
+			customElements.define("my-app", MyApp);
+
+			const vm = document.querySelector("viewmodel-editor");
+			const sourceVM = document.querySelector("my-app");
 
 			const viewModelData = sourceVM.serialize();
 			const typeNamesData = {};
 
 			for (let key in viewModelData) {
 				if (typeof viewModelData[key] === "object") {
-					typeNamesData[key] = Reflect.getName( Reflect.getKeyValue(sourceVM, key) );
+					typeNamesData[key] = Reflect.getName(Reflect.getKeyValue(sourceVM, key));
 				}
 			}
 
@@ -107,7 +127,7 @@
 			};
 
 			// simulate devtools getting new data from app
-			(function updateViewModelData(){
+			(function updateViewModelData() {
 				// fake serializing of non-serializable properties that devtools does
 				Reflect.updateDeep(vm.viewModelData, {
 					time: sourceVM.time,
@@ -115,10 +135,10 @@
 					last: sourceVM.last,
 					name: sourceVM.name,
 					nameChangeCount: sourceVM.nameChangeCount,
-					hobbies: sourceVM.hobbies.serialize(),
+					hobbies: sourceVM.hobbies.serialize()
 				});
 				setTimeout(updateViewModelData, 500);
-			}());
+			})();
 		</script>
 	</body>
-<html>
+</html>

@@ -1,53 +1,65 @@
-import { Component } from "can";
+import { StacheElement, type } from "can";
 
 import "../turning-arrow/turning-arrow";
-
 import "./expandable-section.less";
 
-export default Component.extend({
-	tag: "expandable-section",
+export default class ExpandableSection extends StacheElement {
+	static get view() {
+		return `
+			<div
+				class="{{# if(this.collapsible) }}collapsible{{/ if }}"
+				on:click="this.expanded = not(this.expanded)"
+			>
+				<div this:to="this.sectionTitle" class="title">
+					{{# if(this.collapsible) }}
+						<turning-arrow down:bind="this.expanded" />
+					{{/ if }}
+					<p {{# not(this.collapsible) }}class="not-collapsible"{{/ not }}>
+						{{ this.title }}
+					</p>
+				</div>
+				<div
+					class="content-container {{# if(this.expanded) }}expanded{{/ if }}"
+					on:click="scope.event.stopPropagation()"
+					style="height: {{ this.height }}px"
+				>
+					<content/>
+				</div>
+			</div>
+		`;
+	}
 
-	ViewModel: {
-		height: { type: "number", default: 300 },
-		title: { type: "string", default: "Expandable Section" },
-		collapsible: { type: "boolean", default: true },
-		sectionTitle: "any",
-		
-		expanded: {
-			default: false,
-			value({ lastSet, listenTo, resolve }) {
-				let collapsible = this.collapsible;
+	static get props() {
+		return {
+			height: { type: Number, default: 300 },
+			title: { type: String, default: "Expandable Section" },
+			collapsible: { type: Boolean, default: true },
+			sectionTitle: type.Any,
 
-				resolve(collapsible ? lastSet.get() : true);
+			expanded: {
+				default: false,
+				value({ lastSet, listenTo, resolve }) {
+					let collapsible = this.collapsible;
 
-				listenTo(lastSet, (newVal) => {
-					if (collapsible) {
-						resolve(newVal);
-					}
-				});
+					resolve(collapsible ? lastSet.get() : true);
 
-				listenTo("collapsible", (ev, newVal) => {
-					collapsible = newVal;
+					listenTo(lastSet, newVal => {
+						if (collapsible) {
+							resolve(newVal);
+						}
+					});
 
-					if (!collapsible) {
-						resolve(true);
-					}
-				});
+					listenTo("collapsible", (ev, newVal) => {
+						collapsible = newVal;
+
+						if (!collapsible) {
+							resolve(true);
+						}
+					});
+				}
 			}
-		}
-	},
+		};
+	}
+}
 
-	view: `
-		<div class="{{# if(collapsible) }}collapsible{{/ if }}" on:click="expanded = not(expanded)">
-			<div this:to="sectionTitle" class="title">
-				{{# if(collapsible) }}
-					<turning-arrow down:bind="expanded" />
-				{{/ if }}
-				<p {{# not(collapsible) }}class="not-collapsible"{{/ not }}>{{title}}</p>
-			</div>
-			<div class="content-container {{# if(expanded) }}expanded{{/ if }}" on:click="scope.event.stopPropagation()" style="height: {{height}}px">
-				<content/>
-			</div>
-		</div>
-	`
-});
+customElements.define("expandable-section", ExpandableSection);

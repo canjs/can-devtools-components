@@ -1,158 +1,205 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>~/panel</title>
 		<style>
-		html, body {
-			height: 100%;
-		}
+			html,
+			body {
+				height: 100%;
+			}
 		</style>
 	</head>
-
 	<body>
 		<todo-list></todo-list>
-		<br><br><hr><br><br>
+		<br /><br />
+		<hr />
+		<br /><br />
 		<components-panel></components-panel>
 
 		<script src="../node_modules/steal/steal.js">
-			import { Component, Reflect } from "can-devtools-components/panel/panel";
+					import {
+				Reflect,
+				StacheElement,
+				type
+			} from "can-devtools-components/panel/panel";
+
 			// demo app code
-			Component.extend({
-				tag: "todo-item",
-				view: `
-					<input type="checkbox" checked:from="this.complete" disabled>
-					<span>{{ this.name }}</span>
-				`,
-				ViewModel: {
-					name: "string",
-					complete: "boolean"
+			class TodoItem extends StacheElement {
+				static get view() {
+					return `
+						<input type="checkbox" checked:from="this.complete" disabled>
+						<span>{{ this.name }}</span>
+					`;
 				}
-			});
 
-			Component.extend({
-				tag: "todo-editor",
-				view: `
-					<input type="checkbox" checked:bind="this.complete">
-					<input type="text" value:bind="this.name">
-				`,
-				ViewModel: {
-					name: "string",
-					complete: "boolean"
+				static get props() {
+					return {
+						name: String,
+						complete: Boolean
+					};
 				}
-			});
+			}
 
-			Component.extend({
-				tag: "todo-list",
-				view: `
-					{{# for(todo of this.todos) }}
-					  <div on:click="this.editing = todo">
-					  {{# if( this.isEditing(todo) ) }}
-						<todo-editor name:bind="todo.name" complete:bind="todo.complete" />
-					  {{ else }}
-						<todo-item name:bind="todo.name" complete:bind="todo.complete" />
-					  {{/ if }}
-					  </div>
-					{{/ for }}
-				`,
-				ViewModel: {
-					editing: {
-						type: "any",
-						default() {
-							return this.todos[1];
+			customElements.define("todo-item", TodoItem);
+
+			class TodoEditor extends StacheElement {
+				static get view() {
+					return `
+						<input type="checkbox" checked:bind="this.complete">
+						<input type="text" value:bind="this.name">
+					`;
+				}
+
+				static get props() {
+					return {
+						name: String,
+						complete: Boolean
+					};
+				}
+			}
+
+			customElements.define("todo-editor", TodoEditor);
+
+			class TodoList extends StacheElement {
+				static get view() {
+					return `
+						{{# for(todo of this.todos) }}
+							<div on:click="this.editing = todo">
+								{{# if(this.isEditing(todo)) }}
+									<todo-editor name:bind="todo.name" complete:bind="todo.complete" />
+								{{ else }}
+									<todo-item name:bind="todo.name" complete:bind="todo.complete" />
+								{{/ if }}
+							</div>
+						{{/ for }}
+					`;
+				}
+
+				static get props() {
+					return {
+						editing: {
+							type: type.Any,
+
+							get default() {
+								return this.todos[1];
+							}
+						},
+
+						todos: {
+							get default() {
+								return [
+									{
+										name: "create a list",
+										complete: true
+									},
+									{
+										name: "go shopping",
+										complete: false
+									},
+									{
+										name: "make dinner",
+										complete: false
+									},
+									{
+										name: "create a list, again",
+										complete: true
+									},
+									{
+										name: "go shopping, again",
+										complete: false
+									},
+									{
+										name: "make dinner, again",
+										complete: false
+									},
+									{
+										name: "create a list, one more time",
+										complete: true
+									},
+									{
+										name: "go shopping, one more time",
+										complete: false
+									},
+									{
+										name: "make dinner, one more time",
+										complete: false
+									}
+								];
+							}
 						}
-					},
-					isEditing(todo) {
-						return todo === this.editing;
-					},
-					todos: {
-						default() {
-							return [{
-								name: "create a list",
-								complete: true
-							}, {
-								name: "go shopping",
-								complete: false
-							}, {
-								name: "make dinner",
-								complete: false
-							}, {
-								name: "create a list, again",
-								complete: true
-							}, {
-								name: "go shopping, again",
-								complete: false
-							}, {
-								name: "make dinner, again",
-								complete: false
-							}, {
-								name: "create a list, one more time",
-								complete: true
-							}, {
-								name: "go shopping, one more time",
-								complete: false
-							}, {
-								name: "make dinner, one more time",
-								complete: false
-							}];
-						}
-					}
+					};
 				}
-			});
 
+				isEditing(todo) {
+					return todo === this.editing;
+				}
+			}
+
+			customElements.define("todo-list", TodoList);
 
 			// panel code
-			const vm = document.querySelector("components-panel").viewModel;
+			const panel = document.querySelector("components-panel");
 
-			vm.componentTree.updateDeep([{
-				selected: false,
-				tagName: "todo-list",
-				id: 0,
-				children: [{
+			panel.componentTree.updateDeep([
+				{
 					selected: false,
-					tagName: "todo-item",
-					id: 1,
-					children: []
-				},{
-					selected: true,
-					tagName: "todo-editor",
-					id: 2,
-					children: []
-				},{
-					selected: false,
-					tagName: "todo-item",
-					id: 3,
-					children: []
-				}]
-			}]);
+					tagName: "todo-list",
+					id: 0,
+					children: [
+						{
+							selected: false,
+							tagName: "todo-item",
+							id: 1,
+							children: []
+						},
+						{
+							selected: true,
+							tagName: "todo-editor",
+							id: 2,
+							children: []
+						},
+						{
+							selected: false,
+							tagName: "todo-item",
+							id: 3,
+							children: []
+						}
+					]
+				}
+			]);
 
 			const elsById = {
 				0: document.querySelector("todo-list"),
 				1: document.querySelectorAll("todo-item")[0],
 				2: document.querySelector("todo-editor"),
-				3: document.querySelectorAll("todo-item")[1],
+				3: document.querySelectorAll("todo-item")[1]
 			};
 
 			let sourceVm;
 
-			vm.updateValues = (data) => {
-				if(sourceVm) {
+			panel.updateValues = data => {
+				if (sourceVm) {
 					Reflect.updateDeep(sourceVm, data);
-					Reflect.updateDeep(vm.viewModelData, sourceVm.serialize());
+					Reflect.updateDeep(panel.viewModelData, sourceVm.serialize());
 				}
 			};
 
 			let selectedNode = null;
-			vm.listenTo("selectedNode", (ev, node) => {
-				vm.breakpointsError = null;
+			panel.listenTo("selectedNode", (ev, node) => {
+				panel.breakpointsError = null;
 				selectedNode = node;
 				const el = elsById[node.id];
-				sourceVm = el.viewModel;
-				Reflect.updateDeep(vm.viewModelData, sourceVm.serialize());
+				sourceVm = el;
+				Reflect.updateDeep(panel.viewModelData, sourceVm.serialize());
 			});
 
 			const breakpoints = [];
 			let nextBreakpointId = 0;
 
-			const getIndexOfBreakpoint = (id) => {
+			const getIndexOfBreakpoint = id => {
 				let index = -1;
 
 				breakpoints.some((bp, i) => {
@@ -165,9 +212,10 @@
 				return index;
 			};
 
-			vm.addBreakpoint = (expression) => {
-				if(!selectedNode) {
-					vm.breakpointsError = "Select a component in order to create a mutation breakpoint for its ViewModel";
+			panel.addBreakpoint = expression => {
+				if (!selectedNode) {
+					panel.breakpointsError =
+						"Select a component in order to create a mutation breakpoint for its ViewModel";
 					return;
 				}
 				breakpoints.push({
@@ -175,20 +223,20 @@
 					expression: expression,
 					enabled: true
 				});
-				vm.breakpoints = breakpoints;
+				panel.breakpoints = breakpoints;
 			};
 
-			vm.toggleBreakpoint = (bp) => {
+			panel.toggleBreakpoint = bp => {
 				const index = getIndexOfBreakpoint(bp.id);
 				breakpoints[index].enabled = !breakpoints[index].enabled;
-				vm.breakpoints = breakpoints;
+				panel.breakpoints = breakpoints;
 			};
 
-			vm.deleteBreakpoint = (bp) => {
+			panel.deleteBreakpoint = bp => {
 				const index = getIndexOfBreakpoint(bp.id);
 				breakpoints.splice(index, 1);
-				vm.breakpoints = breakpoints;
+				panel.breakpoints = breakpoints;
 			};
 		</script>
 	</body>
-	<html>
+</html>

@@ -1,275 +1,273 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>~/json-tree-editor</title>
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Montserrat:400, 400i);
 
-<head>
-	<style>
-		@import url(https://fonts.googleapis.com/css?family=Montserrat:400,400i);
-
-		.wrapper {
-			display: flex;
-      flex-direction: column;
-			font-family: 'Montserrat', sans-serif;
-			font-size: 18px;
-			line-height: 2;
-      margin-top: 15px;
-			color: #404040;
-    }
-    .wrapper .wrapper {
-      margin-top: 0;
-      margin-left: 25px;
-    }
-    .header-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      box-shadow: 0px 15px 10px -15px rgba(1,1,1,.15);
-    }
-    .header-container div:first-child {
-      margin-right: 10px;
-    }
-		.list-container {
-      display: flex;
-      flex-direction: column;
-    }
-    .wrapper .odd-row {
-      background: rgba(217, 247, 254,.2);
-    }
-		.kv-group {
-      display: flex;
-      width: 100%;
-    }
-    .kv-group + .kv-group {
-        border-top: none;
-    }
-    .kv-group:hover {
-			background-color: rgba(0, 0, 0, .025);
-			transition: background-color .2s ease-in-out;
-		}
-    .kv-group > .key {
-      margin-left: 25px;
-    }
-		.arrow-toggle {
-			content: '';
-			display: inline-flex;
-			width: 0;
-			height: 0;
-			border-top: 7px solid transparent;
-			border-bottom: 7px solid transparent;
-			border-left: 14px solid #404040;
-			transform-origin: center center;
-		}
-		.arrow-toggle.right {
-			transform: rotate(0deg);
-			animation: rotateRight 0.25s ease-in-out forwards;
-		}
-		.arrow-toggle.down {
-			transform: rotate(90deg);
-			animation: rotateDown 0.25s ease-in-out forwards;
-		}
-		.key {
-			color: #963296;
-		}
-		.value {
-			color: #1527a9;
-		}
-		.value.string {
-			color: #c3201c;
-			quotes: "“""”""‘""’";
-		}
-		.value.string:before {
-      content: open-quote;
-			user-select: none;
-		}
-		.value.string:after {
-      content: close-quote;
-			user-select: none;
-    }
-    .value.string span {
-      border: 1px transparent solid;
-      padding: 5px;
-    }
-    .value.string span:hover {
-      border: 1px #CCC solid;
-    }
-		.options {
-      display: flex;
-      margin-right: 30px;
-      margin-left: auto;
-      align-self: center;
-		}
-		.options div {
-			font-weight: bold;
-			height: 20px;
-      width: 60px;
-      font-size: 24px;
-      color: rgba(0, 0, 0, 0.1);
-			display: inline-flex;
-			justify-content: center;
-			align-items: center;
-			border-radius: 5%;
-			margin-right: 15px;
-      cursor: pointer;
-      box-shadow: 0 0 0 0 rgba(0,0,0,0);
-			transition: all 0.2s ease-in-out;
-    }
-    .options div:last-of-type {
-      margin-right: 0;
-    }
-		.header-container:hover .options div, .kv-group:hover .options div {
-      color: rgba(0, 0, 0, 0.1);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
-    }
-    .header-container:hover .options div:hover, .kv-group:hover .options div:hover {
-      color: rgba(0, 0, 0, 0.5);
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.5);
-		}
-		@keyframes rotateRight {
-			from {
-				transform: rotate(90deg);
+			.wrapper {
+				display: flex;
+				flex-direction: column;
+				font-family: "Montserrat", sans-serif;
+				font-size: 18px;
+				line-height: 2;
+				margin-top: 15px;
+				color: #404040;
 			}
-			to {
+			.wrapper .wrapper {
+				margin-top: 0;
+				margin-left: 25px;
+			}
+			.header-container {
+				display: flex;
+				align-items: center;
+				margin-bottom: 10px;
+				box-shadow: 0px 15px 10px -15px rgba(1, 1, 1, 0.15);
+			}
+			.header-container div:first-child {
+				margin-right: 10px;
+			}
+			.list-container {
+				display: flex;
+				flex-direction: column;
+			}
+			.wrapper .odd-row {
+				background: rgba(217, 247, 254, 0.2);
+			}
+			.kv-group {
+				display: flex;
+				width: 100%;
+			}
+			.kv-group + .kv-group {
+				border-top: none;
+			}
+			.kv-group:hover {
+				background-color: rgba(0, 0, 0, 0.025);
+				transition: background-color 0.2s ease-in-out;
+			}
+			.kv-group > .key {
+				margin-left: 25px;
+			}
+			.arrow-toggle {
+				content: "";
+				display: inline-flex;
+				width: 0;
+				height: 0;
+				border-top: 7px solid transparent;
+				border-bottom: 7px solid transparent;
+				border-left: 14px solid #404040;
+				transform-origin: center center;
+			}
+			.arrow-toggle.right {
 				transform: rotate(0deg);
+				animation: rotateRight 0.25s ease-in-out forwards;
 			}
-		}
-		@keyframes rotateDown {
-			from {
-				transform: rotate(0deg);
-			}
-			to {
+			.arrow-toggle.down {
 				transform: rotate(90deg);
+				animation: rotateDown 0.25s ease-in-out forwards;
 			}
-		}
-		@keyframes fadeIn {
-			from {
-				opacity: 0;
-				transform: scaleY(0);
+			.key {
+				color: #963296;
 			}
-			to {
-				opacity: 1;
-				transform: scaleY(1);
+			.value {
+				color: #1527a9;
 			}
-		}
-
-	</style>
-</head>
-
-<body>
-	<div class="wrapper">
-		<div class="header-container">
-			<div class="arrow-toggle down"></div>
-			<div class="key">name:&nbsp;</div>
-      <div class="value">Object</div>
-      <div class="options">
-        <div>&plus;</div>
-        <div>&minus;</div>
-      </div>
+			.value.string {
+				color: #c3201c;
+				quotes: "“" "”" "‘" "’";
+			}
+			.value.string:before {
+				content: open-quote;
+				user-select: none;
+			}
+			.value.string:after {
+				content: close-quote;
+				user-select: none;
+			}
+			.value.string span {
+				border: 1px transparent solid;
+				padding: 5px;
+			}
+			.value.string span:hover {
+				border: 1px #ccc solid;
+			}
+			.options {
+				display: flex;
+				margin-right: 30px;
+				margin-left: auto;
+				align-self: center;
+			}
+			.options div {
+				font-weight: bold;
+				height: 20px;
+				width: 60px;
+				font-size: 24px;
+				color: rgba(0, 0, 0, 0.1);
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 5%;
+				margin-right: 15px;
+				cursor: pointer;
+				box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+				transition: all 0.2s ease-in-out;
+			}
+			.options div:last-of-type {
+				margin-right: 0;
+			}
+			.header-container:hover .options div,
+			.kv-group:hover .options div {
+				color: rgba(0, 0, 0, 0.1);
+				box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+			}
+			.header-container:hover .options div:hover,
+			.kv-group:hover .options div:hover {
+				color: rgba(0, 0, 0, 0.5);
+				box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
+			}
+			@keyframes rotateRight {
+				from {
+					transform: rotate(90deg);
+				}
+				to {
+					transform: rotate(0deg);
+				}
+			}
+			@keyframes rotateDown {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(90deg);
+				}
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: scaleY(0);
+				}
+				to {
+					opacity: 1;
+					transform: scaleY(1);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header-container">
+				<div class="arrow-toggle down"></div>
+				<div class="key">name:&nbsp;</div>
+				<div class="value">Object</div>
+				<div class="options">
+					<div>&#43;</div>
+					<div>&#45;</div>
+				</div>
+			</div>
+			<div class="list-container">
+				<div class="kv-group odd-row">
+					<div class="key">first:&nbsp;</div>
+					<div class="value string"><span>Conner</span></div>
+					<div class="options">
+						<div>&#45;</div>
+					</div>
+				</div>
+				<div class="kv-group">
+					<div class="key">last:&nbsp;</div>
+					<div class="value string"><span>Phillips</span></div>
+					<div class="options">
+						<div>&#45;</div>
+					</div>
+				</div>
+			</div>
 		</div>
-    <div class="list-container">
-      <div class="kv-group odd-row">
-        <div class="key">first:&nbsp;</div>
-        <div class="value string"><span>Conner</span></div>
-        <div class="options">
-          <div>&minus;</div>
-        </div>
-      </div>
-      <div class="kv-group">
-        <div class="key">last:&nbsp;</div>
-        <div class="value string"><span>Phillips</span></div>
-        <div class="options">
-          <div>&minus;</div>
-        </div>
-      </div>
-    </div>
-  </div>
-<div class="wrapper">
-  <div class="header-container">
-    <div class="arrow-toggle down"></div>
-    <div class="key">hobbies:&nbsp;</div>
-    <div class="">Array(3)</div>
-    <div class="options">
-      <div>&plus;</div>
-      <div>&minus;</div>
-    </div>
-  </div>
-  <div class="list-container">
-    <div class="wrapper">
-    <div class="header-container">
-      <div class="arrow-toggle down"></div>
-      <div class="value">Object</div>
-      <div class="options">
-        <div>&plus;</div>
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group odd-row">
-      <div class="key">name:&nbsp;</div>
-      <div class="value string"><span>spinning around</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group">
-      <div class="key">rank:&nbsp;</div>
-      <div class="value string"><span>1</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-  </div>
-  <div class="wrapper">
-  <div class="header-container">
-      <div class="arrow-toggle down"></div>
-      <div class="value">Object</div>
-      <div class="options">
-        <div>&plus;</div>
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group odd-row">
-      <div class="key">name:&nbsp;</div>
-      <div class="value string"><span>kicking the ball</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group">
-      <div class="key">rank:&nbsp;</div>
-      <div class="value string"><span>2</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-  </div>
-  <div class="wrapper">
-    <div class="header-container">
-      <div class="arrow-toggle down"></div>
-      <div class="value">Object</div>
-      <div class="options">
-        <div>&plus;</div>
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group odd-row">
-      <div class="key">name:&nbsp;</div>
-      <div class="value string"><span>dunking it</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-    <div class="kv-group">
-      <div class="key">rank:&nbsp;</div>
-      <div class="value string"><span>3</span></div>
-      <div class="options">
-        <div>&minus;</div>
-      </div>
-    </div>
-  </div>
-
-
-	
-
-    </div>
-  </div>
-</body>
-
+		<div class="wrapper">
+			<div class="header-container">
+				<div class="arrow-toggle down"></div>
+				<div class="key">hobbies:&nbsp;</div>
+				<div class="">Array(3)</div>
+				<div class="options">
+					<div>&#43;</div>
+					<div>&#45;</div>
+				</div>
+			</div>
+			<div class="list-container">
+				<div class="wrapper">
+					<div class="header-container">
+						<div class="arrow-toggle down"></div>
+						<div class="value">Object</div>
+						<div class="options">
+							<div>&#43;</div>
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group odd-row">
+						<div class="key">name:&nbsp;</div>
+						<div class="value string"><span>spinning around</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group">
+						<div class="key">rank:&nbsp;</div>
+						<div class="value string"><span>1</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+				</div>
+				<div class="wrapper">
+					<div class="header-container">
+						<div class="arrow-toggle down"></div>
+						<div class="value">Object</div>
+						<div class="options">
+							<div>&#43;</div>
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group odd-row">
+						<div class="key">name:&nbsp;</div>
+						<div class="value string"><span>kicking the ball</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group">
+						<div class="key">rank:&nbsp;</div>
+						<div class="value string"><span>2</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+				</div>
+				<div class="wrapper">
+					<div class="header-container">
+						<div class="arrow-toggle down"></div>
+						<div class="value">Object</div>
+						<div class="options">
+							<div>&#43;</div>
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group odd-row">
+						<div class="key">name:&nbsp;</div>
+						<div class="value string"><span>dunking it</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+					<div class="kv-group">
+						<div class="key">rank:&nbsp;</div>
+						<div class="value string"><span>3</span></div>
+						<div class="options">
+							<div>&#45;</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

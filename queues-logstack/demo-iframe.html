@@ -1,86 +1,89 @@
 <queues-logstack></queues-logstack>
-<script src="../node_modules/steal/steal.js" main="can-devtools-components/queues-logstack/queues-logstack">
-	const vm = document.querySelector("queues-logstack").viewModel;
+<script
+	src="../node_modules/steal/steal.js"
+	main="can-devtools-components/queues-logstack/queues-logstack"
+>
+	const vm = document.querySelector("queues-logstack");
 
 	vm.stack = [{
-	  "queue": "NOTIFY",
-	  "context": "Confusing{}",
-	  "functionName": "Observation<Confusing{}'s t getter>.onDependencyChange",
-	  "metaReasonLog": "Confusing{}'s s changed to 6 from 5"
+		"queue": "NOTIFY",
+		"context": "Confusing{}",
+		"functionName": "Observation<Confusing{}'s t getter>.onDependencyChange",
+		"metaReasonLog": "Confusing{}'s s changed to 6 from 5"
 	}, {
-	  "queue": "DERIVE",
-	  "context": "Observation<Confusing{}'s t getter>",
-	  "functionName": "Observation<Confusing{}'s t getter>.update",
-	  "metaLog": "Observation<Confusing{}'s t getter>.update"
+		"queue": "DERIVE",
+		"context": "Observation<Confusing{}'s t getter>",
+		"functionName": "Observation<Confusing{}'s t getter>.update",
+		"metaLog": "Observation<Confusing{}'s t getter>.update"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Observation<Confusing{}'s t getter>",
-	  "functionName": "Confusing{}'s t event emitter",
-	  "metaReasonLog": "Observation<Confusing{}'s t getter> changed to 6 from 5"
+		"queue": "NOTIFY",
+		"context": "Observation<Confusing{}'s t getter>",
+		"functionName": "Confusing{}'s t event emitter",
+		"metaReasonLog": "Observation<Confusing{}'s t getter> changed to 6 from 5"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Confusing{}",
-	  "functionName": "Observation<Confusing{}'s a getter>.onDependencyChange",
-	  "metaReasonLog": "Confusing{} dispatched \"t\" with 6 5"
+		"queue": "NOTIFY",
+		"context": "Confusing{}",
+		"functionName": "Observation<Confusing{}'s a getter>.onDependencyChange",
+		"metaReasonLog": "Confusing{} dispatched \"t\" with 6 5"
 	}, {
-	  "queue": "DERIVE",
-	  "context": "Observation<Confusing{}'s a getter>",
-	  "functionName": "Observation<Confusing{}'s a getter>.update",
-	  "metaLog": "Observation<Confusing{}'s a getter>.update"
+		"queue": "DERIVE",
+		"context": "Observation<Confusing{}'s a getter>",
+		"functionName": "Observation<Confusing{}'s a getter>.update",
+		"metaLog": "Observation<Confusing{}'s a getter>.update"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Observation<Confusing{}'s a getter>",
-	  "functionName": "Confusing{}'s a event emitter",
-	  "metaReasonLog": "Observation<Confusing{}'s a getter> changed to 11 from 10"
+		"queue": "NOTIFY",
+		"context": "Observation<Confusing{}'s a getter>",
+		"functionName": "Confusing{}'s a event emitter",
+		"metaReasonLog": "Observation<Confusing{}'s a getter> changed to 11 from 10"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Confusing{}",
-	  "functionName": "Observation<Confusing{}'s c getter>.onDependencyChange",
-	  "metaReasonLog": "Confusing{} dispatched \"a\" with 11 10"
+		"queue": "NOTIFY",
+		"context": "Confusing{}",
+		"functionName": "Observation<Confusing{}'s c getter>.onDependencyChange",
+		"metaReasonLog": "Confusing{} dispatched \"a\" with 11 10"
 	}, {
-	  "queue": "DERIVE",
-	  "context": "Observation<Confusing{}'s c getter>",
-	  "functionName": "Observation<Confusing{}'s c getter>.update",
-	  "metaLog": "Observation<Confusing{}'s c getter>.update"
+		"queue": "DERIVE",
+		"context": "Observation<Confusing{}'s c getter>",
+		"functionName": "Observation<Confusing{}'s c getter>.update",
+		"metaLog": "Observation<Confusing{}'s c getter>.update"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Observation<Confusing{}'s c getter>",
-	  "functionName": "Confusing{}'s c event emitter",
-	  "metaReasonLog": "Observation<Confusing{}'s c getter> changed to 14 from 13"
+		"queue": "NOTIFY",
+		"context": "Observation<Confusing{}'s c getter>",
+		"functionName": "Confusing{}'s c event emitter",
+		"metaReasonLog": "Observation<Confusing{}'s c getter> changed to 14 from 13"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Confusing{}",
-	  "functionName": "bound cChanged",
-	  "metaReasonLog": "Confusing{} dispatched \"c\" with 14 13"
+		"queue": "NOTIFY",
+		"context": "Confusing{}",
+		"functionName": "bound cChanged",
+		"metaReasonLog": "Confusing{} dispatched \"c\" with 14 13"
 	}, {
-	  "queue": "DERIVE",
-	  "context": "ResolverObservable<Confusing{}'s k value>",
-	  "functionName": "ResolverObservable<Confusing{}'s k value>.update",
-	  "metaLog": "ResolverObservable<Confusing{}'s k value>.update",
-	  "metaReasonLog": "ResolverObservable<Confusing{}'s k value> resolved with 1"
+		"queue": "DERIVE",
+		"context": "ResolverObservable<Confusing{}'s k value>",
+		"functionName": "ResolverObservable<Confusing{}'s k value>.update",
+		"metaLog": "ResolverObservable<Confusing{}'s k value>.update",
+		"metaReasonLog": "ResolverObservable<Confusing{}'s k value> resolved with 1"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "ResolverObservable<Confusing{}'s k value>",
-	  "functionName": "Confusing{}'s k event emitter"
+		"queue": "NOTIFY",
+		"context": "ResolverObservable<Confusing{}'s k value>",
+		"functionName": "Confusing{}'s k event emitter"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Confusing{}",
-	  "functionName": "Observation<Confusing{}'s final getter>.onDependencyChange",
-	  "metaReasonLog": "Confusing{} dispatched \"k\" with 1 0"
+		"queue": "NOTIFY",
+		"context": "Confusing{}",
+		"functionName": "Observation<Confusing{}'s final getter>.onDependencyChange",
+		"metaReasonLog": "Confusing{} dispatched \"k\" with 1 0"
 	}, {
-	  "queue": "DERIVE",
-	  "context": "Observation<Confusing{}'s final getter>",
-	  "functionName": "Observation<Confusing{}'s final getter>.update",
-	  "metaLog": "Observation<Confusing{}'s final getter>.update"
+		"queue": "DERIVE",
+		"context": "Observation<Confusing{}'s final getter>",
+		"functionName": "Observation<Confusing{}'s final getter>.update",
+		"metaLog": "Observation<Confusing{}'s final getter>.update"
 	}, {
-	  "queue": "NOTIFY",
-	  "context": "Observation<Confusing{}'s final getter>",
-	  "functionName": "Confusing{}'s final event emitter",
-	  "metaReasonLog": "Observation<Confusing{}'s final getter> changed to 6 from 5"
+		"queue": "NOTIFY",
+		"context": "Observation<Confusing{}'s final getter>",
+		"functionName": "Confusing{}'s final event emitter",
+		"metaReasonLog": "Observation<Confusing{}'s final getter> changed to 6 from 5"
 	}, {
-	  "queue": "MUTATE",
-	  "context": "Confusing{}",
-	  "functionName": "",
-	  "metaReasonLog": "Confusing{} dispatched \"final\" with 6 5"
+		"queue": "MUTATE",
+		"context": "Confusing{}",
+		"functionName": "",
+		"metaReasonLog": "Confusing{} dispatched \"final\" with 6 5"
 	}];
 </script>

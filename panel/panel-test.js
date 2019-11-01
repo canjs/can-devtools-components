@@ -1,14 +1,11 @@
-import Component from "./panel";
+import { assert } from "chai";
+import Panel from "./panel";
 
 import "steal-mocha";
-import chai from "chai";
-
-const ViewModel = Component.ViewModel;
-const assert = chai.assert;
 
 describe("components-panel", () => {
 	it("basics", () => {
-		const vm = new ViewModel();
+		const vm = new Panel();
 		assert.ok(vm);
 	});
 });
