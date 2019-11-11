@@ -183,7 +183,7 @@
 			panel.updateValues = data => {
 				if (sourceVm) {
 					Reflect.updateDeep(sourceVm, data);
-					Reflect.updateDeep(panel.viewModelData, sourceVm.serialize());
+					Reflect.updateDeep(panel.viewModelData, sourceVm);
 				}
 			};
 
@@ -193,7 +193,7 @@
 				selectedNode = node;
 				const el = elsById[node.id];
 				sourceVm = el;
-				Reflect.updateDeep(panel.viewModelData, sourceVm.serialize());
+				Reflect.updateDeep(panel.viewModelData, sourceVm);
 			});
 
 			const breakpoints = [];

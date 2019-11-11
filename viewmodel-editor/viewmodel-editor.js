@@ -63,7 +63,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 	static get props() {
 		return {
-			tagName: { type: String, default: "" },
+			tagName: { type: type.convert(String), default: "" },
 
 			viewModelData: {
 				type: type.convert(ObservableObject),
@@ -98,7 +98,7 @@ export default class ViewmodelEditor extends StacheElement {
 			},
 
 			expandedKeys: type.convert(ObservableArray),
-			editorError: String,
+			editorError: type.convert(String),
 
 			get serializedViewModelData() {
 				return this.viewModelData.serialize();
