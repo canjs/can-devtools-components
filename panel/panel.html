@@ -25,6 +25,7 @@
 				StacheElement,
 				type
 			} from "can-devtools-components/panel/panel";
+			import { key as canKey } from "can";
 
 			// demo app code
 			class TodoItem extends StacheElement {
@@ -180,9 +181,25 @@
 
 			let sourceVm;
 
-			panel.updateValues = data => {
+			panel.updateValues = patches => {
 				if (sourceVm) {
-					Reflect.updateDeep(sourceVm, data);
+					let arr;
+					patches.forEach(({ type, key, value, index, deleteCount, insert }) => {
+						switch (type) {
+							case "add":
+							case "set":
+								canKey.set(sourceVm, key, value);
+								break;
+							case "delete":
+								canKey.deleteKey(sourceVm, key);
+								break;
+							case "splice":
+								arr = canKey.get(sourceVm, key);
+								arr.splice(index, deleteCount, ...insert);
+								break;
+						}
+					});
+
 					Reflect.updateDeep(panel.viewModelData, sourceVm);
 				}
 			};

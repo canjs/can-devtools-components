@@ -1,3 +1,4 @@
 lib/
 make-empty.js
 build.js
+dist/
