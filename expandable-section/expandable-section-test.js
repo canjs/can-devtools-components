@@ -42,7 +42,7 @@ describe("expandable-section", () => {
 	});
 
 	it("collapsible", () => {
-		const el = new ExpandableSection().initialize({ contentTemplate: function() {} });;
+		const el = new ExpandableSection().initialize({ contentTemplate: function() {} });
 		assert.equal(el.collapsible, true, "collapsible === true");
 	});
 });
