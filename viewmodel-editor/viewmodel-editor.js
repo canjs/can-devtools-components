@@ -54,7 +54,7 @@ export default class ViewmodelEditor extends StacheElement {
 					json:from="this.json"
 					typeNames:from="this.typeNamesData"
 					messages:from="this.messages"
-					rootNodeName:raw="Obserbale Properties"
+					rootNodeName:raw="Observable Properties"
 					expandedKeys:to="this.expandedKeys"
 				></json-tree-editor>
 			{{/ and }}
