@@ -40,11 +40,14 @@ export default class ViewmodelEditor extends StacheElement {
 					{{ else }}
 						<h1>{{ this.tagName }} ViewModel</h1>
 
-						{{# if(this.jsonEditorPatches.length) }}
-							<button on:click="this.save()">Apply Changes</button>
-						{{ else }}
-							<button class="disabled">Up To Date</button>
-						{{/ if }}
+						<span class="buttons">
+							{{# if(this.jsonEditorPatches.length) }}
+								<button on:click="this.save()">Apply</button>
+								<button on:click="this.reset()">Reset</button>
+							{{ else }}
+								<button class="disabled">Up To Date</button>
+							{{/ if }}
+						</span>
 					{{/ unless }}
 				{{/ unless }}
 			</div>
@@ -211,6 +214,11 @@ export default class ViewmodelEditor extends StacheElement {
 	save() {
 		this.updateValues(this.jsonEditorPatches);
 		this.dispatch("reset-json-patches");
+	}
+
+	reset() {
+		this.dispatch("reset-json-patches");
+		this.dispatch("serializedViewModelData", [this.viewModelData]);
 	}
 
 	static get propertyDefaults() {

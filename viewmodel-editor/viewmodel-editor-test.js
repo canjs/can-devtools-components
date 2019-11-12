@@ -255,4 +255,52 @@ describe("viewmodel-editor", () => {
 
 		vm.save();
 	});
+
+	it("reset", done => {
+		let asserts = 3;
+		const patches = [
+			{
+				key: "foo",
+				type: "set",
+				value: "baz"
+			},
+			{
+				index: 0,
+				deleteCount: 1,
+				insert: [],
+				type: "splice",
+				key: "list"
+			}
+		];
+		const vm = new ViewModelEditor().initialize({
+			jsonEditorPatches: patches,
+			updateValues() {
+				assert.ok(
+					false,
+					"updateValues called (should not be)"
+				);
+				done();
+			},
+			viewModelData: {
+				abc: "xyz",
+				def: "uvw",
+				ghi: []
+			}
+		});
+		const json = vm.json;
+
+		vm.listenTo("reset-json-patches", () => {
+			assert.ok(true, "reset-json-patches event dispatched");
+			asserts -= 1;
+			asserts || done();
+		});
+		vm.listenTo("serializedViewModelData", (ev, vmJson) => {
+			assert.ok(true, "serializedViewModelData event dispatched");
+			assert.deepEqual(vmJson, json);
+			asserts -= 2;
+			asserts || done();
+		});
+
+		vm.reset();
+	});
 });
