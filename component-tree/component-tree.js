@@ -16,7 +16,7 @@ class ComponentTreeNode extends ObservableObject {
 	static get props() {
 		return {
 			selected: Boolean,
-			tagName: String,
+			tagName: type.convert(String),
 			id: { type: Number, identity: true },
 			children: type.late(() => type.convert(ComponentTreeList))
 		};
@@ -62,7 +62,7 @@ export default class ComponentTree extends StacheElement {
 
 	static get props() {
 		return {
-			treeError: String,
+			treeError: type.convert(String),
 
 			componentTree: {
 				type: type.maybeConvert(ComponentTreeList),

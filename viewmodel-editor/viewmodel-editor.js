@@ -63,7 +63,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 	static get props() {
 		return {
-			tagName: { type: String, default: "" },
+			tagName: { type: type.convert(String), default: "" },
 
 			viewModelData: {
 				type: type.convert(ObservableObject),
@@ -98,7 +98,7 @@ export default class ViewmodelEditor extends StacheElement {
 			},
 
 			expandedKeys: type.convert(ObservableArray),
-			editorError: String,
+			editorError: type.convert(String),
 
 			get serializedViewModelData() {
 				return this.viewModelData.serialize();
@@ -106,7 +106,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 			json: {
 				type: DeepObservable,
-				value({ listenTo, lastSet, resolve }) {
+				value({ listenTo, resolve }) {
 					let json = resolve(
 						Reflect.new(DeepObservable, this.serializedViewModelData)
 					);
@@ -187,6 +187,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 	getPatchedData(destination, patches) {
 		const patchedData = clone(destination);
+		let arr = []
 
 		patches.forEach(({ type, key, value, index, deleteCount, insert }) => {
 			switch (type) {
@@ -198,7 +199,7 @@ export default class ViewmodelEditor extends StacheElement {
 					canKey.deleteKey(patchedData, key);
 					break;
 				case "splice":
-					let arr = canKey.get(patchedData, key);
+					arr = canKey.get(patchedData, key);
 					arr.splice(index, deleteCount, ...insert);
 					break;
 			}

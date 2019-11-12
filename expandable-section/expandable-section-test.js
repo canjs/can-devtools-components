@@ -6,7 +6,9 @@ import "steal-mocha";
 describe("expandable-section", () => {
 	it("expanded", () => {
 		let el = new ExpandableSection();
-		el.initialize();
+		el.initialize({
+			contentTemplate: function() {}
+		});
 
 		el.listenTo("expanded", () => {});
 		assert.equal(el.expanded, false, "defaults to false");
@@ -31,7 +33,7 @@ describe("expandable-section", () => {
 			"cannot set expanded if collapsible is false"
 		);
 
-		el = new ExpandableSection().initialize({ collapsible: false });
+		el = new ExpandableSection().initialize({ collapsible: false, contentTemplate: function() {} });
 		assert.equal(
 			el.expanded,
 			true,
@@ -40,7 +42,7 @@ describe("expandable-section", () => {
 	});
 
 	it("collapsible", () => {
-		const el = new ExpandableSection();
+		const el = new ExpandableSection().initialize({ contentTemplate: function() {} });
 		assert.equal(el.collapsible, true, "collapsible === true");
 	});
 });

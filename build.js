@@ -9,7 +9,8 @@ stealTools.export({
 		main: "can-devtools-components"
 	},
 	options: {
-		verbose: true
+		verbose: true,
+		sourceMaps: false
 	},
 	outputs: {
 		"components": {
