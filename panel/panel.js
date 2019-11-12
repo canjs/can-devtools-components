@@ -39,31 +39,35 @@ export default class ComponentsPanel extends StacheElement {
 						height:from="this.breakpointsHeight"
 						expanded:bind="this.breakpointsExpanded"
 					>
-						<breakpoints-editor
-							breakpoints:bind="this.breakpoints"
-							addBreakpoint:from="this.addBreakpoint"
-							toggleBreakpoint:from="this.toggleBreakpoint"
-							deleteBreakpoint:from="this.deleteBreakpoint"
-							editorError:bind="this.breakpointsError"
-						></breakpoints-editor>
+						<can-template name="contentTemplate">
+							<breakpoints-editor
+								breakpoints:bind="this.breakpoints"
+								addBreakpoint:from="this.addBreakpoint"
+								toggleBreakpoint:from="this.toggleBreakpoint"
+								deleteBreakpoint:from="this.deleteBreakpoint"
+								editorError:bind="this.breakpointsError"
+							></breakpoints-editor>
+						</can-template>
 					</expandable-section>
 
-					<expandable-section 
-						title:raw="ViewModel Editor" 
+					<expandable-section
+						title:raw="ViewModel Editor"
 						expanded:from="true"
 						sectionTitle:to="this.viewModelTitle"
 						height:from="this.viewModelEditorHeight"
 					>
-						<viewmodel-editor
-							tagName:from="this.selectedNode.tagName"
-							viewModelData:bind="this.viewModelData"
-							typeNamesData:bind="this.typeNamesData"
-							messages:bind="this.messages"
-							undefineds:bind="this.undefineds"
-							updateValues:from="this.updateValues"
-							expandedKeys:to="this.expandedKeys"
-							editorError:bind="this.viewModelEditorError"
-						></viewmodel-editor>
+						<can-template name="contentTemplate">
+							<viewmodel-editor
+								tagName:from="this.selectedNode.tagName"
+								viewModelData:bind="this.viewModelData"
+								typeNamesData:bind="this.typeNamesData"
+								messages:bind="this.messages"
+								undefineds:bind="this.undefineds"
+								updateValues:from="this.updateValues"
+								expandedKeys:to="this.expandedKeys"
+								editorError:bind="this.viewModelEditorError"
+							></viewmodel-editor>
+						</can-template>
 					</expandable-section>
 				</div>
 			</div>
@@ -98,7 +102,7 @@ export default class ComponentsPanel extends StacheElement {
 			// component tree fields
 			componentTree: type.convert(ObservableArray),
 
-			selectedNode: type.convert(ObservableObject),
+			selectedNode: type.maybeConvert(ObservableObject),
 			componentTreeError: String,
 
 			// viewmodel editor fields
@@ -113,7 +117,7 @@ export default class ComponentsPanel extends StacheElement {
 			// breakpoints fields
 			breakpoints: type.convert(ObservableArray),
 
-			breakpointsError: String,
+			breakpointsError: type.convert(String),
 			breakpointsExpanded: Boolean,
 
 			//breakpoints DOM fields

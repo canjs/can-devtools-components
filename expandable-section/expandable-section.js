@@ -23,7 +23,7 @@ export default class ExpandableSection extends StacheElement {
 					on:click="scope.event.stopPropagation()"
 					style="height: {{ this.height }}px"
 				>
-					<content/>
+					<div>{{ this.contentTemplate(section = this) }}</div>
 				</div>
 			</div>
 		`;
@@ -35,7 +35,7 @@ export default class ExpandableSection extends StacheElement {
 			title: { type: String, default: "Expandable Section" },
 			collapsible: { type: Boolean, default: true },
 			sectionTitle: type.Any,
-
+			contentTemplate: { type: Function, required: true },
 			expanded: {
 				default: false,
 				value({ lastSet, listenTo, resolve }) {
