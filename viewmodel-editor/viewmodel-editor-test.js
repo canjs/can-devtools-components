@@ -87,12 +87,12 @@ describe("viewmodel-editor", () => {
 			"`undefined` properties that are set don't reset to `undefined`"
 		);
 
-		vm.dispatch("reset-json-patches");
+		vm.jsonEditorPatches = [];
 		vm.viewModelData = { abc: "hij", def: "nop", ghi: ["rst"] };
 		assert.deepEqual(
 			vm.json.serialize(),
 			{ abc: "hij", def: "nop", ghi: ["rst"] },
-			"updates when viewModelData is updated again after reset-json-patches event"
+			"updates when viewModelData is updated again after patches are reset"
 		);
 
 		vm.assign({
@@ -245,62 +245,45 @@ describe("viewmodel-editor", () => {
 					patches,
 					"updateValues called with jsonEditorPatches"
 				);
+				done();
 			}
-		});
-
-		vm.listenTo("reset-json-patches", () => {
-			assert.ok(true, "reset-json-patches event dispatched");
-			done();
 		});
 
 		vm.save();
 	});
 
-	it("reset", done => {
-		let asserts = 3;
+	it("reset", () => {
 		const patches = [
 			{
 				key: "foo",
 				type: "set",
 				value: "baz"
-			},
-			{
-				index: 0,
-				deleteCount: 1,
-				insert: [],
-				type: "splice",
-				key: "list"
 			}
 		];
 		const vm = new ViewModelEditor().initialize({
-			jsonEditorPatches: patches,
 			updateValues() {
 				assert.ok(
 					false,
 					"updateValues called (should not be)"
 				);
-				done();
 			},
 			viewModelData: {
 				abc: "xyz",
 				def: "uvw",
-				ghi: []
+				ghi: [],
+				foo: null
 			}
 		});
-		const json = vm.json;
+		const json = vm.json.serialize();
+		vm.json.foo = "baz"; // sets patches
 
-		vm.listenTo("reset-json-patches", () => {
-			assert.ok(true, "reset-json-patches event dispatched");
-			asserts -= 1;
-			asserts || done();
-		});
-		vm.listenTo("serializedViewModelData", (ev, vmJson) => {
-			assert.ok(true, "serializedViewModelData event dispatched");
-			assert.deepEqual(vmJson, json);
-			asserts -= 2;
-			asserts || done();
-		});
+		assert.deepEqual(vm.getPatchedData(json, vm.jsonEditorPatches), vm.json.serialize(), "json patches");
+		assert.deepEqual(vm.jsonEditorPatches, patches, "json patches");
 
 		vm.reset();
+
+		assert.deepEqual(vm.json, json);
+		assert.deepEqual(vm.jsonEditorPatches, []);
+
 	});
 });
