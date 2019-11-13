@@ -34,7 +34,7 @@ export default class ComponentsPanel extends StacheElement {
 				</div>
 				<div class="sidebar" style="height: {{ this.scrollableAreaHeight }}px">
 					<expandable-section
-						title:raw="ViewModel Mutation Breakpoints"
+						title:raw="Observable Properties Mutation Breakpoints"
 						sectionTitle:to="this.breakpointsTitle"
 						height:from="this.breakpointsHeight"
 						expanded:bind="this.breakpointsExpanded"
@@ -51,7 +51,7 @@ export default class ComponentsPanel extends StacheElement {
 					</expandable-section>
 
 					<expandable-section
-						title:raw="ViewModel Editor"
+						title:raw="Observable Properties Editor"
 						expanded:from="true"
 						sectionTitle:to="this.viewModelTitle"
 						height:from="this.viewModelEditorHeight"

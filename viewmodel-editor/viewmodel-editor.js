@@ -33,12 +33,12 @@ export default class ViewmodelEditor extends StacheElement {
 		return `
 			<div class="header">
 				{{# unless(this.tagName) }}
-					<h1 class="select-vm">Select an Element to see its ViewModel</h1>
+					<h1 class="select-vm">Select an Element to see its Observable Properties</h1>
 				{{ else }}
 					{{# unless(this.viewModelData) }}
-						<h1>{{ this.tagName }} does not have a ViewModel</h1>
+						<h1>{{ this.tagName }} does not have a Observable Properties</h1>
 					{{ else }}
-						<h1>{{ this.tagName }} ViewModel</h1>
+						<h1>{{ this.tagName }} Observable Properties</h1>
 
 						{{# if(this.jsonEditorPatches.length) }}
 							<button on:click="this.save()">Apply Changes</button>
@@ -54,7 +54,7 @@ export default class ViewmodelEditor extends StacheElement {
 					json:from="this.json"
 					typeNames:from="this.typeNamesData"
 					messages:from="this.messages"
-					rootNodeName:raw="ViewModel"
+					rootNodeName:raw="Observable Properties"
 					expandedKeys:to="this.expandedKeys"
 				></json-tree-editor>
 			{{/ and }}
@@ -128,7 +128,7 @@ export default class ViewmodelEditor extends StacheElement {
 						let newJson = this.getPatchedData(vmData, jsonPatches);
 
 						// don't set patches when json is changed
-						// due to viewModel data being updated
+						// due to Observable Properties data being updated
 						Reflect.offValue(serializedJSON, setPatches);
 						Reflect.updateDeep(json, newJson);
 						Reflect.onValue(serializedJSON, setPatches);
@@ -178,7 +178,7 @@ export default class ViewmodelEditor extends StacheElement {
 			updateValues: {
 				get default() {
 					return data => {
-						console.log("updating viewModel with", data);
+						console.log("updating props with", data);
 					};
 				}
 			}
