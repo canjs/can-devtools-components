@@ -40,11 +40,14 @@ export default class ViewmodelEditor extends StacheElement {
 					{{ else }}
 						<h1>{{ this.tagName }} Observable Properties</h1>
 
-						{{# if(this.jsonEditorPatches.length) }}
-							<button on:click="this.save()">Apply Changes</button>
-						{{ else }}
-							<button class="disabled">Up To Date</button>
-						{{/ if }}
+						<span class="buttons">
+							{{# if(this.jsonEditorPatches.length) }}
+								<button on:click="this.save()">Apply</button>
+								<button on:click="this.reset()">Reset</button>
+							{{ else }}
+								<button class="disabled">Up To Date</button>
+							{{/ if }}
+						</span>
 					{{/ unless }}
 				{{/ unless }}
 			</div>
@@ -108,31 +111,35 @@ export default class ViewmodelEditor extends StacheElement {
 				type: DeepObservable,
 				value({ listenTo, resolve }) {
 					let json = resolve(
-						Reflect.new(DeepObservable, this.serializedViewModelData)
+						Reflect.new(
+							DeepObservable,
+							this.getPatchedData(this.serializedViewModelData, this.jsonEditorPatches)
+						)
 					);
-					let jsonPatches = [];
+
+					listenTo("jsonEditorPatches", () => {
+						updateVm(null, this.serializedViewModelData);
+					});
 
 					const setPatches = (newJSON, oldJSON) => {
 						const patches = diff.deep(oldJSON, newJSON);
-						jsonPatches.push(...patches);
+						this.jsonEditorPatches.push(...patches);
 					};
 
-					listenTo("reset-json-patches", () => {
-						jsonPatches = [];
-					});
-
-					const serializedJSON = new Observation(() => json.serialize());
-					Reflect.onValue(serializedJSON, setPatches);
-
-					listenTo("serializedViewModelData", (ev, vmData) => {
-						let newJson = this.getPatchedData(vmData, jsonPatches);
+					const updateVm = (ev, vmData) => {
+						let newJson = this.getPatchedData(vmData, this.jsonEditorPatches);
 
 						// don't set patches when json is changed
 						// due to Observable Properties data being updated
 						Reflect.offValue(serializedJSON, setPatches);
 						Reflect.updateDeep(json, newJson);
 						Reflect.onValue(serializedJSON, setPatches);
-					});
+					}
+
+					const serializedJSON = new Observation(() => json.serialize());
+					Reflect.onValue(serializedJSON, setPatches);
+
+					listenTo("serializedViewModelData", updateVm);
 
 					listenTo("undefineds", (ev, undefineds) => {
 						// don't set patches when json is changed
@@ -149,7 +156,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 						// apply patches to json to set all undefined values from `undefineds`
 						// and then set all patches from changes made to json
-						let allPatches = [...undefinedPatches, ...jsonPatches];
+						let allPatches = [...undefinedPatches, ...this.jsonEditorPatches];
 						let newJson = this.getPatchedData(json.serialize(), allPatches);
 						Reflect.updateDeep(json, newJson);
 
@@ -160,18 +167,15 @@ export default class ViewmodelEditor extends StacheElement {
 						Reflect.offValue(serializedJSON, setPatches);
 						json.update({});
 						Reflect.onValue(serializedJSON, setPatches);
-						jsonPatches = [];
+						this.jsonEditorPatches = [];
 					});
 				}
 			},
 
 			jsonEditorPatches: {
-				type: type.Any,
-				get(lastSet) {
-					if (lastSet) {
-						return lastSet;
-					}
-					return diff.deep(this.serializedViewModelData, this.json.serialize());
+				type: type.ObservableArray,
+				get default() {
+					return []
 				}
 			},
 
@@ -210,7 +214,11 @@ export default class ViewmodelEditor extends StacheElement {
 
 	save() {
 		this.updateValues(this.jsonEditorPatches);
-		this.dispatch("reset-json-patches");
+		this.jsonEditorPatches = [];
+	}
+
+	reset() {
+		this.jsonEditorPatches = [];
 	}
 
 	static get propertyDefaults() {
