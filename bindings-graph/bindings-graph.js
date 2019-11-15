@@ -1,4 +1,4 @@
-import { ObservableArray, ObservableObject, StacheElement, type } from "can";
+import { ObservableArray, ObservableObject, StacheElement, type, diff } from "can";
 import vis from "../lib/vis";
 import "../editable-span/editable-span";
 import "./bindings-graph.less";
@@ -33,7 +33,7 @@ export default class BindingsGraph extends StacheElement {
 			selectedObj: String,
 
 			selectedKey: {
-				type: String,
+				type: type.maybe(String),
 
 				value({ resolve, listenTo, lastSet }) {
 					// all key to be set
@@ -41,7 +41,7 @@ export default class BindingsGraph extends StacheElement {
 						resolve(setVal);
 					});
 
-					listenTo(this.availableKeys, "length", (ev, newLength) => {
+					listenTo(this.availableKeys, 'length', (ev, newLength) => {
 						if (newLength) {
 							resolve(this.availableKeys[0]);
 						} else {
@@ -89,4 +89,4 @@ export default class BindingsGraph extends StacheElement {
 
 customElements.define("bindings-graph", BindingsGraph);
 
-export { StacheElement, type, ObservableArray, ObservableObject };
+export { StacheElement, type, ObservableArray, ObservableObject, diff };
