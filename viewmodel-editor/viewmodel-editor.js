@@ -69,10 +69,10 @@ export default class ViewmodelEditor extends StacheElement {
 			tagName: { type: type.convert(String), default: "" },
 
 			viewModelData: {
-				type: type.convert(ObservableObject),
+				type: DeepObservable,
 
 				get default() {
-					return new ObservableObject();
+					return Reflect.new(DeepObservable, {});
 				}
 			},
 

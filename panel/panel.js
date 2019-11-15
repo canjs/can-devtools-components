@@ -1,4 +1,5 @@
 import {
+	DeepObservable,
 	ObservableArray,
 	ObservableObject,
 	Reflect,
@@ -106,7 +107,7 @@ export default class ComponentsPanel extends StacheElement {
 			componentTreeError: String,
 
 			// viewmodel editor fields
-			viewModelData: type.convert(ObservableObject),
+			viewModelData: DeepObservable,
 
 			typeNamesData: type.convert(ObservableObject),
 			messages: type.convert(ObservableObject),
@@ -176,4 +177,4 @@ export default class ComponentsPanel extends StacheElement {
 
 customElements.define("components-panel", ComponentsPanel);
 
-export { StacheElement, ObservableObject, ObservableArray, Reflect, type };
+export { StacheElement, DeepObservable, ObservableObject, ObservableArray, Reflect, type };
