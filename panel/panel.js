@@ -59,7 +59,7 @@ export default class ComponentsPanel extends StacheElement {
 					>
 						<can-template name="contentTemplate">
 							<viewmodel-editor
-								tagName:from="this.selectedNode.tagName"
+								tagName:from="this.tagName"
 								viewModelData:bind="this.viewModelData"
 								typeNamesData:bind="this.typeNamesData"
 								messages:bind="this.messages"
@@ -105,6 +105,10 @@ export default class ComponentsPanel extends StacheElement {
 
 			selectedNode: type.maybeConvert(ObservableObject),
 			componentTreeError: String,
+			tagName: {
+				type: String,
+				get default() { return ""; }
+			},
 
 			// viewmodel editor fields
 			viewModelData: DeepObservable,

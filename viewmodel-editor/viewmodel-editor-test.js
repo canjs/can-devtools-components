@@ -95,6 +95,13 @@ describe("viewmodel-editor", () => {
 			"updates when viewModelData is updated again after patches are reset"
 		);
 
+		vm.jsonEditorPatches = [{ type: "set", key: "abc", value: "klm" }];
+		assert.deepEqual(
+			vm.json.serialize(),
+			{ abc: "klm", def: "nop", ghi: ["rst"] },
+			"updates when patches are set"
+		);
+
 		vm.assign({
 			tagName: "foo",
 			viewModelData: {}

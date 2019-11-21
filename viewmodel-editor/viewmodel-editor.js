@@ -165,9 +165,9 @@ export default class ViewmodelEditor extends StacheElement {
 
 					listenTo("tagName", () => {
 						Reflect.offValue(serializedJSON, setPatches);
-						json.update({});
+						json.updateDeep({});
 						Reflect.onValue(serializedJSON, setPatches);
-						this.jsonEditorPatches = [];
+						this.jsonEditorPatches.splice(0, this.jsonEditorPatches.length);
 					});
 				}
 			},
@@ -229,6 +229,7 @@ export default class ViewmodelEditor extends StacheElement {
 customElements.define("viewmodel-editor", ViewmodelEditor);
 
 export {
+	DeepObservable,
 	StacheElement,
 	ObservableObject,
 	ObservableArray,
