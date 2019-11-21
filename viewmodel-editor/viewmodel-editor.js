@@ -167,15 +167,22 @@ export default class ViewmodelEditor extends StacheElement {
 						Reflect.offValue(serializedJSON, setPatches);
 						json.updateDeep({});
 						Reflect.onValue(serializedJSON, setPatches);
-						this.jsonEditorPatches.splice(0, this.jsonEditorPatches.length);
 					});
 				}
 			},
 
 			jsonEditorPatches: {
-				type: type.ObservableArray,
+				type: type.convert(ObservableArray),
+				value({ lastSet, listenTo, resolve }) {
+					listenTo(lastSet, resolve);
+
+					listenTo("tagName", () => {
+						lastSet.get().updateDeep([]);
+					});
+					resolve(lastSet.get());
+				},
 				get default() {
-					return []
+					return new ObservableArray([]);
 				}
 			},
 

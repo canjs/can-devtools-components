@@ -95,7 +95,9 @@ describe("viewmodel-editor", () => {
 			"updates when viewModelData is updated again after patches are reset"
 		);
 
-		vm.jsonEditorPatches = [{ type: "set", key: "abc", value: "klm" }];
+		vm.jsonEditorPatches = [
+			{ type: "set", key: "abc", value: "klm" }
+		];
 		assert.deepEqual(
 			vm.json.serialize(),
 			{ abc: "klm", def: "nop", ghi: ["rst"] },
@@ -108,6 +110,33 @@ describe("viewmodel-editor", () => {
 		});
 		assert.deepEqual(vm.json.serialize(), {}, "resets when tagName changes");
 	});
+
+	it("jsonEditorPatches", () => {
+		const vm = new ViewModelEditor().initialize({
+			viewModelData: {
+				abc: "xyz",
+				def: "uvw",
+				ghi: []
+			},
+			tagName: "tagName"
+		});
+		vm.listenTo("jsonEditorPatches", noop);
+
+		assert.deepEqual(vm.jsonEditorPatches.get(), [], "patches are initially empty");
+
+		const patch = { type: "set", key: "abc", value: "jkl" };
+		vm.jsonEditorPatches.push(patch);
+		assert.deepEqual(vm.jsonEditorPatches.get(), [patch], "patches are settable");
+
+		vm.tagName = "differentTagName";
+		assert.deepEqual(vm.jsonEditorPatches.get(), [], "patches are empty after tagName change");
+
+		vm.jsonEditorPatches.push(patch);
+		vm.viewModelData = {
+			abc: "mnopq"
+		};
+		assert.deepEqual(vm.json.get(), { abc: "jkl" }, "patches are unchanged by change in vm data");
+	})
 
 	describe("getPatchedData", () => {
 		let vm;
