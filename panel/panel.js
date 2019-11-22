@@ -1,4 +1,5 @@
 import {
+	DeepObservable,
 	ObservableArray,
 	ObservableObject,
 	Reflect,
@@ -58,7 +59,7 @@ export default class ComponentsPanel extends StacheElement {
 					>
 						<can-template name="contentTemplate">
 							<viewmodel-editor
-								tagName:from="this.selectedNode.tagName"
+								tagName:from="this.tagName"
 								viewModelData:bind="this.viewModelData"
 								typeNamesData:bind="this.typeNamesData"
 								messages:bind="this.messages"
@@ -104,9 +105,10 @@ export default class ComponentsPanel extends StacheElement {
 
 			selectedNode: type.maybeConvert(ObservableObject),
 			componentTreeError: String,
+			tagName: "",
 
 			// viewmodel editor fields
-			viewModelData: type.convert(ObservableObject),
+			viewModelData: DeepObservable,
 
 			typeNamesData: type.convert(ObservableObject),
 			messages: type.convert(ObservableObject),
@@ -176,4 +178,4 @@ export default class ComponentsPanel extends StacheElement {
 
 customElements.define("components-panel", ComponentsPanel);
 
-export { StacheElement, ObservableObject, ObservableArray, Reflect, type };
+export { StacheElement, DeepObservable, ObservableObject, ObservableArray, Reflect, type };
