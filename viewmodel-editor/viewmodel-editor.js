@@ -66,7 +66,7 @@ export default class ViewmodelEditor extends StacheElement {
 
 	static get props() {
 		return {
-			tagName: { type: type.convert(String), default: "" },
+			tagName: "",
 
 			viewModelData: {
 				type: DeepObservable,
@@ -174,16 +174,16 @@ export default class ViewmodelEditor extends StacheElement {
 			jsonEditorPatches: {
 				type: type.convert(ObservableArray),
 				value({ lastSet, listenTo, resolve }) {
-					listenTo(lastSet, resolve);
+					let patches = resolve(lastSet.get() || new ObservableArray([]));
+
+					listenTo(lastSet, value => {
+						patches = resolve(value)
+					});
 
 					listenTo("tagName", () => {
-						lastSet.get().updateDeep([]);
+						patches.updateDeep([]);
 					});
-					resolve(lastSet.get());
 				},
-				get default() {
-					return new ObservableArray([]);
-				}
 			},
 
 			updateValues: {

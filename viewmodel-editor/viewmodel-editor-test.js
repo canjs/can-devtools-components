@@ -310,6 +310,7 @@ describe("viewmodel-editor", () => {
 				foo: null
 			}
 		});
+		vm.listenTo("jsonEditorPatches", noop);
 		const json = vm.json.serialize();
 		vm.json.foo = "baz"; // sets patches
 

@@ -105,10 +105,7 @@ export default class ComponentsPanel extends StacheElement {
 
 			selectedNode: type.maybeConvert(ObservableObject),
 			componentTreeError: String,
-			tagName: {
-				type: String,
-				get default() { return ""; }
-			},
+			tagName: "",
 
 			// viewmodel editor fields
 			viewModelData: DeepObservable,
