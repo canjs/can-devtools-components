@@ -10,7 +10,7 @@ describe("editable-span", () => {
 	describe("ViewModel", () => {
 		it("edit() / save()", () => {
 			const el = new EditableSpan();
-			el.initialize();
+			el.connect(); // start listeners and ensure the span child is available
 
 			el.listenTo("editing", () => {});
 			el.listenTo("text", () => {});
@@ -18,8 +18,6 @@ describe("editable-span", () => {
 			el.edit(ev);
 
 			assert.ok(el.editing, "edit() sets editing to true");
-			el.connect(); // start listeners
-			el.render(); // ensure the span child is available
 			el.querySelector("span").appendChild(document.createElement("br"));  // this happens often when the user hits enter.
 
 			el.save("foo");
