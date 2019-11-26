@@ -18,10 +18,15 @@ describe("editable-span", () => {
 			el.edit(ev);
 
 			assert.ok(el.editing, "edit() sets editing to true");
+			el.connect(); // start listeners
+			el.render(); // ensure the span child is available
+			el.querySelector("span").appendChild(document.createElement("br"));  // this happens often when the user hits enter.
 
 			el.save("foo");
+
 			assert.notOk(el.editing, "save() sets editing to false");
 			assert.equal(el.text, "foo", "save() sets text");
+			assert.equal(el.querySelector("span").children.length, 0, "save() removes line breaks.");
 		});
 
 		it("showOptions", () => {

@@ -21,6 +21,8 @@
 
 		<script src="../node_modules/steal/steal.js">
 					import {
+				ObservableArray,
+				ObservableObject,
 				Reflect,
 				StacheElement,
 				type
@@ -90,6 +92,11 @@
 						},
 
 						todos: {
+							type: type.convert(class extends ObservableArray {
+								static get items() {
+									return type.convert(ObservableObject);
+								}
+							}),
 							get default() {
 								return [
 									{
@@ -200,6 +207,7 @@
 						}
 					});
 
+					panel.tagName = (sourceVm.tagName || "").toLowerCase();
 					Reflect.updateDeep(panel.viewModelData, sourceVm);
 				}
 			};
@@ -210,6 +218,7 @@
 				selectedNode = node;
 				const el = elsById[node.id];
 				sourceVm = el;
+				panel.tagName = (sourceVm.tagName || "").toLowerCase();
 				Reflect.updateDeep(panel.viewModelData, sourceVm);
 			});
 

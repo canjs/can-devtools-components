@@ -25,7 +25,8 @@ export default class EditableSpan extends StacheElement {
 				class="{{# if(this.editing) }}editing{{/ if }} {{# if(this.wrapInQuotes) }}quotes{{/ if }}"
 				{{# if(this.editing) }}contenteditable="true"{{/ if }}
 				tabindex="0"
-			>{{ this.text }}</span>
+				innerText:from="this.text"
+			></span>
 
 			{{# if(this.showOptions) }}
 				<ul>
@@ -100,8 +101,8 @@ export default class EditableSpan extends StacheElement {
 			}
 		});
 
-		this.listenTo("set-value", (ev, val) => {
-			span.innerText = val;
+		this.listenTo("set-value", () => {
+			[].forEach.call(span.children, child => span.removeChild(child));
 		});
 
 		this.listenTo(this, "focus", () => {
