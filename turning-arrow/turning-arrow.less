@@ -16,7 +16,9 @@ turning-arrow {
 		border-left: (@arrow-border + 2) solid @base-color;
 		transform-origin: center center;
 		vertical-align: middle;
-
+		@media (prefers-color-scheme: dark) {
+			border-left-color: #ADADAD;
+		}
 		&.right {
 			transform: rotate(0deg);
 			&.animate {
