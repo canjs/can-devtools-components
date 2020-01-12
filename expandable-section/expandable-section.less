@@ -16,7 +16,9 @@ expandable-section {
 			padding: @sm-unit @third-unit;
 			border-bottom: 1px solid #d0d0d0;
 			flex-shrink: 0; // needed for scrollbar
-
+			@media (prefers-color-scheme: dark) {
+				border-bottom-color: #3D3D3D;
+			}
 			p {
 				margin: 0;
 				padding: 0;
@@ -28,18 +30,29 @@ expandable-section {
 			}
 		}
 
+		&.collapsible {
+			@media (prefers-color-scheme: dark) {
+				background-color: #333333;
+			}
+		}
+
 		&.collapsible:hover {
 			background-color: #E0E0E0;
+			@media (prefers-color-scheme: dark) {
+				background-color: #000;
+			}
 		}
 
 		.content-container {
 			display: none;
 			padding: @sm-unit;
-
 			&.expanded {
 				display: flex;
 				flex-direction: column;
 				background: #FFFFFF;
+				@media (prefers-color-scheme: dark) {
+					background-color: #242424;
+				}
 				border-top: none;
 				overflow-y: auto; // needed for scrollbar
 				flex-grow: 1; // needed for scrollbar
