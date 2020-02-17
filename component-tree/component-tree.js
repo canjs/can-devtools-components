@@ -18,8 +18,21 @@ class ComponentTreeNode extends ObservableObject {
 			selected: Boolean,
 			tagName: type.convert(String),
 			id: { type: Number, identity: true },
-			children: type.late(() => type.convert(ComponentTreeList))
+			children: type.late(() => type.convert(ComponentTreeList)),
 		};
+	}
+	filteredChildren(filterString) {
+		const fc = this.children.filteredItems(filterString)
+		if(!filterString) {
+			return this.children;
+		} else if(this.nodeMatchesFilter(filterString)) {
+			return fc;
+		} else {
+			return fc.length > 0 ? fc : null;
+		}
+	}
+	nodeMatchesFilter(filterString) {
+		return !filterString || this.tagName.indexOf(filterString) > -1;
 	}
 }
 
@@ -27,6 +40,9 @@ class ComponentTreeNode extends ObservableObject {
 class ComponentTreeList extends ObservableArray {
 	static get items() {
 		return type.convert(ComponentTreeNode);
+	}
+	filteredItems(filterString) {
+		return this.filter(child => child.filteredChildren(filterString));
 	}
 }
 /* jshint +W003 */
@@ -41,18 +57,18 @@ export default class ComponentTree extends StacheElement {
 					</p>
 				{{ else }}
 					<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
-						<span>&#x3C;</span>{{ node.tagName }}<span>&#x3E;</span>
+						<span>&#x3C;</span>{{#if node.nodeMatchesFilter(tree.filterString)}}{{ node.tagName }}{{else}}<span>{{ node.tagName }}</span>{{/if}}<span>&#x3E;</span>
 					</p>
-					{{# for(child of node.children) }}
+					{{# for(child of node.children.filteredItems(tree.filterString)) }}
 						{{ treeNodeTemplate(node=child level=plusOne(level) tree=tree) }}
 					{{/ for }}
 					<p class="tag level-{{level}}{{# eq(tree.selectedNode, node) }} selected{{/ eq }}" on:click="tree.selectedNode = node">
-						<span>&#x3C;/</span>{{ node.tagName }}<span>&#x3E;</span>
+						<span>&#x3C;/</span>{{#if node.nodeMatchesFilter(tree.filterString)}}{{ node.tagName }}{{else}}<span>{{ node.tagName }}</span>{{/if}}<span>&#x3E;</span>
 					</p>
 				{{/ unless }}
 			{{/ treeNodeTemplate }}
 
-			{{# for(node of this.componentTree) }}
+			{{# for(node of this.componentTree.filteredItems(this.filterString)) }}
 				{{ treeNodeTemplate(node=node level=0 tree=this) }}
 			{{/ else }}
 				<h1 class="no-components">No Components Found</h1>
@@ -70,6 +86,11 @@ export default class ComponentTree extends StacheElement {
 				get default() {
 					return new ComponentTreeList();
 				}
+			},
+
+			filterString: {
+				type: String,
+				default: ""
 			},
 
 			selectedNode: {

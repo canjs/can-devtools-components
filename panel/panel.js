@@ -22,7 +22,7 @@ export default class ComponentsPanel extends StacheElement {
 					<div class="component-tree-header">
 						<h1>CanJS Components</h1>
 						<div class="filters">
-							{{! <p><input placeholder="Filter Components"></p> }}
+							<p><input placeholder="Filter Components" on:input="this.filterString = scope.element.value"></p>
 						</div>
 					</div>
 					<div class="component-tree">
@@ -30,6 +30,7 @@ export default class ComponentsPanel extends StacheElement {
 							componentTree:bind="this.componentTree"
 							selectedNode:to="this.selectedNode"
 							treeError:bind="this.componentTreeError"
+							filterString:from="this.filterString"
 						></component-tree>
 					</div>
 				</div>
@@ -99,6 +100,8 @@ export default class ComponentsPanel extends StacheElement {
 					this.breakpointsTitleHeight
 				);
 			},
+
+			filterString: { type: String, default: "" },
 
 			// component tree fields
 			componentTree: type.convert(ObservableArray),
