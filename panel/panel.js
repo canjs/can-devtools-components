@@ -22,7 +22,13 @@ export default class ComponentsPanel extends StacheElement {
 					<div class="component-tree-header">
 						<h1>CanJS Components</h1>
 						<div class="filters">
-							<p><input placeholder="Filter Components" on:input="this.filterString = scope.element.value"></p>
+							<p>
+								<input this:to="filterInput" placeholder="Filter Components" on:input="this.filterString = scope.element.value">
+								<button 
+										on:click="this.resetFilter()" 
+										disabled:from="this.disableReset" 
+										class="{{# this.disableReset }} disabled {{/ this.disableReset }}">Reset</button>
+							</p>
 						</div>
 					</div>
 					<div class="component-tree">
@@ -101,6 +107,10 @@ export default class ComponentsPanel extends StacheElement {
 				);
 			},
 
+			get disableReset(){
+				return this.filterString === "";
+			},
+
 			filterString: { type: String, default: "" },
 
 			// component tree fields
@@ -132,6 +142,8 @@ export default class ComponentsPanel extends StacheElement {
 			breakpointsTitleHeight: Number,
 			viewModelTitleHeight: Number,
 
+			filterInput: HTMLInputElement,
+
 			// viewmodel editor functions
 			updateValues: {
 				get default() {
@@ -158,6 +170,11 @@ export default class ComponentsPanel extends StacheElement {
 				}
 			}
 		};
+	}
+
+	resetFilter() {
+		this.filterString = "";
+		this.filterInput.value = "";
 	}
 
 	connected() {
