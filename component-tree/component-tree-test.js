@@ -1,5 +1,6 @@
 import { assert } from "chai";
 import ComponentTree from "./component-tree";
+import {ComponentTreeNode} from "./component-tree";
 
 import "steal-mocha";
 
@@ -254,5 +255,47 @@ describe("component-tree", () => {
 			vm.componentTree[0],
 			"selectedNode not reset if its ID changes"
 		);
+	});
+
+	describe('ComponentTreeNode', () => {
+		it('filteredChildren', () => {
+			let node, filtered;
+			const children = [{
+					selected: false,
+					tagName: "todo-item",
+					id: 1,
+					children: []
+				},
+				{
+					selected: false,
+					tagName: "todo-editor",
+					id: 2,
+					children: []
+				},
+				{
+					selected: false,
+					tagName: "todo-item",
+					id: 3,
+					children: [{
+						selected: false,
+						tagName: "a-child-tag",
+						id: 9,
+						children: []
+					}]
+			}];
+			const props = {
+				selected: false,
+				tagName: "todo-list",
+				id: 0,
+				children
+			}
+			node = new ComponentTreeNode(props);
+			filtered = node.filteredChildren('todo-editor');
+			assert.equal(filtered.length, 1);
+			assert.deepEqual([{selected: false, tagName: "todo-editor", id: 2, children: []}], filtered);
+
+			filtered = node.filteredChildren();
+			assert.deepEqual(children, filtered);
+		});
 	});
 });

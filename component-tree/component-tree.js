@@ -12,7 +12,7 @@ import "component-tree/component-tree.less";
 
 stache.addHelper("plusOne", num => num + 1);
 
-class ComponentTreeNode extends ObservableObject {
+export class ComponentTreeNode extends ObservableObject {
 	static get props() {
 		return {
 			selected: Boolean,
