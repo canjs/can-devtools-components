@@ -22,6 +22,8 @@ export default class BindingsGraph extends StacheElement {
 		return {
 			graphData: type.convert(ObservableObject),
 
+			showInternalNodes: false,
+
 			availableKeys: {
 				type: type.convert(ObservableArray),
 
